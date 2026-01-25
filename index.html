@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>我的個人網頁</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Microsoft JhengHei', Arial, sans-serif;
+            background-color: #000;
+            color: #fff;
+            overflow-x: hidden;
+            min-height: 100vh;
+            position: relative;
+        }
+
+        /* 呼吸動畫背景 */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at center, #1a1a1a 0%, #000 100%);
+            z-index: -1;
+            animation: breathe 4s ease-in-out infinite;
+        }
+
+        @keyframes breathe {
+            0%, 100% {
+                opacity: 0.8;
+                transform: scale(1);
+            }
+            50% {
+                opacity: 1;
+                transform: scale(1.05);
+            }
+        }
+
+        /* 頂部導航欄 */
+        .navbar {
+            width: 100%;
+            background-color: rgba(20, 20, 20, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 20px rgba(255, 255, 255, 0.05);
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+            padding: 0 20px;
+        }
+
+        .nav-item {
+            padding: 20px 30px;
+            cursor: pointer;
+            color: #ccc;
+            font-size: 16px;
+            transition: all 0.4s ease;
+            position: relative;
+            border-radius: 8px;
+            margin: 5px;
+            background-color: transparent;
+        }
+
+        .nav-item:hover {
+            color: #fff;
+            background-color: rgba(255, 255, 255, 0.1);
+            animation: breatheHover 2s ease-in-out infinite;
+        }
+
+        .nav-item.active {
+            color: #000;
+            background-color: #fff;
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+        }
+
+        .nav-item.active:hover,
+        .nav-item.active:active {
+            animation: breatheHighlight 2s ease-in-out infinite;
+        }
+
+        @keyframes breatheHover {
+            0%, 100% {
+                background-color: rgba(255, 255, 255, 0.1);
+            }
+            50% {
+                background-color: rgba(255, 255, 255, 0.15);
+            }
+        }
+
+        @keyframes breatheHighlight {
+            0%, 100% {
+                background-color: #fff;
+                box-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+            }
+            50% {
+                background-color: rgba(255, 255, 255, 0.9);
+                box-shadow: 0 0 30px rgba(255, 255, 255, 0.5);
+            }
+        }
+
+        /* 內容區域 */
+        .content-area {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+            min-height: calc(100vh - 80px);
+        }
+
+        .page-title {
+            color: #fff;
+            font-size: 36px;
+            font-weight: bold;
+            margin-bottom: 30px;
+            padding-left: 0;
+            animation: fadeIn 1s ease-in;
+            text-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* 頁面內容 */
+        .page-content {
+            display: none;
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        .page-content.active {
+            display: block;
+        }
+
+        .content-section {
+            background-color: rgba(30, 30, 30, 0.6);
+            padding: 30px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(5px);
+        }
+
+        .content-section h2 {
+            color: #fff;
+            margin-bottom: 15px;
+            font-size: 24px;
+        }
+
+        .content-section p {
+            color: #ccc;
+            line-height: 1.8;
+            font-size: 16px;
+        }
+
+        /* 響應式設計 */
+        @media (max-width: 768px) {
+            .nav-container {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+
+            .nav-item {
+                padding: 15px 15px;
+                font-size: 13px;
+                margin: 3px;
+            }
+
+            .page-title {
+                font-size: 28px;
+            }
+
+            .content-area {
+                padding: 20px 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 頂部導航欄 -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-item active" data-page="home">首頁</div>
+            <div class="nav-item" data-page="about">關於我</div>
+            <div class="nav-item" data-page="baseball-game">棒球比賽紀錄</div>
+            <div class="nav-item" data-page="baseball-training">棒球訓練紀錄</div>
+            <div class="nav-item" data-page="reading">讀書紀錄</div>
+            <div class="nav-item" data-page="study">學業紀錄</div>
+        </div>
+    </nav>
+
+    <!-- 內容區域 -->
+    <div class="content-area">
+        <h1 class="page-title">我的個人網頁</h1>
+
+        <!-- 首頁內容 -->
+        <div id="home" class="page-content active">
+            <div class="content-section">
+                <h2>歡迎來到我的個人網頁</h2>
+                <p>這是一個展示個人資訊和個人紀錄的平台。我會在這裡記錄下一切，例如球場、讀書等各種方面的事情，可能是日記，可能是認真記錄課題。</p>
+                
+            </div>
+        </div>
+
+        <!-- 關於我頁面 -->
+        <div id="about" class="page-content">
+            <div class="content-section">
+                <h2>關於我</h2>
+                <p>生日:2008/01/15</p>
+                <p>星座:摩羯座</p>
+                <p>就讀學校:台北市立成淵高中</p>
+                <P>興趣:棒球競技、日語、英語、重量訓練</P>
+            </div>
+        </div>
+
+        <!-- 棒球比賽紀錄頁面 -->
+        <div id="baseball-game" class="page-content">
+            <div class="content-section">
+                <h2>棒球比賽紀錄</h2>
+                <p>這裡記錄我的棒球比賽相關資訊和表現。</p>
+            </div>
+        </div>
+
+        <!-- 棒球訓練紀錄頁面 -->
+        <div id="baseball-training" class="page-content">
+            <div class="content-section">
+                <h2>棒球訓練紀錄</h2>
+                <p>這裡記錄我的棒球訓練內容和進度。</p>
+            </div>
+        </div>
+
+        <!-- 讀書紀錄頁面 -->
+        <div id="reading" class="page-content">
+            <div class="content-section">
+                <h2>讀書紀錄</h2>
+                <p>這裡記錄我閱讀的書籍和心得。</p>
+            </div>
+        </div>
+
+        <!-- 學業紀錄頁面 -->
+        <div id="study" class="page-content">
+            <div class="content-section">
+                <h2>學業紀錄</h2>
+                <p>這裡記錄我的學業相關內容和學習進度。</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 頁面切換功能
+        const navItems = document.querySelectorAll('.nav-item');
+        const pageContents = document.querySelectorAll('.page-content');
+
+        navItems.forEach(item => {
+            item.addEventListener('click', () => {
+                const targetPage = item.getAttribute('data-page');
+
+                // 移除所有活動狀態
+                navItems.forEach(nav => nav.classList.remove('active'));
+                pageContents.forEach(page => page.classList.remove('active'));
+
+                // 添加活動狀態到選中的項目
+                item.classList.add('active');
+                document.getElementById(targetPage).classList.add('active');
+            });
+        });
+
+        // 添加呼吸動畫到內容區域
+        const contentArea = document.querySelector('.content-area');
+        setInterval(() => {
+            contentArea.style.transform = 'scale(1)';
+            setTimeout(() => {
+                contentArea.style.transform = 'scale(1.01)';
+            }, 2000);
+        }, 4000);
+    </script>
+</body>
+</html>
