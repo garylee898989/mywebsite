@@ -540,11 +540,11 @@
                 <p>這裡記錄我閱讀的書籍和心得。</p>
 
                 <div class="diary-header">
-                    <div class="diary-header-title" id="readingDiarySectionTitle">書籍紀錄區</div>
+                    <div class="diary-header-title">書籍紀錄區</div>
                     <button class="btn-circle" id="diaryAddBtnReading" type="button" aria-label="新增日記">＋</button>
                 </div>
 
-                <div id="diaryEmptyReading" class="empty-state">目前還沒有日記。點右上角「＋」新增第一篇。</div>
+                <div id="diaryEmptyReading" class="empty-state">目前還沒有書籍紀錄。點右上角「＋」新增第一本。</div>
                 <div id="diaryListReading" class="diary-list" aria-label="日記列表"></div>
             </div>
         </div>
@@ -618,7 +618,11 @@
                     <div class="modal-title" id="diaryViewerTitle">日記</div>
                     <div class="modal-sub" id="diaryViewerMeta"></div>
                 </div>
-                <button class="btn secondary" id="diaryViewerCloseBtn" type="button">關閉</button>
+                <div class="btn-row" style="margin-top:0;">
+                    <button class="btn secondary" id="diaryViewerEditBtn" type="button">編輯</button>
+                    <button class="btn secondary" id="diaryViewerDeleteBtn" type="button" style="color: #ff6b6b; border-color: rgba(255, 107, 107, 0.3);">刪除日記</button>
+                    <button class="btn secondary" id="diaryViewerCloseBtn" type="button">關閉</button>
+                </div>
             </div>
 
             <div class="content-section" style="margin: 0; background: rgba(255,255,255,0.04);">
@@ -666,7 +670,10 @@
                     <div class="modal-title" id="subjectPageTitle">科目</div>
                     <div class="modal-sub" id="subjectPageDesc"></div>
                 </div>
-                <button class="btn secondary" id="subjectPageCloseBtn" type="button">關閉</button>
+                <div class="btn-row" style="margin-top:0;">
+                    <button class="btn secondary" id="subjectDeleteBtn" type="button" style="color: #ff6b6b; border-color: rgba(255, 107, 107, 0.3);">刪除此科目</button>
+                    <button class="btn secondary" id="subjectPageCloseBtn" type="button">關閉</button>
+                </div>
             </div>
 
             <div class="content-section" style="background: rgba(255,255,255,0.04);">
@@ -694,7 +701,13 @@
             </div>
 
             <div class="content-section" style="background: rgba(255,255,255,0.04);">
-                <h2 style="margin-bottom: 10px;">行事曆（一週）</h2>
+                <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:10px;">
+                    <h2>行事曆（一週）</h2>
+                    <div style="display:flex; gap:8px;">
+                        <button class="btn-circle" id="calPrevWeekBtn" style="width:32px; height:32px; font-size:14px;">&lt;</button>
+                        <button class="btn-circle" id="calNextWeekBtn" style="width:32px; height:32px; font-size:14px;">&gt;</button>
+                    </div>
+                </div>
                 <div id="weekCalendar" class="diary-list" style="grid-template-columns: repeat(2, minmax(0, 1fr));"></div>
             </div>
         </div>
@@ -725,6 +738,21 @@
         </div>
     </div>
 
+    <!-- 確認對話框 -->
+    <div id="confirmOverlay" class="overlay" aria-hidden="true">
+        <div class="modal" role="dialog" aria-modal="true" aria-label="確認" style="width: min(400px, 90%);">
+            <div class="modal-header">
+                <div class="modal-title" id="confirmTitle">確認</div>
+            </div>
+            <div class="content-section" style="background: transparent; padding: 0; border: none; margin-bottom: 20px;">
+                <p id="confirmMessage" style="color: #fff; font-size: 16px;">是否確定執行此操作？</p>
+            </div>
+            <div class="btn-row">
+                <button class="btn secondary" id="confirmNoBtn" type="button">取消</button>
+                <button class="btn" id="confirmYesBtn" type="button" style="background: rgba(255, 50, 50, 0.2); border-color: rgba(255, 50, 50, 0.4);">確定</button>
+            </div>
+        </div>
+    </div>
     <script>
         // 頁面切換功能（加上 hash 路由，避免部署後分頁看不到）
         const navItems = document.querySelectorAll('.nav-item');
@@ -754,10 +782,6 @@
                 activatePage(targetPage);
             });
         });
-
-        // 初次載入：如果網址有 hash，就直接打開該分頁
-        const initialPage = (location.hash || '').replace('#', '') || 'home';
-        activatePage(initialPage);
 
         // 添加呼吸動畫到內容區域
         const contentArea = document.querySelector('.content-area');
@@ -792,16 +816,7 @@
                 storageKey: 'myweb.diary.reading.v1',
                 addBtnId: 'diaryAddBtnReading',
                 emptyId: 'diaryEmptyReading',
-                listId: 'diaryListReading',
-                ui: {
-                    sectionTitle: '書籍紀錄區',
-                    addAriaLabel: '新增書籍',
-                    emptyText: '目前還沒有書籍紀錄。點右上角「＋」新增第一本。',
-                    editorTitle: '新增書籍',
-                    titleLabel: '書籍',
-                    titlePlaceholder: '輸入書籍名稱',
-                    bodyLabel: '心得或摘要紀錄'
-                }
+                listId: 'diaryListReading'
             }
         ];
 
@@ -874,7 +889,9 @@
 
             listEl.innerHTML = '';
             if (!diaries.length) {
-                emptyEl.textContent = module.ui?.emptyText || emptyEl.textContent;
+                if (module.key === 'reading') {
+                    emptyEl.textContent = '目前還沒有書籍紀錄。點右上角「＋」新增第一本。';
+                }
                 emptyEl.style.display = 'block';
                 return;
             }
@@ -953,22 +970,48 @@
                 });
         }
 
-        function openEditor(module) {
+        function openEditor(module, entryId = null) {
             if (!editorOverlay) return;
             currentModule = module;
+            editingEntryId = entryId;
 
             draftMedia = [];
-            if (mediaStrip) mediaStrip.innerHTML = '';
-            if (editorTitleInput) editorTitleInput.value = '';
-            if (editorSubtitleInput) editorSubtitleInput.value = '';
-            if (editorBodyInput) editorBodyInput.value = '';
-            if (editorDateEl) editorDateEl.textContent = formatDateYYYYMMDD(new Date());
-            if (editorTitleEl) editorTitleEl.textContent = module.ui?.editorTitle ? `${module.label}：${module.ui.editorTitle}` : `${module.label}：新增日記`;
-            if (editorTitleInput) editorTitleInput.placeholder = module.ui?.titlePlaceholder || '輸入標題';
+            let entry = null;
+            if (entryId) {
+                const diaries = diaryState.get(module.storageKey) || [];
+                entry = diaries.find(d => d.id === entryId);
+                if (entry && entry.media) {
+                    // Deep copy media to avoid modifying original until save
+                    draftMedia = JSON.parse(JSON.stringify(entry.media));
+                }
+            }
+            
+            renderDraftMedia();
+
+            if (editorTitleInput) editorTitleInput.value = entry ? (entry.title || '') : '';
+            if (editorSubtitleInput) editorSubtitleInput.value = entry ? (entry.subtitle || '') : '';
+            if (editorBodyInput) editorBodyInput.value = entry ? (entry.body || '') : '';
+            if (editorDateEl) editorDateEl.textContent = entry ? (entry.date || '') : formatDateYYYYMMDD(new Date());
+            
+            if (editorTitleEl) {
+                const action = entryId ? '編輯' : '新增';
+                if (module.key === 'reading') {
+                    editorTitleEl.textContent = `讀書紀錄：${action}書籍`;
+                } else {
+                    editorTitleEl.textContent = `${module.label}：${action}日記`;
+                }
+            }
             const titleLabel = document.querySelector('label[for="diaryTitleInput"]');
-            if (titleLabel) titleLabel.textContent = module.ui?.titleLabel || '標題';
             const bodyLabel = document.querySelector('label[for="diaryBodyInput"]');
-            if (bodyLabel) bodyLabel.textContent = module.ui?.bodyLabel || '正文';
+            if (module.key === 'reading') {
+                if (titleLabel) titleLabel.textContent = '書籍';
+                if (editorTitleInput) editorTitleInput.placeholder = '輸入書籍名稱';
+                if (bodyLabel) bodyLabel.textContent = '心得或摘要紀錄';
+            } else {
+                if (titleLabel) titleLabel.textContent = '標題';
+                if (editorTitleInput) editorTitleInput.placeholder = '輸入標題';
+                if (bodyLabel) bodyLabel.textContent = '正文';
+            }
 
             editorOverlay.classList.add('active');
             editorOverlay.setAttribute('aria-hidden', 'false');
@@ -984,9 +1027,20 @@
 
         function openViewer(module, id) {
             if (!viewerOverlay) return;
+            currentViewerModule = module;
+            currentViewerId = id;
+
             const diaries = diaryState.get(module.storageKey) || [];
             const entry = diaries.find(d => d.id === id);
             if (!entry) return;
+
+            if (viewerDeleteBtn) {
+                if (module.key === 'reading') {
+                    viewerDeleteBtn.textContent = '刪除書籍紀錄';
+                } else {
+                    viewerDeleteBtn.textContent = '刪除日記';
+                }
+            }
 
             if (viewerTitle) viewerTitle.textContent = entry.title || '（未命名）';
             if (viewerMeta) viewerMeta.textContent = `${module.label}｜日期：${entry.date || ''}`;
@@ -1079,26 +1133,52 @@
             if (!currentModule) return;
 
             const now = new Date();
-            const date = formatDateYYYYMMDD(now);
+            const date = editingEntryId ? editorDateEl.textContent : formatDateYYYYMMDD(now); // Keep original date if editing
             const title = editorTitleInput?.value?.trim?.() || '';
             const subtitle = editorSubtitleInput?.value?.trim?.() || '';
             const body = editorBodyInput?.value || '';
 
-            const entry = {
-                id: `${Date.now()}-${Math.random().toString(16).slice(2)}`,
-                date,
-                title,
-                subtitle,
-                body,
-                media: draftMedia.slice(),
-                createdAt: Date.now()
-            };
-
             const diaries = diaryState.get(currentModule.storageKey) || [];
-            diaries.push(entry);
+            let entry;
+
+            if (editingEntryId) {
+                const idx = diaries.findIndex(d => d.id === editingEntryId);
+                if (idx >= 0) {
+                    entry = diaries[idx];
+                    entry.title = title;
+                    entry.subtitle = subtitle;
+                    entry.body = body;
+                    entry.media = draftMedia.slice();
+                    // Date usually doesn't change on edit unless we want it to. 
+                    // Requirement doesn't specify, but usually we keep original date.
+                } else {
+                    // Should not happen, but treat as new if missing
+                    editingEntryId = null;
+                }
+            }
+            
+            if (!editingEntryId) {
+                entry = {
+                    id: `${Date.now()}-${Math.random().toString(16).slice(2)}`,
+                    date,
+                    title,
+                    subtitle,
+                    body,
+                    media: draftMedia.slice(),
+                    createdAt: Date.now()
+                };
+                diaries.push(entry);
+            }
+
             diaryState.set(currentModule.storageKey, diaries);
             saveModuleDiaries(currentModule);
             renderModuleList(currentModule);
+            
+            // If we were editing from viewer, we should update viewer content too if it's open
+            if (viewerOverlay && viewerOverlay.classList.contains('active') && currentViewerId === entry.id) {
+                openViewer(currentModule, entry.id);
+            }
+            
             closeEditor();
         });
 
@@ -1109,19 +1189,12 @@
 
             const { addBtn } = getModuleEls(module);
             if (addBtn) {
-                addBtn.setAttribute('aria-label', module.ui?.addAriaLabel || '新增日記');
-                addBtn?.addEventListener('click', () => openEditor(module));
-            }
-
-            if (module.key === 'reading') {
-                const sectionTitleEl = document.getElementById('readingDiarySectionTitle');
-                if (sectionTitleEl && module.ui?.sectionTitle) sectionTitleEl.textContent = module.ui.sectionTitle;
-                const emptyEl = document.getElementById(module.emptyId);
-                if (emptyEl && module.ui?.emptyText) emptyEl.textContent = module.ui.emptyText;
+                addBtn.setAttribute('aria-label', module.key === 'reading' ? '新增書籍' : '新增日記');
+                addBtn.addEventListener('click', () => openEditor(module));
             }
         });
 
-        // ===== 學習記錄：科目功能（取代原本的學業日記）=====
+        // ===== 科目功能（學習記錄）=====
         const SUBJECT_STORAGE_KEY = 'myweb.subjects.v1';
         const subjectAddBtn = document.getElementById('subjectAddBtn');
         const subjectEmpty = document.getElementById('subjectEmpty');
@@ -1154,9 +1227,55 @@
         const calendarEditorSub = document.getElementById('calendarEditorSub');
         const calendarEditorText = document.getElementById('calendarEditorText');
 
+        // Confirm Overlay Elements
+        const confirmOverlay = document.getElementById('confirmOverlay');
+        const confirmTitle = document.getElementById('confirmTitle');
+        const confirmMessage = document.getElementById('confirmMessage');
+        const confirmYesBtn = document.getElementById('confirmYesBtn');
+        const confirmNoBtn = document.getElementById('confirmNoBtn');
+        let confirmAction = null;
+
+        // New Buttons
+        const viewerEditBtn = document.getElementById('diaryViewerEditBtn');
+        const viewerDeleteBtn = document.getElementById('diaryViewerDeleteBtn');
+        const subjectDeleteBtn = document.getElementById('subjectDeleteBtn');
+        const calPrevWeekBtn = document.getElementById('calPrevWeekBtn');
+        const calNextWeekBtn = document.getElementById('calNextWeekBtn');
+
         let subjects = [];
         let currentSubjectId = null;
-        let calendarEditingKey = null; // YYYY-MM-DD
+        let calendarEditingKey = null;
+        let currentWeekOffset = 0; // 0 = this week, -1 = last week
+        let editingEntryId = null; // For diary editing
+
+        function openConfirm(options) {
+            if (!confirmOverlay) return;
+            confirmAction = options?.onConfirm || null;
+            if (confirmTitle) confirmTitle.textContent = options?.title || '';
+            // if (confirmSub) confirmTitle.nextElementSibling.textContent = options?.sub || ''; 
+            if (confirmMessage) confirmMessage.textContent = options?.message || '';
+            if (confirmYesBtn) confirmYesBtn.textContent = options?.confirmText || '確定刪除';
+            if (confirmNoBtn) confirmNoBtn.textContent = options?.cancelText || '保留日記';
+            
+            confirmOverlay.classList.add('active');
+            confirmOverlay.setAttribute('aria-hidden', 'false');
+        }
+
+        function closeConfirm() {
+            if (!confirmOverlay) return;
+            confirmOverlay.classList.remove('active');
+            confirmOverlay.setAttribute('aria-hidden', 'true');
+            confirmAction = null;
+        }
+
+        confirmYesBtn?.addEventListener('click', () => {
+            if (confirmAction) confirmAction();
+            closeConfirm();
+        });
+        confirmNoBtn?.addEventListener('click', closeConfirm);
+        confirmOverlay?.addEventListener('click', (e) => {
+            if (e.target === confirmOverlay) closeConfirm();
+        });
 
         function loadSubjects() {
             try {
@@ -1181,7 +1300,7 @@
             }
             subjectEmpty.style.display = 'none';
 
-            subjects.slice().sort((a,b)=> (b.createdAt||0)-(a.createdAt||0)).forEach(s => {
+            subjects.slice().sort((a,b)=> (b.updatedAt||0)-(a.updatedAt||0)).forEach(s => {
                 const card = document.createElement('div');
                 card.className = 'diary-card';
                 card.tabIndex = 0;
@@ -1207,7 +1326,7 @@
                 card.appendChild(top);
                 card.appendChild(desc);
 
-                const open = () => openSubjectPage(s.id);
+                const open = () => { location.hash = `#study/subject/${s.id}`; };
                 card.addEventListener('click', open);
                 card.addEventListener('keydown', (e)=>{
                     if (e.key==='Enter' || e.key===' ') { e.preventDefault(); open(); }
@@ -1236,6 +1355,7 @@
             const s = subjects.find(x=>x.id===subjectId);
             if (!s || !subjectPageOverlay) return;
             currentSubjectId = subjectId;
+            currentWeekOffset = 0; // Reset to current week
 
             subjectPageTitle.textContent = s.name || '科目';
             subjectPageDesc.textContent = s.description || '';
@@ -1275,8 +1395,12 @@
             weekCalendar.innerHTML = '';
 
             const now = new Date();
-            const start = new Date(now);
-            start.setDate(now.getDate() - now.getDay()); // Sunday start
+            const baseDate = new Date(now);
+            baseDate.setDate(baseDate.getDate() + (currentWeekOffset * 7));
+            
+            const start = new Date(baseDate);
+            start.setHours(0, 0, 0, 0);
+            start.setDate(start.getDate() - start.getDay());
 
             const weekDays = ['日','一','二','三','四','五','六'];
 
@@ -1353,8 +1477,8 @@
             closeSubjectEditor();
         });
 
-        subjectPageCloseBtn?.addEventListener('click', closeSubjectPage);
-        subjectPageOverlay?.addEventListener('click', (e)=>{ if (e.target===subjectPageOverlay) closeSubjectPage(); });
+        subjectPageCloseBtn?.addEventListener('click', () => { location.hash = '#study'; });
+        subjectPageOverlay?.addEventListener('click', (e)=>{ if (e.target===subjectPageOverlay) location.hash = '#study'; });
 
         subjectScopeEditBtn?.addEventListener('click', ()=> editLongText('scope','學習範圍（編輯）'));
         subjectGoalEditBtn?.addEventListener('click', ()=> editLongText('goal','學習目標（編輯）'));
@@ -1381,14 +1505,90 @@
             saveSubjects();
             renderSubjects();
             if (subjectPageOverlay?.classList.contains('active')) {
-                openSubjectPage(s.id); // refresh view + calendar
+                openSubjectPage(s.id);
             }
             closeCalendarEditor();
         });
 
-        // 初始化科目
+        function deleteEntry(module, entryId) {
+            const diaries = diaryState.get(module.storageKey) || [];
+            const updated = diaries.filter(d => d.id !== entryId);
+            diaryState.set(module.storageKey, updated);
+            saveModuleDiaries(module);
+            renderModuleList(module);
+            closeViewer();
+        }
+
+        function deleteSubject(subjectId) {
+            subjects = subjects.filter(s => s.id !== subjectId);
+            saveSubjects();
+            renderSubjects();
+            closeSubjectPage();
+            location.hash = '#study';
+        }
+
+        viewerEditBtn?.addEventListener('click', () => {
+             if (currentViewerModule && currentViewerId) {
+                 // Ensure editor is above viewer
+                 if (editorOverlay) editorOverlay.style.zIndex = '2010';
+                 openEditor(currentViewerModule, currentViewerId);
+             }
+        });
+
+        viewerDeleteBtn?.addEventListener('click', () => {
+             if (!currentViewerModule || !currentViewerId) return;
+             openConfirm({
+                 title: '刪除確認',
+                 message: '一旦刪除便無法復原，是否確定刪除?',
+                 confirmText: '確定刪除',
+                 cancelText: currentViewerModule.key === 'reading' ? '保留此書籍紀錄' : '保留日記',
+                 onConfirm: () => {
+                     deleteEntry(currentViewerModule, currentViewerId);
+                 }
+             });
+        });
+
+        subjectDeleteBtn?.addEventListener('click', () => {
+             if (!currentSubjectId) return;
+             openConfirm({
+                 title: '刪除確認',
+                 message: '一旦刪除便無法復原，是否確定刪除?',
+                 confirmText: '確定刪除',
+                 cancelText: '保留此科目',
+                 onConfirm: () => {
+                     deleteSubject(currentSubjectId);
+                 }
+             });
+        });
+
+        calPrevWeekBtn?.addEventListener('click', () => {
+             currentWeekOffset--;
+             const s = subjects.find(x=>x.id===currentSubjectId);
+             if (s) renderWeekCalendar(s);
+        });
+
+        calNextWeekBtn?.addEventListener('click', () => {
+             currentWeekOffset++;
+             const s = subjects.find(x=>x.id===currentSubjectId);
+             if (s) renderWeekCalendar(s);
+        });
+
         loadSubjects();
         renderSubjects();
+
+        function handleHash() {
+            const h = (location.hash || '').replace('#', '');
+            const [page, sub, id] = h.split('/');
+            const target = page || 'home';
+            activatePage(target);
+            if (target === 'study' && sub === 'subject' && id) {
+                openSubjectPage(id);
+            } else {
+                closeSubjectPage();
+            }
+        }
+        handleHash();
+        window.addEventListener('hashchange', handleHash);
     </script>
 </body>
 </html>
