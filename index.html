@@ -753,6 +753,8 @@
             </div>
         </div>
     </div>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="supabase_init.js"></script>
     <script>
         // 頁面切換功能（加上 hash 路由，避免部署後分頁看不到）
         const navItems = document.querySelectorAll('.nav-item');
@@ -797,7 +799,7 @@
             {
                 key: 'baseballGame',
                 label: '棒球比賽紀錄',
-                storageKey: 'myweb.diary.baseballGame.v1',
+                // storageKey removed, use key as type
                 addBtnId: 'diaryAddBtn',
                 emptyId: 'diaryEmpty',
                 listId: 'diaryList'
@@ -805,7 +807,6 @@
             {
                 key: 'baseballTraining',
                 label: '棒球訓練紀錄',
-                storageKey: 'myweb.diary.baseballTraining.v1',
                 addBtnId: 'diaryAddBtnTraining',
                 emptyId: 'diaryEmptyTraining',
                 listId: 'diaryListTraining'
@@ -813,7 +814,6 @@
             {
                 key: 'reading',
                 label: '讀書紀錄',
-                storageKey: 'myweb.diary.reading.v1',
                 addBtnId: 'diaryAddBtnReading',
                 emptyId: 'diaryEmptyReading',
                 listId: 'diaryListReading'
@@ -841,7 +841,7 @@
         const viewerMedia = document.getElementById('diaryViewerMedia');
         const viewerCloseBtn = document.getElementById('diaryViewerCloseBtn');
 
-        const diaryState = new Map(); // storageKey -> diaries[]
+        const diaryState = new Map(); // key -> diaries[]
         let currentModule = null;
         let draftMedia = [];
 
@@ -858,21 +858,17 @@
             return t.slice(0, maxLen) + '…';
         }
 
-        function loadModuleDiaries(module) {
-            try {
-                const raw = localStorage.getItem(module.storageKey);
-                const parsed = raw ? JSON.parse(raw) : [];
-                diaryState.set(module.storageKey, Array.isArray(parsed) ? parsed : []);
-            } catch {
-                diaryState.set(module.storageKey, []);
-            }
+        async function loadModuleDiaries(module) {
+            // Replace localStorage with Supabase fetch
+            // Using 'diary_' prefix to distinguish from other types if needed, 
+            // or just use module.key if unique enough. Let's use 'diary_' + module.key
+            const type = `diary_${module.key}`;
+            const data = await dbFetch(type);
+            diaryState.set(module.key, data);
         }
 
-        function saveModuleDiaries(module) {
-            const arr = diaryState.get(module.storageKey) || [];
-            localStorage.setItem(module.storageKey, JSON.stringify(arr));
-        }
-
+        // saveModuleDiaries removed as we now save per item
+        
         function getModuleEls(module) {
             return {
                 addBtn: document.getElementById(module.addBtnId),
@@ -885,7 +881,7 @@
             const { listEl, emptyEl } = getModuleEls(module);
             if (!listEl || !emptyEl) return;
 
-            const diaries = diaryState.get(module.storageKey) || [];
+            const diaries = diaryState.get(module.key) || [];
 
             listEl.innerHTML = '';
             if (!diaries.length) {
@@ -898,8 +894,8 @@
             emptyEl.style.display = 'none';
 
             diaries
-                .slice()
-                .sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0))
+                // .sort handled by DB fetch order, but we can double check
+                .slice() // copy
                 .forEach(entry => {
                     const card = document.createElement('div');
                     card.className = 'diary-card';
@@ -978,7 +974,7 @@
             draftMedia = [];
             let entry = null;
             if (entryId) {
-                const diaries = diaryState.get(module.storageKey) || [];
+                const diaries = diaryState.get(module.key) || [];
                 entry = diaries.find(d => d.id === entryId);
                 if (entry && entry.media) {
                     // Deep copy media to avoid modifying original until save
@@ -1030,7 +1026,7 @@
             currentViewerModule = module;
             currentViewerId = id;
 
-            const diaries = diaryState.get(module.storageKey) || [];
+            const diaries = diaryState.get(module.key) || [];
             const entry = diaries.find(d => d.id === id);
             if (!entry) return;
 
@@ -1129,73 +1125,84 @@
             mediaInput.value = '';
         });
 
-        editorSaveBtn?.addEventListener('click', () => {
+        editorSaveBtn?.addEventListener('click', async () => {
             if (!currentModule) return;
 
+            // UI Loading state? For now just await
+            editorSaveBtn.textContent = '儲存中...';
+            editorSaveBtn.disabled = true;
+
             const now = new Date();
-            const date = editingEntryId ? editorDateEl.textContent : formatDateYYYYMMDD(now); // Keep original date if editing
+            const date = editingEntryId ? editorDateEl.textContent : formatDateYYYYMMDD(now);
             const title = editorTitleInput?.value?.trim?.() || '';
             const subtitle = editorSubtitleInput?.value?.trim?.() || '';
             const body = editorBodyInput?.value || '';
 
-            const diaries = diaryState.get(currentModule.storageKey) || [];
+            const diaries = diaryState.get(currentModule.key) || [];
             let entry;
 
+            // Prepare content object (without ID if new, Supabase generates ID)
+            // But for local state update we need ID.
+            // Wait, dbAdd returns the new object with ID.
+
+            const contentToSave = {
+                date,
+                title,
+                subtitle,
+                body,
+                media: draftMedia.slice(),
+                createdAt: editingEntryId ? undefined : Date.now() // Only set if new, but DB has created_at
+            };
+            // Clean undefined
+            if (contentToSave.createdAt === undefined) delete contentToSave.createdAt;
+
             if (editingEntryId) {
-                const idx = diaries.findIndex(d => d.id === editingEntryId);
-                if (idx >= 0) {
-                    entry = diaries[idx];
-                    entry.title = title;
-                    entry.subtitle = subtitle;
-                    entry.body = body;
-                    entry.media = draftMedia.slice();
-                    // Date usually doesn't change on edit unless we want it to. 
-                    // Requirement doesn't specify, but usually we keep original date.
-                } else {
-                    // Should not happen, but treat as new if missing
-                    editingEntryId = null;
+                // Update
+                const success = await dbUpdate(editingEntryId, contentToSave);
+                if (success) {
+                    const idx = diaries.findIndex(d => d.id === editingEntryId);
+                    if (idx >= 0) {
+                        // Update local cache
+                        diaries[idx] = { ...diaries[idx], ...contentToSave };
+                    }
+                }
+            } else {
+                // Add
+                const newEntry = await dbAdd(`diary_${currentModule.key}`, contentToSave);
+                if (newEntry) {
+                    diaries.unshift(newEntry); // Add to top
                 }
             }
-            
-            if (!editingEntryId) {
-                entry = {
-                    id: `${Date.now()}-${Math.random().toString(16).slice(2)}`,
-                    date,
-                    title,
-                    subtitle,
-                    body,
-                    media: draftMedia.slice(),
-                    createdAt: Date.now()
-                };
-                diaries.push(entry);
-            }
 
-            diaryState.set(currentModule.storageKey, diaries);
-            saveModuleDiaries(currentModule);
+            diaryState.set(currentModule.key, diaries);
             renderModuleList(currentModule);
             
             // If we were editing from viewer, we should update viewer content too if it's open
-            if (viewerOverlay && viewerOverlay.classList.contains('active') && currentViewerId === entry.id) {
-                openViewer(currentModule, entry.id);
+            if (editingEntryId && viewerOverlay && viewerOverlay.classList.contains('active') && currentViewerId === editingEntryId) {
+                openViewer(currentModule, editingEntryId);
             }
             
+            editorSaveBtn.textContent = '儲存日記';
+            editorSaveBtn.disabled = false;
             closeEditor();
         });
 
         // 初始化：載入並綁定每個分頁的新增按鈕
-        DIARY_MODULES.forEach(module => {
-            loadModuleDiaries(module);
-            renderModuleList(module);
+        (async function initDiaries() {
+            for (const module of DIARY_MODULES) {
+                await loadModuleDiaries(module);
+                renderModuleList(module);
 
-            const { addBtn } = getModuleEls(module);
-            if (addBtn) {
-                addBtn.setAttribute('aria-label', module.key === 'reading' ? '新增書籍' : '新增日記');
-                addBtn.addEventListener('click', () => openEditor(module));
+                const { addBtn } = getModuleEls(module);
+                if (addBtn) {
+                    addBtn.setAttribute('aria-label', module.key === 'reading' ? '新增書籍' : '新增日記');
+                    addBtn.addEventListener('click', () => openEditor(module));
+                }
             }
-        });
+        })();
 
         // ===== 科目功能（學習記錄）=====
-        const SUBJECT_STORAGE_KEY = 'myweb.subjects.v1';
+        // const SUBJECT_STORAGE_KEY = 'myweb.subjects.v1'; // removed
         const subjectAddBtn = document.getElementById('subjectAddBtn');
         const subjectEmpty = document.getElementById('subjectEmpty');
         const subjectList = document.getElementById('subjectList');
@@ -1277,19 +1284,12 @@
             if (e.target === confirmOverlay) closeConfirm();
         });
 
-        function loadSubjects() {
-            try {
-                const raw = localStorage.getItem(SUBJECT_STORAGE_KEY);
-                const parsed = raw ? JSON.parse(raw) : [];
-                subjects = Array.isArray(parsed) ? parsed : [];
-            } catch {
-                subjects = [];
-            }
+        // Load subjects
+        async function loadSubjects() {
+            subjects = await dbFetch('subject');
         }
 
-        function saveSubjects() {
-            localStorage.setItem(SUBJECT_STORAGE_KEY, JSON.stringify(subjects));
-        }
+        // saveSubjects removed
 
         function renderSubjects() {
             if (!subjectList || !subjectEmpty) return;
@@ -1457,11 +1457,14 @@
         subjectEditorCancelBtn?.addEventListener('click', closeSubjectEditor);
         subjectEditorOverlay?.addEventListener('click', (e)=>{ if (e.target===subjectEditorOverlay) closeSubjectEditor(); });
 
-        subjectEditorSaveBtn?.addEventListener('click', () => {
+        subjectEditorSaveBtn?.addEventListener('click', async () => {
+            subjectEditorSaveBtn.textContent = '儲存中...';
+            subjectEditorSaveBtn.disabled = true;
+
             const name = subjectNameInput.value.trim();
             const description = subjectDescInput.value.trim();
-            const s = {
-                id: `${Date.now()}-${Math.random().toString(16).slice(2)}`,
+            
+            const contentToSave = {
                 name,
                 description,
                 scope: '',
@@ -1471,9 +1474,16 @@
                 createdAt: Date.now(),
                 updatedAt: Date.now()
             };
-            subjects.push(s);
-            saveSubjects();
+
+            const newSubject = await dbAdd('subject', contentToSave);
+            if (newSubject) {
+                subjects.unshift(newSubject);
+            }
+
             renderSubjects();
+            
+            subjectEditorSaveBtn.textContent = '儲存科目';
+            subjectEditorSaveBtn.disabled = false;
             closeSubjectEditor();
         });
 
@@ -1488,10 +1498,18 @@
         calendarEditorCancelBtn?.addEventListener('click', closeCalendarEditor);
         calendarEditorOverlay?.addEventListener('click', (e)=>{ if (e.target===calendarEditorOverlay) closeCalendarEditor(); });
 
-        calendarEditorSaveBtn?.addEventListener('click', () => {
+        calendarEditorSaveBtn?.addEventListener('click', async () => {
             const s = subjects.find(x=>x.id===currentSubjectId);
             if (!s) return;
 
+            calendarEditorSaveBtn.textContent = '儲存中...';
+            calendarEditorSaveBtn.disabled = true;
+
+            // Clone subject content to update
+            // We need to construct the new object state before sending to DB.
+            // s is a reference to local object, we modify it locally but also need to send updates.
+            // dbUpdate expects the full content object (excluding ID).
+            
             const mode = calendarEditorOverlay.dataset.mode || '';
             if (mode.startsWith('field:')) {
                 const fieldKey = mode.replace('field:','');
@@ -1502,29 +1520,42 @@
             }
 
             s.updatedAt = Date.now();
-            saveSubjects();
+
+            // Prepare for DB
+            const { id, _db_created_at, ...contentToSave } = s;
+            
+            await dbUpdate(s.id, contentToSave);
+            
             renderSubjects();
             if (subjectPageOverlay?.classList.contains('active')) {
                 openSubjectPage(s.id);
             }
+            
+            calendarEditorSaveBtn.textContent = '儲存';
+            calendarEditorSaveBtn.disabled = false;
             closeCalendarEditor();
         });
 
-        function deleteEntry(module, entryId) {
-            const diaries = diaryState.get(module.storageKey) || [];
-            const updated = diaries.filter(d => d.id !== entryId);
-            diaryState.set(module.storageKey, updated);
-            saveModuleDiaries(module);
-            renderModuleList(module);
-            closeViewer();
+        async function deleteEntry(module, entryId) {
+            // Optimistic update or wait? Let's wait.
+            const success = await dbDelete(entryId);
+            if (success) {
+                const diaries = diaryState.get(module.key) || [];
+                const updated = diaries.filter(d => d.id !== entryId);
+                diaryState.set(module.key, updated);
+                renderModuleList(module);
+                closeViewer();
+            }
         }
 
-        function deleteSubject(subjectId) {
-            subjects = subjects.filter(s => s.id !== subjectId);
-            saveSubjects();
-            renderSubjects();
-            closeSubjectPage();
-            location.hash = '#study';
+        async function deleteSubject(subjectId) {
+            const success = await dbDelete(subjectId);
+            if (success) {
+                subjects = subjects.filter(s => s.id !== subjectId);
+                renderSubjects();
+                closeSubjectPage();
+                location.hash = '#study';
+            }
         }
 
         viewerEditBtn?.addEventListener('click', () => {
