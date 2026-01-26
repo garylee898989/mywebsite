@@ -115,6 +115,272 @@
             }
         }
 
+        /* 日記功能（棒球比賽紀錄） */
+        .diary-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            margin-top: 18px;
+            margin-bottom: 12px;
+        }
+
+        .diary-header-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: #fff;
+        }
+
+        .btn-circle {
+            width: 42px;
+            height: 42px;
+            border-radius: 999px;
+            border: 1px solid rgba(255, 255, 255, 0.22);
+            background: rgba(255, 255, 255, 0.08);
+            color: #fff;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: transform 0.2s ease, background-color 0.2s ease, border-color 0.2s ease;
+            user-select: none;
+        }
+
+        .btn-circle:hover {
+            animation: breatheHover 1.8s ease-in-out infinite;
+            background: rgba(255, 255, 255, 0.14);
+            border-color: rgba(255, 255, 255, 0.35);
+            transform: scale(1.03);
+        }
+
+        .btn-circle:active {
+            transform: scale(0.98);
+        }
+
+        .diary-list {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 14px;
+        }
+
+        @media (max-width: 768px) {
+            .diary-list {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .diary-card {
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.06);
+            padding: 14px;
+            cursor: pointer;
+            transition: transform 0.18s ease, border-color 0.18s ease, background-color 0.18s ease;
+            display: grid;
+            gap: 10px;
+        }
+
+        .diary-card:hover {
+            background: rgba(255, 255, 255, 0.09);
+            border-color: rgba(255, 255, 255, 0.2);
+            transform: translateY(-1px);
+        }
+
+        .diary-card-top {
+            display: flex;
+            align-items: baseline;
+            justify-content: space-between;
+            gap: 10px;
+        }
+
+        .diary-card-title {
+            font-weight: 800;
+            color: #fff;
+            font-size: 16px;
+            line-height: 1.3;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .diary-card-date {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 12px;
+            white-space: nowrap;
+        }
+
+        .diary-card-subtitle {
+            color: rgba(255, 255, 255, 0.78);
+            font-size: 13px;
+            line-height: 1.4;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .diary-card-preview {
+            color: rgba(255, 255, 255, 0.72);
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .media-preview {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .media-thumb {
+            width: 120px;
+            height: 80px;
+            border-radius: 10px;
+            object-fit: cover;
+            border: 1px solid rgba(255, 255, 255, 0.14);
+            background: rgba(0, 0, 0, 0.4);
+        }
+
+        .empty-state {
+            color: rgba(255, 255, 255, 0.65);
+            font-size: 14px;
+            padding: 10px 0 0;
+        }
+
+        /* 編輯/全覽 視窗 */
+        .overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.72);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 18px;
+            z-index: 2000;
+        }
+
+        .overlay.active {
+            display: flex;
+        }
+
+        .modal {
+            width: min(920px, 100%);
+            max-height: min(86vh, 900px);
+            overflow: auto;
+            border-radius: 14px;
+            border: 1px solid rgba(255, 255, 255, 0.14);
+            background: rgba(18, 18, 18, 0.92);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 18px 60px rgba(0, 0, 0, 0.55);
+            padding: 18px;
+        }
+
+        .modal-header {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 12px;
+            margin-bottom: 10px;
+        }
+
+        .modal-title {
+            font-size: 18px;
+            font-weight: 800;
+            color: #fff;
+        }
+
+        .modal-sub {
+            margin-top: 4px;
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 13px;
+        }
+
+        .form-grid {
+            display: grid;
+            gap: 12px;
+            margin-top: 12px;
+        }
+
+        .field label {
+            display: block;
+            font-size: 13px;
+            color: rgba(255, 255, 255, 0.75);
+            margin-bottom: 6px;
+        }
+
+        .input, .textarea {
+            width: 100%;
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.16);
+            background: rgba(255, 255, 255, 0.06);
+            color: #fff;
+            padding: 10px 12px;
+            outline: none;
+            transition: border-color 0.2s ease, background-color 0.2s ease;
+        }
+
+        .input:focus, .textarea:focus {
+            border-color: rgba(255, 255, 255, 0.35);
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .textarea {
+            min-height: 180px;
+            resize: vertical;
+        }
+
+        .btn-row {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-top: 12px;
+        }
+
+        .btn {
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            background: rgba(255, 255, 255, 0.08);
+            color: #fff;
+            padding: 10px 12px;
+            cursor: pointer;
+            transition: transform 0.2s ease, background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+            user-select: none;
+        }
+
+        /* 互動式呼吸感反白：只在 hover 時觸發 */
+        .btn:hover {
+            animation: breatheHighlight 1.9s ease-in-out infinite;
+            color: #000;
+            border-color: rgba(255, 255, 255, 0.55);
+        }
+
+        .btn:active {
+            transform: scale(0.98);
+        }
+
+        .btn.secondary {
+            background: rgba(255, 255, 255, 0.04);
+        }
+
+        .media-strip {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .media-chip {
+            border: 1px solid rgba(255, 255, 255, 0.14);
+            border-radius: 999px;
+            padding: 6px 10px;
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.82);
+            background: rgba(255, 255, 255, 0.06);
+            max-width: 100%;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
         /* 內容區域 */
         .content-area {
             max-width: 1200px;
@@ -240,6 +506,14 @@
             <div class="content-section">
                 <h2>棒球比賽紀錄</h2>
                 <p>這裡記錄我的棒球比賽相關資訊和表現。</p>
+
+                <div class="diary-header">
+                    <div class="diary-header-title">日記區</div>
+                    <button class="btn-circle" id="diaryAddBtn" type="button" aria-label="新增日記">＋</button>
+                </div>
+
+                <div id="diaryEmpty" class="empty-state">目前還沒有日記。點右上角「＋」新增第一篇。</div>
+                <div id="diaryList" class="diary-list" aria-label="日記列表"></div>
             </div>
         </div>
 
@@ -248,6 +522,14 @@
             <div class="content-section">
                 <h2>棒球訓練紀錄</h2>
                 <p>這裡記錄我的棒球訓練內容和進度。</p>
+
+                <div class="diary-header">
+                    <div class="diary-header-title">日記區</div>
+                    <button class="btn-circle" id="diaryAddBtnTraining" type="button" aria-label="新增日記">＋</button>
+                </div>
+
+                <div id="diaryEmptyTraining" class="empty-state">目前還沒有日記。點右上角「＋」新增第一篇。</div>
+                <div id="diaryListTraining" class="diary-list" aria-label="日記列表"></div>
             </div>
         </div>
 
@@ -256,6 +538,14 @@
             <div class="content-section">
                 <h2>讀書紀錄</h2>
                 <p>這裡記錄我閱讀的書籍和心得。</p>
+
+                <div class="diary-header">
+                    <div class="diary-header-title">日記區</div>
+                    <button class="btn-circle" id="diaryAddBtnReading" type="button" aria-label="新增日記">＋</button>
+                </div>
+
+                <div id="diaryEmptyReading" class="empty-state">目前還沒有日記。點右上角「＋」新增第一篇。</div>
+                <div id="diaryListReading" class="diary-list" aria-label="日記列表"></div>
             </div>
         </div>
 
@@ -264,6 +554,77 @@
             <div class="content-section">
                 <h2>學業紀錄</h2>
                 <p>這裡記錄我的學業相關內容和學習進度。</p>
+
+                <div class="diary-header">
+                    <div class="diary-header-title">日記區</div>
+                    <button class="btn-circle" id="diaryAddBtnStudy" type="button" aria-label="新增日記">＋</button>
+                </div>
+
+                <div id="diaryEmptyStudy" class="empty-state">目前還沒有日記。點右上角「＋」新增第一篇。</div>
+                <div id="diaryListStudy" class="diary-list" aria-label="日記列表"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 日記編輯視窗 -->
+    <div id="diaryEditorOverlay" class="overlay" aria-hidden="true">
+        <div class="modal" role="dialog" aria-modal="true" aria-label="日記編輯">
+            <div class="modal-header">
+                <div>
+                    <div class="modal-title" id="diaryEditorTitle">新增日記</div>
+                    <div class="modal-sub">日期：<span id="diaryEditorDate"></span></div>
+                </div>
+                <button class="btn secondary" id="diaryEditorCloseBtn" type="button">關閉</button>
+            </div>
+
+            <div class="form-grid">
+                <div class="field">
+                    <label for="diaryTitleInput">標題</label>
+                    <input id="diaryTitleInput" class="input" type="text" placeholder="輸入標題" maxlength="80" />
+                </div>
+
+                <div class="field">
+                    <label for="diarySubtitleInput">副標題</label>
+                    <input id="diarySubtitleInput" class="input" type="text" placeholder="輸入副標題（可選）" maxlength="120" />
+                </div>
+
+                <div class="field">
+                    <label for="diaryBodyInput">正文</label>
+                    <textarea id="diaryBodyInput" class="textarea" placeholder="開始打字記錄…"></textarea>
+                </div>
+
+                <div class="field">
+                    <label>媒體（照片/影片）</label>
+                    <div class="btn-row" style="justify-content: flex-start;">
+                        <button class="btn" id="diaryMediaAddBtn" type="button">新增媒體</button>
+                        <input id="diaryMediaInput" type="file" accept="image/*,video/*" multiple style="display:none;" />
+                    </div>
+                    <div id="diaryMediaStrip" class="media-strip" aria-label="已加入媒體"></div>
+                </div>
+            </div>
+
+            <div class="btn-row">
+                <button class="btn secondary" id="diaryEditorCancelBtn" type="button">取消</button>
+                <button class="btn" id="diaryEditorSaveBtn" type="button">儲存日記</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 日記全覽視窗 -->
+    <div id="diaryViewerOverlay" class="overlay" aria-hidden="true">
+        <div class="modal" role="dialog" aria-modal="true" aria-label="日記全覽">
+            <div class="modal-header">
+                <div>
+                    <div class="modal-title" id="diaryViewerTitle">日記</div>
+                    <div class="modal-sub" id="diaryViewerMeta"></div>
+                </div>
+                <button class="btn secondary" id="diaryViewerCloseBtn" type="button">關閉</button>
+            </div>
+
+            <div class="content-section" style="margin: 0; background: rgba(255,255,255,0.04);">
+                <div id="diaryViewerSubtitle" style="color: rgba(255,255,255,0.8); margin-bottom: 10px;"></div>
+                <div id="diaryViewerBody" style="white-space: pre-wrap; color: rgba(255,255,255,0.78); line-height: 1.8;"></div>
+                <div id="diaryViewerMedia" class="media-preview" style="margin-top: 14px;"></div>
             </div>
         </div>
     </div>
@@ -295,6 +656,342 @@
                 contentArea.style.transform = 'scale(1.01)';
             }, 2000);
         }, 4000);
+
+        // ===== 日記功能（多分頁共用）=====
+        const DIARY_MODULES = [
+            {
+                key: 'baseballGame',
+                label: '棒球比賽紀錄',
+                storageKey: 'myweb.diary.baseballGame.v1',
+                addBtnId: 'diaryAddBtn',
+                emptyId: 'diaryEmpty',
+                listId: 'diaryList'
+            },
+            {
+                key: 'baseballTraining',
+                label: '棒球訓練紀錄',
+                storageKey: 'myweb.diary.baseballTraining.v1',
+                addBtnId: 'diaryAddBtnTraining',
+                emptyId: 'diaryEmptyTraining',
+                listId: 'diaryListTraining'
+            },
+            {
+                key: 'reading',
+                label: '讀書紀錄',
+                storageKey: 'myweb.diary.reading.v1',
+                addBtnId: 'diaryAddBtnReading',
+                emptyId: 'diaryEmptyReading',
+                listId: 'diaryListReading'
+            },
+            {
+                key: 'study',
+                label: '學業紀錄',
+                storageKey: 'myweb.diary.study.v1',
+                addBtnId: 'diaryAddBtnStudy',
+                emptyId: 'diaryEmptyStudy',
+                listId: 'diaryListStudy'
+            }
+        ];
+
+        const editorOverlay = document.getElementById('diaryEditorOverlay');
+        const editorTitleEl = document.getElementById('diaryEditorTitle');
+        const editorDateEl = document.getElementById('diaryEditorDate');
+        const editorTitleInput = document.getElementById('diaryTitleInput');
+        const editorSubtitleInput = document.getElementById('diarySubtitleInput');
+        const editorBodyInput = document.getElementById('diaryBodyInput');
+        const editorCloseBtn = document.getElementById('diaryEditorCloseBtn');
+        const editorCancelBtn = document.getElementById('diaryEditorCancelBtn');
+        const editorSaveBtn = document.getElementById('diaryEditorSaveBtn');
+        const mediaAddBtn = document.getElementById('diaryMediaAddBtn');
+        const mediaInput = document.getElementById('diaryMediaInput');
+        const mediaStrip = document.getElementById('diaryMediaStrip');
+
+        const viewerOverlay = document.getElementById('diaryViewerOverlay');
+        const viewerTitle = document.getElementById('diaryViewerTitle');
+        const viewerMeta = document.getElementById('diaryViewerMeta');
+        const viewerSubtitle = document.getElementById('diaryViewerSubtitle');
+        const viewerBody = document.getElementById('diaryViewerBody');
+        const viewerMedia = document.getElementById('diaryViewerMedia');
+        const viewerCloseBtn = document.getElementById('diaryViewerCloseBtn');
+
+        const diaryState = new Map(); // storageKey -> diaries[]
+        let currentModule = null;
+        let draftMedia = [];
+
+        function formatDateYYYYMMDD(d) {
+            const y = d.getFullYear();
+            const m = String(d.getMonth() + 1).padStart(2, '0');
+            const day = String(d.getDate()).padStart(2, '0');
+            return `${y}-${m}-${day}`;
+        }
+
+        function safePreviewText(text, maxLen = 50) {
+            const t = (text || '').replace(/\s+/g, ' ').trim();
+            if (t.length <= maxLen) return t;
+            return t.slice(0, maxLen) + '…';
+        }
+
+        function loadModuleDiaries(module) {
+            try {
+                const raw = localStorage.getItem(module.storageKey);
+                const parsed = raw ? JSON.parse(raw) : [];
+                diaryState.set(module.storageKey, Array.isArray(parsed) ? parsed : []);
+            } catch {
+                diaryState.set(module.storageKey, []);
+            }
+        }
+
+        function saveModuleDiaries(module) {
+            const arr = diaryState.get(module.storageKey) || [];
+            localStorage.setItem(module.storageKey, JSON.stringify(arr));
+        }
+
+        function getModuleEls(module) {
+            return {
+                addBtn: document.getElementById(module.addBtnId),
+                listEl: document.getElementById(module.listId),
+                emptyEl: document.getElementById(module.emptyId)
+            };
+        }
+
+        function renderModuleList(module) {
+            const { listEl, emptyEl } = getModuleEls(module);
+            if (!listEl || !emptyEl) return;
+
+            const diaries = diaryState.get(module.storageKey) || [];
+
+            listEl.innerHTML = '';
+            if (!diaries.length) {
+                emptyEl.style.display = 'block';
+                return;
+            }
+            emptyEl.style.display = 'none';
+
+            diaries
+                .slice()
+                .sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0))
+                .forEach(entry => {
+                    const card = document.createElement('div');
+                    card.className = 'diary-card';
+                    card.tabIndex = 0;
+                    card.setAttribute('role', 'button');
+                    card.setAttribute('aria-label', `開啟日記：${entry.title || '（未命名）'}`);
+
+                    const top = document.createElement('div');
+                    top.className = 'diary-card-top';
+
+                    const title = document.createElement('div');
+                    title.className = 'diary-card-title';
+                    title.textContent = entry.title || '（未命名）';
+
+                    const date = document.createElement('div');
+                    date.className = 'diary-card-date';
+                    date.textContent = entry.date || '';
+
+                    top.appendChild(title);
+                    top.appendChild(date);
+
+                    const subtitle = document.createElement('div');
+                    subtitle.className = 'diary-card-subtitle';
+                    subtitle.textContent = entry.subtitle || '';
+
+                    const preview = document.createElement('div');
+                    preview.className = 'diary-card-preview';
+                    preview.textContent = safePreviewText(entry.body, 50);
+
+                    const media = document.createElement('div');
+                    media.className = 'media-preview';
+                    if (Array.isArray(entry.media) && entry.media.length) {
+                        const first = entry.media[0];
+                        if (first.type && first.type.startsWith('image/') && first.dataUrl) {
+                            const img = document.createElement('img');
+                            img.className = 'media-thumb';
+                            img.src = first.dataUrl;
+                            img.alt = '媒體預覽';
+                            media.appendChild(img);
+                        } else if (first.type && first.type.startsWith('video/') && first.dataUrl) {
+                            const vid = document.createElement('video');
+                            vid.className = 'media-thumb';
+                            vid.src = first.dataUrl;
+                            vid.muted = true;
+                            vid.playsInline = true;
+                            media.appendChild(vid);
+                        }
+                    }
+
+                    card.appendChild(top);
+                    if (entry.subtitle) card.appendChild(subtitle);
+                    card.appendChild(preview);
+                    if (media.childNodes.length) card.appendChild(media);
+
+                    function open() {
+                        openViewer(module, entry.id);
+                    }
+
+                    card.addEventListener('click', open);
+                    card.addEventListener('keydown', (e) => {
+                        if (e.key === 'Enter' || e.key === ' ') {
+                            e.preventDefault();
+                            open();
+                        }
+                    });
+
+                    listEl.appendChild(card);
+                });
+        }
+
+        function openEditor(module) {
+            if (!editorOverlay) return;
+            currentModule = module;
+
+            draftMedia = [];
+            if (mediaStrip) mediaStrip.innerHTML = '';
+            if (editorTitleInput) editorTitleInput.value = '';
+            if (editorSubtitleInput) editorSubtitleInput.value = '';
+            if (editorBodyInput) editorBodyInput.value = '';
+            if (editorDateEl) editorDateEl.textContent = formatDateYYYYMMDD(new Date());
+            if (editorTitleEl) editorTitleEl.textContent = `${module.label}：新增日記`;
+
+            editorOverlay.classList.add('active');
+            editorOverlay.setAttribute('aria-hidden', 'false');
+            editorTitleInput?.focus();
+        }
+
+        function closeEditor() {
+            if (!editorOverlay) return;
+            editorOverlay.classList.remove('active');
+            editorOverlay.setAttribute('aria-hidden', 'true');
+            currentModule = null;
+        }
+
+        function openViewer(module, id) {
+            if (!viewerOverlay) return;
+            const diaries = diaryState.get(module.storageKey) || [];
+            const entry = diaries.find(d => d.id === id);
+            if (!entry) return;
+
+            if (viewerTitle) viewerTitle.textContent = entry.title || '（未命名）';
+            if (viewerMeta) viewerMeta.textContent = `${module.label}｜日期：${entry.date || ''}`;
+            if (viewerSubtitle) viewerSubtitle.textContent = entry.subtitle || '';
+            if (viewerBody) viewerBody.textContent = entry.body || '';
+
+            if (viewerMedia) {
+                viewerMedia.innerHTML = '';
+                if (Array.isArray(entry.media)) {
+                    entry.media.forEach(m => {
+                        if (!m || !m.dataUrl || !m.type) return;
+                        if (m.type.startsWith('image/')) {
+                            const img = document.createElement('img');
+                            img.className = 'media-thumb';
+                            img.src = m.dataUrl;
+                            img.alt = m.name || '圖片';
+                            viewerMedia.appendChild(img);
+                        } else if (m.type.startsWith('video/')) {
+                            const vid = document.createElement('video');
+                            vid.className = 'media-thumb';
+                            vid.src = m.dataUrl;
+                            vid.controls = true;
+                            viewerMedia.appendChild(vid);
+                        }
+                    });
+                }
+            }
+
+            viewerOverlay.classList.add('active');
+            viewerOverlay.setAttribute('aria-hidden', 'false');
+        }
+
+        function closeViewer() {
+            if (!viewerOverlay) return;
+            viewerOverlay.classList.remove('active');
+            viewerOverlay.setAttribute('aria-hidden', 'true');
+        }
+
+        function renderDraftMedia() {
+            if (!mediaStrip) return;
+            mediaStrip.innerHTML = '';
+            if (!draftMedia.length) return;
+            draftMedia.forEach(m => {
+                const chip = document.createElement('div');
+                chip.className = 'media-chip';
+                chip.textContent = m.name || '媒體';
+                mediaStrip.appendChild(chip);
+            });
+        }
+
+        editorCloseBtn?.addEventListener('click', closeEditor);
+        editorCancelBtn?.addEventListener('click', closeEditor);
+        viewerCloseBtn?.addEventListener('click', closeViewer);
+
+        editorOverlay?.addEventListener('click', (e) => {
+            if (e.target === editorOverlay) closeEditor();
+        });
+        viewerOverlay?.addEventListener('click', (e) => {
+            if (e.target === viewerOverlay) closeViewer();
+        });
+
+        mediaAddBtn?.addEventListener('click', () => {
+            mediaInput?.click();
+        });
+
+        mediaInput?.addEventListener('change', async (e) => {
+            const files = Array.from(e.target.files || []);
+            if (!files.length) return;
+
+            const readAsDataUrl = (file) => new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onload = () => resolve(String(reader.result || ''));
+                reader.onerror = () => reject(new Error('read failed'));
+                reader.readAsDataURL(file);
+            });
+
+            for (const file of files) {
+                try {
+                    const dataUrl = await readAsDataUrl(file);
+                    draftMedia.push({ name: file.name, type: file.type, dataUrl });
+                } catch {
+                    // ignore
+                }
+            }
+            renderDraftMedia();
+            mediaInput.value = '';
+        });
+
+        editorSaveBtn?.addEventListener('click', () => {
+            if (!currentModule) return;
+
+            const now = new Date();
+            const date = formatDateYYYYMMDD(now);
+            const title = editorTitleInput?.value?.trim?.() || '';
+            const subtitle = editorSubtitleInput?.value?.trim?.() || '';
+            const body = editorBodyInput?.value || '';
+
+            const entry = {
+                id: `${Date.now()}-${Math.random().toString(16).slice(2)}`,
+                date,
+                title,
+                subtitle,
+                body,
+                media: draftMedia.slice(),
+                createdAt: Date.now()
+            };
+
+            const diaries = diaryState.get(currentModule.storageKey) || [];
+            diaries.push(entry);
+            diaryState.set(currentModule.storageKey, diaries);
+            saveModuleDiaries(currentModule);
+            renderModuleList(currentModule);
+            closeEditor();
+        });
+
+        // 初始化：載入並綁定每個分頁的新增按鈕
+        DIARY_MODULES.forEach(module => {
+            loadModuleDiaries(module);
+            renderModuleList(module);
+
+            const { addBtn } = getModuleEls(module);
+            addBtn?.addEventListener('click', () => openEditor(module));
+        });
     </script>
 </body>
 </html>
