@@ -473,7 +473,7 @@
             <div class="nav-item" data-page="baseball-game">棒球比賽紀錄</div>
             <div class="nav-item" data-page="baseball-training">棒球訓練紀錄</div>
             <div class="nav-item" data-page="reading">讀書紀錄</div>
-            <div class="nav-item" data-page="study">學業紀錄</div>
+            <div class="nav-item" data-page="study">學習記錄</div>
         </div>
     </nav>
 
@@ -540,7 +540,7 @@
                 <p>這裡記錄我閱讀的書籍和心得。</p>
 
                 <div class="diary-header">
-                    <div class="diary-header-title">日記區</div>
+                    <div class="diary-header-title" id="readingDiarySectionTitle">書籍紀錄區</div>
                     <button class="btn-circle" id="diaryAddBtnReading" type="button" aria-label="新增日記">＋</button>
                 </div>
 
@@ -549,19 +549,19 @@
             </div>
         </div>
 
-        <!-- 學業紀錄頁面 -->
+        <!-- 學習記錄頁面 -->
         <div id="study" class="page-content">
             <div class="content-section">
-                <h2>學業紀錄</h2>
-                <p>這裡記錄我的學業相關內容和學習進度。</p>
+                <h2>學習記錄</h2>
+                <p>在這裡建立「科目」，並為每個科目管理學習範圍、目標、方法與計劃、以及一週行事曆任務。</p>
 
                 <div class="diary-header">
-                    <div class="diary-header-title">日記區</div>
-                    <button class="btn-circle" id="diaryAddBtnStudy" type="button" aria-label="新增日記">＋</button>
+                    <div class="diary-header-title">科目區</div>
+                    <button class="btn-circle" id="subjectAddBtn" type="button" aria-label="新增科目">＋</button>
                 </div>
 
-                <div id="diaryEmptyStudy" class="empty-state">目前還沒有日記。點右上角「＋」新增第一篇。</div>
-                <div id="diaryListStudy" class="diary-list" aria-label="日記列表"></div>
+                <div id="subjectEmpty" class="empty-state">目前還沒有科目。點右上角「＋」新增第一個科目。</div>
+                <div id="subjectList" class="diary-list" aria-label="科目列表"></div>
             </div>
         </div>
     </div>
@@ -625,6 +625,102 @@
                 <div id="diaryViewerSubtitle" style="color: rgba(255,255,255,0.8); margin-bottom: 10px;"></div>
                 <div id="diaryViewerBody" style="white-space: pre-wrap; color: rgba(255,255,255,0.78); line-height: 1.8;"></div>
                 <div id="diaryViewerMedia" class="media-preview" style="margin-top: 14px;"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 科目新增/編輯視窗（學習記錄） -->
+    <div id="subjectEditorOverlay" class="overlay" aria-hidden="true">
+        <div class="modal" role="dialog" aria-modal="true" aria-label="新增科目">
+            <div class="modal-header">
+                <div>
+                    <div class="modal-title" id="subjectEditorTitle">新增科目</div>
+                    <div class="modal-sub">建立你的專屬科目頁面</div>
+                </div>
+                <button class="btn secondary" id="subjectEditorCloseBtn" type="button">關閉</button>
+            </div>
+
+            <div class="form-grid">
+                <div class="field">
+                    <label for="subjectNameInput">科目名稱</label>
+                    <input id="subjectNameInput" class="input" type="text" placeholder="輸入科目名稱" maxlength="60" />
+                </div>
+                <div class="field">
+                    <label for="subjectDescInput">描述</label>
+                    <textarea id="subjectDescInput" class="textarea" placeholder="輸入科目描述（可簡短說明內容/方向）" style="min-height: 120px;"></textarea>
+                </div>
+            </div>
+
+            <div class="btn-row">
+                <button class="btn secondary" id="subjectEditorCancelBtn" type="button">取消</button>
+                <button class="btn" id="subjectEditorSaveBtn" type="button">儲存科目</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 科目專屬頁面（學習記錄） -->
+    <div id="subjectPageOverlay" class="overlay" aria-hidden="true">
+        <div class="modal" role="dialog" aria-modal="true" aria-label="科目專屬頁面">
+            <div class="modal-header">
+                <div>
+                    <div class="modal-title" id="subjectPageTitle">科目</div>
+                    <div class="modal-sub" id="subjectPageDesc"></div>
+                </div>
+                <button class="btn secondary" id="subjectPageCloseBtn" type="button">關閉</button>
+            </div>
+
+            <div class="content-section" style="background: rgba(255,255,255,0.04);">
+                <h2 style="margin-bottom: 10px;">學習範圍</h2>
+                <div class="input" id="subjectScopeView" style="min-height: 60px; color: rgba(255,255,255,0.85);"></div>
+                <div class="btn-row" style="justify-content: flex-start;">
+                    <button class="btn secondary" id="subjectScopeEditBtn" type="button">編輯</button>
+                </div>
+            </div>
+
+            <div class="content-section" style="background: rgba(255,255,255,0.04);">
+                <h2 style="margin-bottom: 10px;">學習目標</h2>
+                <div class="input" id="subjectGoalView" style="min-height: 60px; color: rgba(255,255,255,0.85);"></div>
+                <div class="btn-row" style="justify-content: flex-start;">
+                    <button class="btn secondary" id="subjectGoalEditBtn" type="button">編輯</button>
+                </div>
+            </div>
+
+            <div class="content-section" style="background: rgba(255,255,255,0.04);">
+                <h2 style="margin-bottom: 10px;">學習方法與計劃</h2>
+                <div class="input" id="subjectPlanView" style="min-height: 80px; color: rgba(255,255,255,0.85);"></div>
+                <div class="btn-row" style="justify-content: flex-start;">
+                    <button class="btn secondary" id="subjectPlanEditBtn" type="button">編輯</button>
+                </div>
+            </div>
+
+            <div class="content-section" style="background: rgba(255,255,255,0.04);">
+                <h2 style="margin-bottom: 10px;">行事曆（一週）</h2>
+                <div id="weekCalendar" class="diary-list" style="grid-template-columns: repeat(2, minmax(0, 1fr));"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 行事曆編輯視窗 -->
+    <div id="calendarEditorOverlay" class="overlay" aria-hidden="true">
+        <div class="modal" role="dialog" aria-modal="true" aria-label="編輯當日任務">
+            <div class="modal-header">
+                <div>
+                    <div class="modal-title" id="calendarEditorTitle">編輯</div>
+                    <div class="modal-sub" id="calendarEditorSub"></div>
+                </div>
+                <button class="btn secondary" id="calendarEditorCloseBtn" type="button">關閉</button>
+            </div>
+
+            <div class="form-grid">
+                <div class="field">
+                    <label for="calendarEditorText">當日任務</label>
+                    <textarea id="calendarEditorText" class="textarea" placeholder="輸入要顯示在該日的任務…" style="min-height: 180px;"></textarea>
+                </div>
+            </div>
+
+            <div class="btn-row">
+                <button class="btn secondary" id="calendarEditorCancelBtn" type="button">取消</button>
+                <button class="btn" id="calendarEditorSaveBtn" type="button">儲存</button>
             </div>
         </div>
     </div>
@@ -696,15 +792,16 @@
                 storageKey: 'myweb.diary.reading.v1',
                 addBtnId: 'diaryAddBtnReading',
                 emptyId: 'diaryEmptyReading',
-                listId: 'diaryListReading'
-            },
-            {
-                key: 'study',
-                label: '學業紀錄',
-                storageKey: 'myweb.diary.study.v1',
-                addBtnId: 'diaryAddBtnStudy',
-                emptyId: 'diaryEmptyStudy',
-                listId: 'diaryListStudy'
+                listId: 'diaryListReading',
+                ui: {
+                    sectionTitle: '書籍紀錄區',
+                    addAriaLabel: '新增書籍',
+                    emptyText: '目前還沒有書籍紀錄。點右上角「＋」新增第一本。',
+                    editorTitle: '新增書籍',
+                    titleLabel: '書籍',
+                    titlePlaceholder: '輸入書籍名稱',
+                    bodyLabel: '心得或摘要紀錄'
+                }
             }
         ];
 
@@ -777,6 +874,7 @@
 
             listEl.innerHTML = '';
             if (!diaries.length) {
+                emptyEl.textContent = module.ui?.emptyText || emptyEl.textContent;
                 emptyEl.style.display = 'block';
                 return;
             }
@@ -865,7 +963,12 @@
             if (editorSubtitleInput) editorSubtitleInput.value = '';
             if (editorBodyInput) editorBodyInput.value = '';
             if (editorDateEl) editorDateEl.textContent = formatDateYYYYMMDD(new Date());
-            if (editorTitleEl) editorTitleEl.textContent = `${module.label}：新增日記`;
+            if (editorTitleEl) editorTitleEl.textContent = module.ui?.editorTitle ? `${module.label}：${module.ui.editorTitle}` : `${module.label}：新增日記`;
+            if (editorTitleInput) editorTitleInput.placeholder = module.ui?.titlePlaceholder || '輸入標題';
+            const titleLabel = document.querySelector('label[for="diaryTitleInput"]');
+            if (titleLabel) titleLabel.textContent = module.ui?.titleLabel || '標題';
+            const bodyLabel = document.querySelector('label[for="diaryBodyInput"]');
+            if (bodyLabel) bodyLabel.textContent = module.ui?.bodyLabel || '正文';
 
             editorOverlay.classList.add('active');
             editorOverlay.setAttribute('aria-hidden', 'false');
@@ -1005,8 +1108,287 @@
             renderModuleList(module);
 
             const { addBtn } = getModuleEls(module);
-            addBtn?.addEventListener('click', () => openEditor(module));
+            if (addBtn) {
+                addBtn.setAttribute('aria-label', module.ui?.addAriaLabel || '新增日記');
+                addBtn?.addEventListener('click', () => openEditor(module));
+            }
+
+            if (module.key === 'reading') {
+                const sectionTitleEl = document.getElementById('readingDiarySectionTitle');
+                if (sectionTitleEl && module.ui?.sectionTitle) sectionTitleEl.textContent = module.ui.sectionTitle;
+                const emptyEl = document.getElementById(module.emptyId);
+                if (emptyEl && module.ui?.emptyText) emptyEl.textContent = module.ui.emptyText;
+            }
         });
+
+        // ===== 學習記錄：科目功能（取代原本的學業日記）=====
+        const SUBJECT_STORAGE_KEY = 'myweb.subjects.v1';
+        const subjectAddBtn = document.getElementById('subjectAddBtn');
+        const subjectEmpty = document.getElementById('subjectEmpty');
+        const subjectList = document.getElementById('subjectList');
+
+        const subjectEditorOverlay = document.getElementById('subjectEditorOverlay');
+        const subjectEditorCloseBtn = document.getElementById('subjectEditorCloseBtn');
+        const subjectEditorCancelBtn = document.getElementById('subjectEditorCancelBtn');
+        const subjectEditorSaveBtn = document.getElementById('subjectEditorSaveBtn');
+        const subjectNameInput = document.getElementById('subjectNameInput');
+        const subjectDescInput = document.getElementById('subjectDescInput');
+
+        const subjectPageOverlay = document.getElementById('subjectPageOverlay');
+        const subjectPageCloseBtn = document.getElementById('subjectPageCloseBtn');
+        const subjectPageTitle = document.getElementById('subjectPageTitle');
+        const subjectPageDesc = document.getElementById('subjectPageDesc');
+        const subjectScopeView = document.getElementById('subjectScopeView');
+        const subjectGoalView = document.getElementById('subjectGoalView');
+        const subjectPlanView = document.getElementById('subjectPlanView');
+        const subjectScopeEditBtn = document.getElementById('subjectScopeEditBtn');
+        const subjectGoalEditBtn = document.getElementById('subjectGoalEditBtn');
+        const subjectPlanEditBtn = document.getElementById('subjectPlanEditBtn');
+        const weekCalendar = document.getElementById('weekCalendar');
+
+        const calendarEditorOverlay = document.getElementById('calendarEditorOverlay');
+        const calendarEditorCloseBtn = document.getElementById('calendarEditorCloseBtn');
+        const calendarEditorCancelBtn = document.getElementById('calendarEditorCancelBtn');
+        const calendarEditorSaveBtn = document.getElementById('calendarEditorSaveBtn');
+        const calendarEditorTitle = document.getElementById('calendarEditorTitle');
+        const calendarEditorSub = document.getElementById('calendarEditorSub');
+        const calendarEditorText = document.getElementById('calendarEditorText');
+
+        let subjects = [];
+        let currentSubjectId = null;
+        let calendarEditingKey = null; // YYYY-MM-DD
+
+        function loadSubjects() {
+            try {
+                const raw = localStorage.getItem(SUBJECT_STORAGE_KEY);
+                const parsed = raw ? JSON.parse(raw) : [];
+                subjects = Array.isArray(parsed) ? parsed : [];
+            } catch {
+                subjects = [];
+            }
+        }
+
+        function saveSubjects() {
+            localStorage.setItem(SUBJECT_STORAGE_KEY, JSON.stringify(subjects));
+        }
+
+        function renderSubjects() {
+            if (!subjectList || !subjectEmpty) return;
+            subjectList.innerHTML = '';
+            if (!subjects.length) {
+                subjectEmpty.style.display = 'block';
+                return;
+            }
+            subjectEmpty.style.display = 'none';
+
+            subjects.slice().sort((a,b)=> (b.createdAt||0)-(a.createdAt||0)).forEach(s => {
+                const card = document.createElement('div');
+                card.className = 'diary-card';
+                card.tabIndex = 0;
+                card.setAttribute('role','button');
+                const top = document.createElement('div');
+                top.className = 'diary-card-top';
+
+                const title = document.createElement('div');
+                title.className = 'diary-card-title';
+                title.textContent = s.name || '（未命名科目）';
+
+                const date = document.createElement('div');
+                date.className = 'diary-card-date';
+                date.textContent = s.updatedAt ? formatDateYYYYMMDD(new Date(s.updatedAt)) : '';
+
+                top.appendChild(title);
+                top.appendChild(date);
+
+                const desc = document.createElement('div');
+                desc.className = 'diary-card-preview';
+                desc.textContent = safePreviewText(s.description || '', 50);
+
+                card.appendChild(top);
+                card.appendChild(desc);
+
+                const open = () => openSubjectPage(s.id);
+                card.addEventListener('click', open);
+                card.addEventListener('keydown', (e)=>{
+                    if (e.key==='Enter' || e.key===' ') { e.preventDefault(); open(); }
+                });
+
+                subjectList.appendChild(card);
+            });
+        }
+
+        function openSubjectEditor() {
+            if (!subjectEditorOverlay) return;
+            subjectNameInput.value = '';
+            subjectDescInput.value = '';
+            subjectEditorOverlay.classList.add('active');
+            subjectEditorOverlay.setAttribute('aria-hidden','false');
+            subjectNameInput.focus();
+        }
+
+        function closeSubjectEditor() {
+            if (!subjectEditorOverlay) return;
+            subjectEditorOverlay.classList.remove('active');
+            subjectEditorOverlay.setAttribute('aria-hidden','true');
+        }
+
+        function openSubjectPage(subjectId) {
+            const s = subjects.find(x=>x.id===subjectId);
+            if (!s || !subjectPageOverlay) return;
+            currentSubjectId = subjectId;
+
+            subjectPageTitle.textContent = s.name || '科目';
+            subjectPageDesc.textContent = s.description || '';
+            subjectScopeView.textContent = s.scope || '';
+            subjectGoalView.textContent = s.goal || '';
+            subjectPlanView.textContent = s.plan || '';
+
+            renderWeekCalendar(s);
+
+            subjectPageOverlay.classList.add('active');
+            subjectPageOverlay.setAttribute('aria-hidden','false');
+        }
+
+        function closeSubjectPage() {
+            if (!subjectPageOverlay) return;
+            subjectPageOverlay.classList.remove('active');
+            subjectPageOverlay.setAttribute('aria-hidden','true');
+            currentSubjectId = null;
+        }
+
+        function editLongText(fieldKey, title) {
+            const s = subjects.find(x=>x.id===currentSubjectId);
+            if (!s) return;
+            calendarEditingKey = null;
+            if (!calendarEditorOverlay) return;
+            calendarEditorTitle.textContent = title || '編輯';
+            calendarEditorSub.textContent = s.name || '';
+            calendarEditorText.value = s[fieldKey] || '';
+            calendarEditorOverlay.classList.add('active');
+            calendarEditorOverlay.setAttribute('aria-hidden','false');
+            calendarEditorText.focus();
+            calendarEditorOverlay.dataset.mode = `field:${fieldKey}`;
+        }
+
+        function renderWeekCalendar(subject) {
+            if (!weekCalendar) return;
+            weekCalendar.innerHTML = '';
+
+            const now = new Date();
+            const start = new Date(now);
+            start.setDate(now.getDate() - now.getDay()); // Sunday start
+
+            const weekDays = ['日','一','二','三','四','五','六'];
+
+            for (let i=0;i<7;i++) {
+                const d = new Date(start);
+                d.setDate(start.getDate()+i);
+                const key = formatDateYYYYMMDD(d);
+                const box = document.createElement('div');
+                box.className = 'diary-card';
+
+                const top = document.createElement('div');
+                top.className = 'diary-card-top';
+
+                const title = document.createElement('div');
+                title.className = 'diary-card-title';
+                title.textContent = `${key}（${weekDays[d.getDay()]}）`;
+
+                const btn = document.createElement('button');
+                btn.className = 'btn secondary';
+                btn.type = 'button';
+                btn.textContent = '編輯';
+                btn.addEventListener('click', () => {
+                    calendarEditingKey = key;
+                    calendarEditorTitle.textContent = '編輯';
+                    calendarEditorSub.textContent = `${subject.name || ''}｜${key}`;
+                    calendarEditorText.value = (subject.calendar?.[key] || '');
+                    calendarEditorOverlay.classList.add('active');
+                    calendarEditorOverlay.setAttribute('aria-hidden','false');
+                    calendarEditorOverlay.dataset.mode = 'calendar';
+                    calendarEditorText.focus();
+                });
+
+                top.appendChild(title);
+                top.appendChild(btn);
+
+                const body = document.createElement('div');
+                body.className = 'diary-card-preview';
+                body.textContent = (subject.calendar?.[key] || '').trim() ? subject.calendar[key] : '（尚無任務）';
+
+                box.appendChild(top);
+                box.appendChild(body);
+                weekCalendar.appendChild(box);
+            }
+        }
+
+        function closeCalendarEditor() {
+            if (!calendarEditorOverlay) return;
+            calendarEditorOverlay.classList.remove('active');
+            calendarEditorOverlay.setAttribute('aria-hidden','true');
+        }
+
+        subjectAddBtn?.addEventListener('click', openSubjectEditor);
+        subjectEditorCloseBtn?.addEventListener('click', closeSubjectEditor);
+        subjectEditorCancelBtn?.addEventListener('click', closeSubjectEditor);
+        subjectEditorOverlay?.addEventListener('click', (e)=>{ if (e.target===subjectEditorOverlay) closeSubjectEditor(); });
+
+        subjectEditorSaveBtn?.addEventListener('click', () => {
+            const name = subjectNameInput.value.trim();
+            const description = subjectDescInput.value.trim();
+            const s = {
+                id: `${Date.now()}-${Math.random().toString(16).slice(2)}`,
+                name,
+                description,
+                scope: '',
+                goal: '',
+                plan: '',
+                calendar: {},
+                createdAt: Date.now(),
+                updatedAt: Date.now()
+            };
+            subjects.push(s);
+            saveSubjects();
+            renderSubjects();
+            closeSubjectEditor();
+        });
+
+        subjectPageCloseBtn?.addEventListener('click', closeSubjectPage);
+        subjectPageOverlay?.addEventListener('click', (e)=>{ if (e.target===subjectPageOverlay) closeSubjectPage(); });
+
+        subjectScopeEditBtn?.addEventListener('click', ()=> editLongText('scope','學習範圍（編輯）'));
+        subjectGoalEditBtn?.addEventListener('click', ()=> editLongText('goal','學習目標（編輯）'));
+        subjectPlanEditBtn?.addEventListener('click', ()=> editLongText('plan','學習方法與計劃（編輯）'));
+
+        calendarEditorCloseBtn?.addEventListener('click', closeCalendarEditor);
+        calendarEditorCancelBtn?.addEventListener('click', closeCalendarEditor);
+        calendarEditorOverlay?.addEventListener('click', (e)=>{ if (e.target===calendarEditorOverlay) closeCalendarEditor(); });
+
+        calendarEditorSaveBtn?.addEventListener('click', () => {
+            const s = subjects.find(x=>x.id===currentSubjectId);
+            if (!s) return;
+
+            const mode = calendarEditorOverlay.dataset.mode || '';
+            if (mode.startsWith('field:')) {
+                const fieldKey = mode.replace('field:','');
+                s[fieldKey] = calendarEditorText.value || '';
+            } else if (mode === 'calendar' && calendarEditingKey) {
+                s.calendar = s.calendar || {};
+                s.calendar[calendarEditingKey] = calendarEditorText.value || '';
+            }
+
+            s.updatedAt = Date.now();
+            saveSubjects();
+            renderSubjects();
+            if (subjectPageOverlay?.classList.contains('active')) {
+                openSubjectPage(s.id); // refresh view + calendar
+            }
+            closeCalendarEditor();
+        });
+
+        // 初始化科目
+        loadSubjects();
+        renderSubjects();
     </script>
 </body>
 </html>
