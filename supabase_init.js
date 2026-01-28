@@ -4,7 +4,7 @@ const SUPABASE_URL = 'https://rkdmecqlxtovdngcxaaj.supabase.co';
 const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJrZG1lY3FseHRvdmRuZ2N4YWFqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njk0MjAzMzQsImV4cCI6MjA4NDk5NjMzNH0.6GN7DQvob-sJs4nQaM6pf0L8F_g3qhcV7afNDmDbqUQ';
 const USER_ID = 'default_user'; // 固定 User ID，方便跨裝置存取同一份資料
 
-// 檢查 Supabase 是否已載入
+// 檢查 Supabase 是否已載入d
 if (typeof supabase === 'undefined') {
     console.error('Supabase SDK not loaded!');
 }
