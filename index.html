@@ -27,6 +27,18 @@
             --modal-text: #fff;
             --surface-subtle: rgba(255, 255, 255, 0.03);
             --shadow: rgba(255, 255, 255, 0.05);
+            --study-color: #4caf50;
+            --game-color: #2196f3;
+            --training-color: #ff9800;
+            --danger: #ff6b6b;
+            --danger-bg: rgba(255, 107, 107, 0.1);
+            --consumption-color: #e040fb;
+            --team-0: #FF6B6B;
+            --team-1: #4ECDC4;
+            --team-2: #FFE66D;
+            --team-3: #6B5B95;
+            --team-4: #88D8B0;
+            --team-5: #FF8C42;
         }
 
         .theme-light {
@@ -43,8 +55,20 @@
             --input-bg: rgba(0, 0, 0, 0.03);
             --secondary-text: #444;
             --modal-text: #000;
-            --surface-subtle: rgba(0, 0, 0, 0.02);
+            --surface-subtle: rgba(0, 0, 0, 0.05);
             --shadow: rgba(0, 0, 0, 0.1);
+            --study-color: #2e7d32;
+            --game-color: #1976d2;
+            --training-color: #f57c00;
+            --danger: #d32f2f;
+            --danger-bg: rgba(211, 47, 47, 0.05);
+            --consumption-color: #7b1fa2;
+            --team-0: #e57373;
+            --team-1: #4db6ac;
+            --team-2: #fdd835;
+            --team-3: #7986cb;
+            --team-4: #81c784;
+            --team-5: #ff8a65;
         }
 
         body {
@@ -168,7 +192,7 @@
         }
 
         .auth-error {
-            color: #ff6b6b;
+            color: var(--danger);
             font-size: 13px;
             margin-top: 12px;
             min-height: 18px;
@@ -226,6 +250,7 @@
         .nav-left {
             display: flex;
             align-items: center;
+            flex-wrap: wrap;
         }
         
         .nav-right {
@@ -349,7 +374,7 @@
         
         .diary-card.is-today {
             border-color: var(--accent);
-            box-shadow: 0 0 0 2px rgba(255, 213, 79, 0.35) inset, 0 0 12px rgba(255, 213, 79, 0.2);
+            box-shadow: 0 0 0 2px var(--shadow) inset, 0 0 12px var(--shadow);
         }
 
         .diary-card-date {
@@ -398,9 +423,9 @@
             filter: brightness(1.1);
         }
 
-        .calendar-event.study { background-color: #4caf50; }
-        .calendar-event.game { background-color: #2196f3; }
-        .calendar-event.training { background-color: #ff9800; }
+        .calendar-event.study { background-color: var(--study-color); }
+        .calendar-event.game { background-color: var(--game-color); }
+        .calendar-event.training { background-color: var(--training-color); }
 
         .calendar-day.full-view {
             display: flex;
@@ -466,7 +491,7 @@
             border: 1px solid var(--border);
             background: var(--modal-bg);
             backdrop-filter: blur(10px);
-            box-shadow: 0 18px 60px rgba(0, 0, 0, 0.55);
+            box-shadow: 0 18px 60px var(--shadow);
             padding: 18px;
         }
 
@@ -723,18 +748,18 @@
 
         .calendar-day.has-record {
             background-color: var(--accent);
-            color: #000;
+            color: var(--bg);
             font-weight: 600;
             border-color: var(--border-strong);
         }
 
         /* 球隊顏色標記 */
-        .calendar-day.team-color-0 { background-color: #FF6B6B; }
-        .calendar-day.team-color-1 { background-color: #4ECDC4; }
-        .calendar-day.team-color-2 { background-color: #FFE66D; }
-        .calendar-day.team-color-3 { background-color: #6B5B95; }
-        .calendar-day.team-color-4 { background-color: #88D8B0; }
-        .calendar-day.team-color-5 { background-color: #FF8C42; }
+        .calendar-day.team-color-0 { background-color: var(--team-0); color: #fff; }
+        .calendar-day.team-color-1 { background-color: var(--team-1); color: #000; }
+        .calendar-day.team-color-2 { background-color: var(--team-2); color: #000; }
+        .calendar-day.team-color-3 { background-color: var(--team-3); color: #fff; }
+        .calendar-day.team-color-4 { background-color: var(--team-4); color: #000; }
+        .calendar-day.team-color-5 { background-color: var(--team-5); color: #000; }
 
         .calendar-day.empty {
             background-color: transparent;
@@ -822,7 +847,7 @@
 
         .team-item.active {
             background-color: var(--accent);
-            color: #000;
+            color: var(--bg);
             border-color: var(--border-strong);
             font-weight: 600;
         }
@@ -872,13 +897,8 @@
         }
 
         select.input option {
-            background-color: #1a1a1a;
-            color: #fff;
-        }
-
-        .theme-light select.input option {
-            background-color: #fff;
-            color: #000;
+            background-color: var(--modal-bg);
+            color: var(--text);
         }
 
         select.input::-ms-expand {
@@ -931,8 +951,8 @@
         }
 
         .task-checkbox.checked {
-            background: #4caf50;
-            border-color: #4caf50;
+            background: var(--study-color);
+            border-color: var(--study-color);
         }
 
         .task-checkbox.checked::after {
@@ -989,7 +1009,7 @@
             background: var(--modal-bg);
             border: 1px solid var(--border);
             border-radius: 8px;
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+            box-shadow: 0 8px 24px var(--shadow);
             z-index: 9999;
             display: none;
             flex-direction: column;
@@ -1024,11 +1044,11 @@
         }
 
         .menu-item.delete {
-            color: #ff6b6b;
+            color: var(--danger);
         }
 
         .menu-item.delete:hover {
-            background: rgba(255, 107, 107, 0.1);
+            background: var(--danger-bg);
         }
 
         .team-content {
@@ -1045,7 +1065,7 @@
 
             .nav-left {
                 display: grid;
-                grid-template-columns: repeat(3, 1fr);
+                grid-template-columns: repeat(2, 1fr);
                 width: 100%;
                 gap: 5px;
             }
@@ -1067,7 +1087,7 @@
 
             .nav-item.active {
                 background: var(--accent);
-                color: #000;
+                color: var(--bg);
                 border-color: var(--accent);
                 opacity: 1;
             }
@@ -1185,6 +1205,7 @@
                 <div class="nav-item" data-page="baseball-training">棒球訓練紀錄</div>
                 <div class="nav-item" data-page="reading">讀書紀錄</div>
                 <div class="nav-item" data-page="study">學習記錄</div>
+                <div class="nav-item" data-page="consumption">消費紀錄</div>
             </div>
             <div class="nav-right">
                 <button class="btn secondary" id="enableBioBtn" type="button" style="display: none; margin-right: 10px; font-size: 12px; padding: 6px 12px;">啟用生物辨識</button>
@@ -1202,6 +1223,12 @@
             <div class="content-section">
                 <h2>歡迎來到我的個人網頁</h2>
                 <p>這是一個展示個人資訊和個人紀錄的平台。我會在這裡記錄下一切，例如球場、讀書等各種方面的事情，可能是日記，可能是認真記錄課題。</p>
+                
+                <div style="margin-top: 20px; display: flex; gap: 10px; flex-wrap: wrap;">
+                    <button class="btn" onclick="location.hash='#consumption'; activatePage('consumption'); setTimeout(() => openConsumptionEditor(), 100);" style="background: var(--consumption-color); border-color: var(--consumption-color); color: white;">＋ 新增消費</button>
+                    <button class="btn" onclick="location.hash='#baseball-game'; activatePage('baseball-game');" style="background: var(--game-color); border-color: var(--game-color); color: white;">前往比賽紀錄</button>
+                    <button class="btn" onclick="location.hash='#baseball-training'; activatePage('baseball-training');" style="background: var(--training-color); border-color: var(--training-color); color: white;">前往訓練紀錄</button>
+                </div>
             </div>
 
             <!-- 總日曆區域 -->
@@ -1236,7 +1263,7 @@
                 <div class="team-sidebar">
                     <div class="team-header">
                         <h3>球隊管理</h3>
-                        <button class="btn-circle" id="teamAddBtn" type="button" aria-label="新增球隊">＋</button>
+                        <button class="btn" id="teamAddBtn" type="button" style="padding: 4px 10px; font-size: 13px;">＋ 新增球隊</button>
                     </div>
                     <div class="team-list" id="teamList">
                         <!-- 球隊列表將在這裡動態生成 -->
@@ -1264,7 +1291,7 @@
 
                 <div class="diary-header">
                     <div class="diary-header-title">日記區</div>
-                    <button class="btn-circle" id="diaryAddBtn" type="button" aria-label="新增日記">＋</button>
+                    <button class="btn" id="diaryAddBtn" type="button" style="padding: 6px 12px; font-size: 14px;">＋ 新增日記</button>
                 </div>
 
                 <div id="diaryEmpty" class="empty-state">目前還沒有日記。點右上角「＋」新增第一篇。</div>
@@ -1281,7 +1308,7 @@
                 <div class="team-sidebar">
                     <div class="team-header">
                         <h3 id="trainingTypeHeader">紀錄類型管理</h3>
-                        <button class="btn-circle" id="teamAddBtnTraining" type="button" aria-label="新增紀錄類型">＋</button>
+                        <button class="btn" id="teamAddBtnTraining" type="button" style="padding: 4px 10px; font-size: 13px;">＋ 新增類型</button>
                     </div>
                     <div class="team-list" id="teamListTraining">
                         <!-- 紀錄類型列表將在這裡動態生成 -->
@@ -1309,7 +1336,7 @@
 
                         <div class="diary-header">
                             <div class="diary-header-title">日記區</div>
-                            <button class="btn-circle" id="diaryAddBtnTraining" type="button" aria-label="新增日記">＋</button>
+                            <button class="btn" id="diaryAddBtnTraining" type="button" style="padding: 6px 12px; font-size: 14px;">＋ 新增日記</button>
                         </div>
 
                         <div id="diaryEmptyTraining" class="empty-state">目前還沒有日記。點右上角「＋」新增第一篇。</div>
@@ -1327,7 +1354,7 @@
 
                 <div class="diary-header">
                     <div class="diary-header-title">書籍紀錄區</div>
-                    <button class="btn-circle" id="diaryAddBtnReading" type="button" aria-label="新增日記">＋</button>
+                    <button class="btn" id="diaryAddBtnReading" type="button" style="padding: 6px 12px; font-size: 14px;">＋ 新增書籍</button>
                 </div>
 
                 <div id="diaryEmptyReading" class="empty-state">目前還沒有書籍紀錄。點右上角「＋」新增第一本。</div>
@@ -1343,7 +1370,7 @@
 
                 <div class="diary-header">
                     <div class="diary-header-title">科目區</div>
-                    <button class="btn-circle" id="subjectAddBtn" type="button" aria-label="新增科目">＋</button>
+                    <button class="btn" id="subjectAddBtn" type="button" style="padding: 6px 12px; font-size: 14px;">＋ 新增科目</button>
                 </div>
 
                 <div id="subjectEmpty" class="empty-state">目前還沒有科目。點右上角「＋」新增第一個科目。</div>
@@ -1418,7 +1445,7 @@
                 </div>
                 <div class="btn-row" style="margin-top:0;">
                     <button class="btn secondary" id="diaryViewerEditBtn" type="button">編輯</button>
-                    <button class="btn secondary" id="diaryViewerDeleteBtn" type="button" style="color: #ff6b6b; border-color: var(--border-strong);">刪除日記</button>
+                    <button class="btn secondary" id="diaryViewerDeleteBtn" type="button" style="color: var(--danger); border-color: var(--border-strong);">刪除日記</button>
                     <button class="btn secondary" id="diaryViewerCloseBtn" type="button">關閉</button>
                 </div>
             </div>
@@ -1469,7 +1496,7 @@
                     <div class="modal-sub" id="subjectPageDesc"></div>
                 </div>
                 <div class="btn-row" style="margin-top:0;">
-                    <button class="btn secondary" id="subjectDeleteBtn" type="button" style="color: #ff6b6b; border-color: rgba(255, 107, 107, 0.3);">刪除此科目</button>
+                    <button class="btn secondary" id="subjectDeleteBtn" type="button" style="color: var(--danger); border-color: var(--danger-bg);">刪除此科目</button>
                     <button class="btn secondary" id="subjectPageCloseBtn" type="button">關閉</button>
                 </div>
             </div>
@@ -1510,6 +1537,51 @@
                     </div>
                 </div>
                 <div id="monthlyCalendarStudy" class="monthly-calendar"></div>
+            </div>
+        </div>
+
+        <!-- 消費紀錄頁面 -->
+        <div id="consumption" class="page-content">
+            <div class="content-section">
+                <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:15px; flex-wrap: wrap; gap: 10px;">
+                    <div>
+                        <h2>消費紀錄</h2>
+                        <p>管理你的日常支出與預算。</p>
+                    </div>
+                    <button class="btn" id="consumptionAddBtn" type="button" style="white-space: nowrap;">＋ 新增消費</button>
+                </div>
+
+                <div class="stats-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 20px;">
+                    <div class="content-section" style="background: var(--surface); margin-bottom: 0;">
+                        <div style="font-size: 14px; color: var(--secondary-text);">本月總支出</div>
+                        <div id="monthTotalAmount" style="font-size: 24px; font-weight: bold; color: var(--accent); margin-top: 5px;">$0</div>
+                    </div>
+                    <div class="content-section" style="background: var(--surface); margin-bottom: 0;">
+                        <div style="font-size: 14px; color: var(--secondary-text);">今日支出</div>
+                        <div id="todayTotalAmount" style="font-size: 24px; font-weight: bold; color: var(--accent); margin-top: 5px;">$0</div>
+                    </div>
+                </div>
+
+                <div class="consumption-layout" style="display: flex; gap: 20px; flex-wrap: wrap;">
+                    <div style="flex: 2; min-width: 300px;">
+                        <div class="diary-header" style="margin-bottom: 15px;">
+                            <div class="diary-header-title">近期消費</div>
+                        </div>
+                        <div id="consumptionList" class="consumption-list">
+                            <!-- 消費項目將在此動態生成 -->
+                            <div class="empty-state" style="text-align: center; padding: 40px;">尚無紀錄</div>
+                        </div>
+                    </div>
+                    <div style="flex: 1; min-width: 300px;">
+                        <div class="diary-header" style="margin-bottom: 15px;">
+                            <div class="diary-header-title">分類統計</div>
+                        </div>
+                        <div id="consumptionStats" class="content-section" style="background: var(--surface); min-height: 200px; display: flex; flex-direction: column; gap: 10px;">
+                            <!-- 分類統計圓餅圖或列表 -->
+                            <div class="empty-state" style="text-align: center; padding: 20px;">尚無資料</div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -1578,11 +1650,11 @@
                 <div class="modal-title" id="confirmTitle">確認</div>
             </div>
             <div class="content-section" style="background: transparent; padding: 0; border: none; margin-bottom: 20px;">
-                <p id="confirmMessage" style="color: #fff; font-size: 16px;">是否確定執行此操作？</p>
+                <p id="confirmMessage" style="color: var(--modal-text); font-size: 16px;">是否確定執行此操作？</p>
             </div>
             <div class="btn-row">
                 <button class="btn secondary" id="confirmNoBtn" type="button">取消</button>
-                <button class="btn" id="confirmYesBtn" type="button" style="background: rgba(255, 50, 50, 0.2); border-color: rgba(255, 50, 50, 0.4);">確定</button>
+                <button class="btn" id="confirmYesBtn" type="button" style="background: var(--danger-bg); border-color: var(--danger); color: var(--danger);">確定</button>
             </div>
         </div>
     </div>
@@ -1614,9 +1686,63 @@
             </div>
 
             <div class="btn-row">
-                <button class="btn secondary" id="teamEditorDeleteBtn" type="button" style="color: #ff6b6b; border-color: rgba(255, 107, 107, 0.3); display: none;">刪除球隊</button>
+                <button class="btn secondary" id="teamEditorDeleteBtn" type="button" style="color: var(--danger); border-color: var(--danger-bg); display: none;">刪除球隊</button>
                 <button class="btn secondary" id="teamEditorCancelBtn" type="button">取消</button>
                 <button class="btn" id="teamEditorSaveBtn" type="button">儲存球隊</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 消費紀錄編輯視窗 -->
+    <div id="consumptionEditorOverlay" class="overlay" aria-hidden="true">
+        <div class="modal" role="dialog" aria-modal="true" aria-label="新增消費">
+            <div class="modal-header">
+                <div>
+                    <div class="modal-title" id="consumptionEditorTitle">新增消費</div>
+                    <div class="modal-sub">記錄每一筆支出</div>
+                </div>
+                <button class="btn secondary" id="consumptionEditorCloseBtn" type="button">關閉</button>
+            </div>
+
+            <div class="form-grid">
+                <div class="field">
+                    <label for="consumptionAmountInput">金額</label>
+                    <input id="consumptionAmountInput" class="input" type="number" placeholder="請輸入金額" required />
+                </div>
+                <div class="field">
+                    <label for="consumptionItemInput">項目</label>
+                    <input id="consumptionItemInput" class="input" type="text" placeholder="例如：午餐、交通、電影..." required />
+                </div>
+                <div class="field">
+                    <label for="consumptionCategorySelect">類別</label>
+                    <select id="consumptionCategorySelect" class="input">
+                        <option value="飲食">飲食</option>
+                        <option value="交通">交通</option>
+                        <option value="娛樂">娛樂</option>
+                        <option value="生活">生活</option>
+                        <option value="購物">購物</option>
+                        <option value="其他">其他</option>
+                    </select>
+                </div>
+                <div class="field">
+                    <label for="consumptionPaymentSelect">付款方式</label>
+                    <select id="consumptionPaymentSelect" class="input">
+                        <option value="現金">現金</option>
+                        <option value="信用卡">信用卡</option>
+                        <option value="行動支付">行動支付</option>
+                        <option value="轉帳">轉帳</option>
+                    </select>
+                </div>
+                <div class="field">
+                    <label for="consumptionDateInput">日期</label>
+                    <input id="consumptionDateInput" class="input" type="date" />
+                </div>
+            </div>
+
+            <div class="btn-row">
+                <button class="btn secondary" id="consumptionEditorDeleteBtn" type="button" style="color: var(--danger); border-color: var(--danger-bg); display: none;">刪除</button>
+                <button class="btn secondary" id="consumptionEditorCancelBtn" type="button">取消</button>
+                <button class="btn" id="consumptionEditorSaveBtn" type="button">儲存</button>
             </div>
         </div>
     </div>
@@ -1673,6 +1799,8 @@
                 // 載入比賽紀錄的球隊
                 loadTeams('game');
                 renderMonthlyCalendar('baseballGame');
+            } else if (targetPage === 'consumption') {
+                loadConsumptions();
             }
 
             // 切換分頁後回到頂部（更像多頁）
@@ -1693,6 +1821,23 @@
             document.body.classList.toggle('theme-light', t === 'light');
             if (themeToggleBtn) themeToggleBtn.textContent = t === 'light' ? '☀' : '☾';
             localStorage.setItem('myweb.theme', t);
+            
+            // 重新渲染當前頁面的月曆，以更新動態生成的顏色
+            const activePage = document.querySelector('.page-content.active');
+            if (activePage) {
+                const pageId = activePage.id;
+                if (pageId === 'home') {
+                    renderMonthlyCalendarHome();
+                } else if (pageId === 'baseball-game') {
+                    renderMonthlyCalendar('baseballGame');
+                } else if (pageId === 'baseball-training') {
+                    renderMonthlyCalendar('baseballTraining');
+                } else if (pageId === 'consumption') {
+                    loadConsumptions();
+                } else if (currentSubjectId) {
+                    renderMonthlyCalendarStudy();
+                }
+            }
         }
         
         (function initTheme() {
@@ -2502,11 +2647,11 @@
                     // 檢查是否全部完成
                     const allCompleted = dayTasks.every(t => t.completed);
                     if (allCompleted) {
-                        dayEl.style.backgroundColor = '#4caf50'; // 綠色代表全部完成
+                        dayEl.style.backgroundColor = 'var(--study-color)'; // 使用 CSS 變數代表全部完成
                         dayEl.style.color = 'white';
                     } else {
-                        dayEl.style.backgroundColor = 'var(--accent)'; // 橘色代表有任務但未全部完成
-                        dayEl.style.color = '#000';
+                        dayEl.style.backgroundColor = 'var(--accent)'; // 使用主題強調色代表有任務但未全部完成
+                        dayEl.style.color = 'var(--bg)';
                     }
                 }
                 
@@ -2799,8 +2944,8 @@
         let currentMonth = new Date().getMonth();
         // --- 身份驗證系統 ---
         const AUTH_CONFIG = {
-            username: '123', // 您可以在此修改帳號
-            password: '321', // 您可以在此修改密碼
+            username: '11111', // 您可以在此修改帳號
+            password: '11111', // 您可以在此修改密碼
             // 移除 sessionKey 相關持久化邏輯
             bioKey: 'myweb_bio_enabled'
         };
@@ -2959,7 +3104,14 @@
                 });
             }
             
-            // 支援 Enter 鍵登入
+            // 支援 Enter 鍵跳轉與登入
+            authUsernameInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    authPasswordInput.focus();
+                }
+            });
+
             authPasswordInput.addEventListener('keypress', (e) => {
                 if (e.key === 'Enter') handleLogin();
             });
@@ -3082,13 +3234,14 @@
             if (!calendarEl || !monthDisplayEl) return;
 
             // 1. 抓取所有需要的資料
-            const [studyTasks, gameDiaries, trainingDiaries, subjects, teams, trainingTypes] = await Promise.all([
+            const [studyTasks, gameDiaries, trainingDiaries, subjects, teams, trainingTypes, consumptionsData] = await Promise.all([
                 dbFetch('study_task'),
                 dbFetch('diary_baseballGame'),
                 dbFetch('diary_baseballTraining'),
                 dbFetch('subject'),
                 dbFetch('team'),
-                dbFetch('training_type')
+                dbFetch('training_type'),
+                dbFetch('consumption')
             ]);
 
             // 2. 準備對照表
@@ -3162,7 +3315,7 @@
                     const team = teamMap.get(diary.team_id);
                     const eventEl = document.createElement('div');
                     eventEl.className = 'calendar-event game';
-                    eventEl.style.backgroundColor = team?.color || '#2196f3';
+                    eventEl.style.backgroundColor = team?.color || 'var(--game-color)';
                     eventEl.textContent = `[${team?.name || '比賽'}] ${diary.title}`;
                     eventEl.onclick = (e) => {
                         e.stopPropagation();
@@ -3176,11 +3329,26 @@
                     const type = trainingTypeMap.get(diary.team_id);
                     const eventEl = document.createElement('div');
                     eventEl.className = 'calendar-event training';
-                    eventEl.style.backgroundColor = type?.color || '#ff9800';
+                    eventEl.style.backgroundColor = type?.color || 'var(--training-color)';
                     eventEl.textContent = `[${type?.name || '訓練'}] ${diary.title}`;
                     eventEl.onclick = (e) => {
                         e.stopPropagation();
                         openViewer({key: 'baseballTraining'}, diary.id);
+                    };
+                    dayEl.appendChild(eventEl);
+                });
+
+                // 消費紀錄
+                const dayConsumptions = (consumptionsData || []).filter(c => c.date === dateStr);
+                dayConsumptions.forEach(c => {
+                    const eventEl = document.createElement('div');
+                    eventEl.className = 'calendar-event consumption';
+                    eventEl.style.backgroundColor = 'var(--consumption-color)';
+                    eventEl.textContent = `[消費] $${c.amount} - ${c.item}`;
+                    eventEl.onclick = (e) => {
+                        e.stopPropagation();
+                        location.hash = '#consumption';
+                        activatePage('consumption');
                     };
                     dayEl.appendChild(eventEl);
                 });
@@ -3558,6 +3726,185 @@
             teamEditorOverlay.classList.remove('active');
             teamEditorOverlay.setAttribute('aria-hidden', 'true');
         }
+
+        // --- 消費紀錄相關功能 ---
+        let consumptions = [];
+        let editingConsumptionId = null;
+
+        const consumptionList = document.getElementById('consumptionList');
+        const consumptionAddBtn = document.getElementById('consumptionAddBtn');
+        const consumptionEditorOverlay = document.getElementById('consumptionEditorOverlay');
+        const consumptionEditorTitle = document.getElementById('consumptionEditorTitle');
+        const consumptionEditorCloseBtn = document.getElementById('consumptionEditorCloseBtn');
+        const consumptionEditorCancelBtn = document.getElementById('consumptionEditorCancelBtn');
+        const consumptionEditorSaveBtn = document.getElementById('consumptionEditorSaveBtn');
+        const consumptionEditorDeleteBtn = document.getElementById('consumptionEditorDeleteBtn');
+
+        const consumptionAmountInput = document.getElementById('consumptionAmountInput');
+        const consumptionItemInput = document.getElementById('consumptionItemInput');
+        const consumptionCategorySelect = document.getElementById('consumptionCategorySelect');
+        const consumptionPaymentSelect = document.getElementById('consumptionPaymentSelect');
+        const consumptionDateInput = document.getElementById('consumptionDateInput');
+
+        async function loadConsumptions() {
+            const data = await dbFetch('consumption');
+            consumptions = data || [];
+            renderConsumptions();
+            updateConsumptionStats();
+        }
+
+        function renderConsumptions() {
+            if (!consumptionList) return;
+            
+            if (consumptions.length === 0) {
+                consumptionList.innerHTML = '<div class="empty-state" style="text-align: center; padding: 40px;">尚無紀錄</div>';
+                return;
+            }
+
+            // 按日期排序（最新在前）
+            const sorted = [...consumptions].sort((a, b) => new Date(b.date) - new Date(a.date));
+            
+            consumptionList.innerHTML = sorted.map(c => `
+                 <div class="content-section" style="background: var(--surface); margin-bottom: 10px; cursor: pointer; transition: transform 0.2s ease;" onclick="handleConsumptionClick('${c.id}')">
+                     <div style="display: flex; justify-content: space-between; align-items: center;">
+                         <div>
+                             <div style="font-weight: bold; font-size: 16px;">${c.item}</div>
+                             <div style="font-size: 12px; color: var(--secondary-text); margin-top: 4px;">
+                                 ${c.date} · ${c.category} · ${c.payment_method}
+                             </div>
+                         </div>
+                         <div style="font-size: 18px; font-weight: bold; color: var(--accent);">$${c.amount}</div>
+                     </div>
+                 </div>
+             `).join('');
+         }
+
+         function handleConsumptionClick(id) {
+             const consumption = consumptions.find(c => c.id === id);
+             if (consumption) openConsumptionEditor(consumption);
+         }
+
+        function updateConsumptionStats() {
+            const now = new Date();
+            const thisMonthStr = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
+            const todayStr = now.toISOString().split('T')[0];
+
+            let monthTotal = 0;
+            let todayTotal = 0;
+            const categoryStats = {};
+
+            consumptions.forEach(c => {
+                const amount = parseFloat(c.amount) || 0;
+                if (c.date.startsWith(thisMonthStr)) {
+                    monthTotal += amount;
+                }
+                if (c.date === todayStr) {
+                    todayTotal += amount;
+                }
+                categoryStats[c.category] = (categoryStats[c.category] || 0) + amount;
+            });
+
+            const monthTotalEl = document.getElementById('monthTotalAmount');
+            const todayTotalEl = document.getElementById('todayTotalAmount');
+            if (monthTotalEl) monthTotalEl.textContent = `$${monthTotal.toLocaleString()}`;
+            if (todayTotalEl) todayTotalEl.textContent = `$${todayTotal.toLocaleString()}`;
+
+            const statsContainer = document.getElementById('consumptionStats');
+            if (statsContainer) {
+                if (Object.keys(categoryStats).length === 0) {
+                    statsContainer.innerHTML = '<div class="empty-state" style="text-align: center; padding: 20px;">尚無資料</div>';
+                } else {
+                    const sortedCategories = Object.entries(categoryStats).sort((a, b) => b[1] - a[1]);
+                    statsContainer.innerHTML = sortedCategories.map(([cat, amt]) => `
+                        <div style="display: flex; justify-content: space-between; align-items: center; font-size: 14px; padding: 4px 0;">
+                            <span style="color: var(--secondary-text);">${cat}</span>
+                            <span style="font-weight: 600;">$${amt.toLocaleString()}</span>
+                        </div>
+                        <div style="width: 100%; height: 6px; background: var(--border); border-radius: 3px; overflow: hidden; margin-bottom: 8px;">
+                            <div style="width: ${(amt / monthTotal * 100) || 0}%; height: 100%; background: var(--accent);"></div>
+                        </div>
+                    `).join('');
+                }
+            }
+        }
+
+        function openConsumptionEditor(consumption = null) {
+            editingConsumptionId = consumption ? consumption.id : null;
+            consumptionEditorTitle.textContent = consumption ? '編輯消費' : '新增消費';
+            consumptionEditorDeleteBtn.style.display = consumption ? 'block' : 'none';
+
+            if (consumption) {
+                consumptionAmountInput.value = consumption.amount;
+                consumptionItemInput.value = consumption.item;
+                consumptionCategorySelect.value = consumption.category;
+                consumptionPaymentSelect.value = consumption.payment_method;
+                consumptionDateInput.value = consumption.date;
+            } else {
+                consumptionAmountInput.value = '';
+                consumptionItemInput.value = '';
+                consumptionCategorySelect.value = '飲食';
+                consumptionPaymentSelect.value = '現金';
+                consumptionDateInput.value = new Date().toISOString().split('T')[0];
+            }
+
+            consumptionEditorOverlay.classList.add('active');
+            consumptionEditorOverlay.setAttribute('aria-hidden', 'false');
+        }
+
+        function closeConsumptionEditor() {
+            consumptionEditorOverlay.classList.remove('active');
+            consumptionEditorOverlay.setAttribute('aria-hidden', 'true');
+            editingConsumptionId = null;
+        }
+
+        async function saveConsumption() {
+            const amount = parseFloat(consumptionAmountInput.value);
+            const item = consumptionItemInput.value.trim();
+            const category = consumptionCategorySelect.value;
+            const payment_method = consumptionPaymentSelect.value;
+            const date = consumptionDateInput.value;
+
+            if (!amount || !item || !date) {
+                alert('請填寫完整資訊');
+                return;
+            }
+
+            consumptionEditorSaveBtn.disabled = true;
+            consumptionEditorSaveBtn.textContent = '儲存中...';
+
+            const data = { amount, item, category, payment_method, date };
+            let result;
+            if (editingConsumptionId) {
+                result = await dbUpdate(editingConsumptionId, data);
+            } else {
+                result = await dbAdd('consumption', data);
+            }
+
+            if (result) {
+                await loadConsumptions();
+                closeConsumptionEditor();
+            }
+
+            consumptionEditorSaveBtn.disabled = false;
+            consumptionEditorSaveBtn.textContent = '儲存';
+        }
+
+        async function deleteConsumption() {
+            if (!editingConsumptionId) return;
+            if (confirm('確定要刪除此筆紀錄嗎？')) {
+                const result = await dbDelete(editingConsumptionId);
+                if (result) {
+                    await loadConsumptions();
+                    closeConsumptionEditor();
+                }
+            }
+        }
+
+        consumptionAddBtn?.addEventListener('click', () => openConsumptionEditor());
+        consumptionEditorCloseBtn?.addEventListener('click', closeConsumptionEditor);
+        consumptionEditorCancelBtn?.addEventListener('click', closeConsumptionEditor);
+        consumptionEditorSaveBtn?.addEventListener('click', saveConsumption);
+        consumptionEditorDeleteBtn?.addEventListener('click', deleteConsumption);
 
         handleHash();
         window.addEventListener('hashchange', handleHash);
