@@ -182,7 +182,7 @@
         }
 
         body.authenticated #mainContent {
-            display: block;
+            display: block !important;
         }
 
         body.authenticated #authOverlay {
@@ -1174,7 +1174,7 @@
         </div>
     </div>
 
-    <div id="mainContent">
+    <div id="mainContent" style="display: none;">
     <!-- 頂部導航欄 -->
     <nav class="navbar">
         <div class="nav-container">
@@ -2831,6 +2831,8 @@
 
         function loginSuccess() {
             // 不再儲存登入狀態到 localStorage
+            const mainContent = document.getElementById('mainContent');
+            if (mainContent) mainContent.style.display = 'block';
             document.body.classList.add('authenticated');
             authError.style.opacity = '0';
             
