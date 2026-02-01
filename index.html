@@ -457,6 +457,276 @@
             font-size: 16px;
         }
 
+        /* 月曆組件樣式 */
+        .monthly-calendar-section {
+            margin-bottom: 20px;
+            padding: 15px;
+            background-color: var(--surface);
+            border-radius: 8px;
+            border: 1px solid var(--border);
+        }
+
+        .calendar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .calendar-header h3 {
+            color: var(--text);
+            margin: 0;
+            font-size: 16px;
+        }
+
+        .calendar-controls {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .calendar-month-display {
+            color: var(--text);
+            font-weight: 500;
+            min-width: 100px;
+            text-align: center;
+            font-size: 14px;
+        }
+
+        .calendar-nav-btn {
+            width: 28px;
+            height: 28px;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .monthly-calendar {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 4px;
+        }
+
+        .calendar-day {
+            aspect-ratio: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 4px;
+            background-color: var(--input-bg);
+            color: var(--text);
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border: 1px solid transparent;
+            min-height: 24px;
+        }
+
+        .calendar-day:hover {
+            background-color: var(--surface-hover);
+            transform: translateY(-1px);
+        }
+
+        .calendar-day.has-record {
+            background-color: var(--accent);
+            color: #000;
+            font-weight: 600;
+            border-color: var(--border-strong);
+        }
+
+        /* 球隊顏色標記 */
+        .calendar-day.team-color-0 { background-color: #FF6B6B; }
+        .calendar-day.team-color-1 { background-color: #4ECDC4; }
+        .calendar-day.team-color-2 { background-color: #FFE66D; }
+        .calendar-day.team-color-3 { background-color: #6B5B95; }
+        .calendar-day.team-color-4 { background-color: #88D8B0; }
+        .calendar-day.team-color-5 { background-color: #FF8C42; }
+
+        .calendar-day.empty {
+            background-color: transparent;
+            cursor: default;
+        }
+
+        .calendar-day-header {
+            aspect-ratio: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            color: var(--secondary-text);
+            font-size: 11px;
+            min-height: 24px;
+        }
+
+        /* 球隊管理系統樣式 */
+        .team-management-layout {
+            display: grid;
+            grid-template-columns: 280px 1fr;
+            gap: 20px;
+            align-items: start;
+        }
+
+        .team-sidebar {
+            background-color: var(--surface);
+            border-radius: 10px;
+            border: 1px solid var(--border);
+            padding: 20px;
+            height: fit-content;
+            position: sticky;
+            top: 20px;
+        }
+
+        .team-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .team-header h3 {
+            color: var(--text);
+            margin: 0;
+            font-size: 18px;
+        }
+
+        .team-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .team-item {
+            background-color: var(--input-bg);
+            border-radius: 8px;
+            padding: 15px;
+            border: 1px solid var(--border);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            color: var(--text);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+        }
+
+        .team-item:hover {
+            background-color: var(--surface-hover);
+            transform: translateY(-1px);
+        }
+
+        .team-item.active {
+            background-color: var(--accent);
+            color: #000;
+            border-color: var(--border-strong);
+            font-weight: 600;
+        }
+
+        .team-item-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .team-more-btn {
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            border: none;
+            background: transparent;
+            color: inherit;
+            cursor: pointer;
+            transition: background 0.2s;
+            margin-left: 8px;
+            font-size: 18px;
+        }
+
+        .team-more-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .team-item.active .team-more-btn:hover {
+            background: rgba(0, 0, 0, 0.1);
+        }
+
+        /* 下拉選單動畫與配色優化 */
+        select.input {
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 12px center;
+            background-size: 16px;
+            padding-right: 40px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
+        }
+
+        .theme-light select.input {
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+        }
+
+        select.input:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(255, 213, 79, 0.2);
+            transform: scale(1.01);
+        }
+
+        /* 更多選項菜單 */
+        .more-menu {
+            position: absolute;
+            right: 15px;
+            top: 50px;
+            background: var(--modal-bg);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+            z-index: 9999;
+            display: none;
+            flex-direction: column;
+            overflow: hidden;
+            min-width: 140px;
+            backdrop-filter: blur(15px);
+        }
+
+        .more-menu.active {
+            display: flex;
+            animation: menuFadeIn 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        @keyframes menuFadeIn {
+            from { opacity: 0; transform: translateY(-10px) scale(0.95); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        .menu-item {
+            padding: 12px 16px;
+            font-size: 14px;
+            color: var(--text);
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .menu-item:hover {
+            background: var(--surface-hover);
+        }
+
+        .menu-item.delete {
+            color: #ff6b6b;
+        }
+
+        .menu-item.delete:hover {
+            background: rgba(255, 107, 107, 0.1);
+        }
+
+        .team-content {
+            min-width: 0; /* 防止內容溢出 */
+        }
+
         /* 響應式設計 */
         @media (max-width: 768px) {
             .nav-container {
@@ -524,9 +794,36 @@
 
         <!-- 棒球比賽紀錄頁面 -->
         <div id="baseball-game" class="page-content">
-            <div class="content-section">
-                <h2>棒球比賽紀錄</h2>
-                <p>這裡記錄我的棒球比賽相關資訊和表現。</p>
+            <div class="team-management-layout">
+                <!-- 球隊管理側邊欄 -->
+                <div class="team-sidebar">
+                    <div class="team-header">
+                        <h3>球隊管理</h3>
+                        <button class="btn-circle" id="teamAddBtn" type="button" aria-label="新增球隊">＋</button>
+                    </div>
+                    <div class="team-list" id="teamList">
+                        <!-- 球隊列表將在這裡動態生成 -->
+                    </div>
+                </div>
+
+                <!-- 主要內容區域 -->
+                <div class="team-content">
+                    <div class="content-section">
+                        <h2>棒球比賽紀錄</h2>
+                        <p>這裡記錄我的棒球比賽相關資訊和表現。</p>
+
+                <!-- 月曆組件 -->
+                <div class="monthly-calendar-section">
+                    <div class="calendar-header">
+                        <h3>月曆檢視</h3>
+                        <div class="calendar-controls">
+                            <button class="btn-circle calendar-nav-btn" id="calPrevMonthBtn" type="button" aria-label="上個月">&lt;</button>
+                            <span id="currentMonthDisplay" class="calendar-month-display"></span>
+                            <button class="btn-circle calendar-nav-btn" id="calNextMonthBtn" type="button" aria-label="下個月">&gt;</button>
+                        </div>
+                    </div>
+                    <div id="monthlyCalendar" class="monthly-calendar"></div>
+                </div>
 
                 <div class="diary-header">
                     <div class="diary-header-title">日記區</div>
@@ -535,6 +832,8 @@
 
                 <div id="diaryEmpty" class="empty-state">目前還沒有日記。點右上角「＋」新增第一篇。</div>
                 <div id="diaryList" class="diary-list" aria-label="日記列表"></div>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -543,6 +842,19 @@
             <div class="content-section">
                 <h2>棒球訓練紀錄</h2>
                 <p>這裡記錄我的棒球訓練內容和進度。</p>
+
+                <!-- 月曆組件 -->
+                <div class="monthly-calendar-section">
+                    <div class="calendar-header">
+                        <h3>月曆檢視</h3>
+                        <div class="calendar-controls">
+                            <button class="btn-circle calendar-nav-btn" id="calPrevMonthBtnTraining" type="button" aria-label="上個月">&lt;</button>
+                            <span id="currentMonthDisplayTraining" class="calendar-month-display"></span>
+                            <button class="btn-circle calendar-nav-btn" id="calNextMonthBtnTraining" type="button" aria-label="下個月">&gt;</button>
+                        </div>
+                    </div>
+                    <div id="monthlyCalendarTraining" class="monthly-calendar"></div>
+                </div>
 
                 <div class="diary-header">
                     <div class="diary-header-title">日記區</div>
@@ -607,6 +919,19 @@
                 <div class="field">
                     <label for="diarySubtitleInput">副標題</label>
                     <input id="diarySubtitleInput" class="input" type="text" placeholder="輸入副標題（可選）" maxlength="120" />
+                </div>
+                <div class="field">
+                    <label for="diaryDateInput">日期 (可手動調整)</label>
+                    <input id="diaryDateInput" class="input" type="date" />
+                </div>
+
+                <div class="field">
+                    <label for="diaryTeamSelect">選擇球隊</label>
+                    <select id="diaryTeamSelect" class="input">
+                        <option value="">-- 選擇球隊 --</option>
+                        <option value="1">範例球隊</option>
+                        <!-- 球隊選項將動態生成 -->
+                    </select>
                 </div>
 
                 <div class="field">
@@ -774,6 +1099,41 @@
             </div>
         </div>
     </div>
+
+    <!-- 球隊編輯視窗 -->
+    <div id="teamEditorOverlay" class="overlay" aria-hidden="true">
+        <div class="modal" role="dialog" aria-modal="true" aria-label="新增球隊">
+            <div class="modal-header">
+                <div>
+                    <div class="modal-title" id="teamEditorTitle">新增球隊</div>
+                    <div class="modal-sub">建立你的專屬球隊</div>
+                </div>
+                <button class="btn secondary" id="teamEditorCloseBtn" type="button">關閉</button>
+            </div>
+
+            <div class="form-grid">
+                <div class="field">
+                    <label for="teamNameInput">球隊名稱</label>
+                    <input id="teamNameInput" class="input" type="text" placeholder="輸入球隊名稱" maxlength="60" />
+                </div>
+                <div class="field">
+                    <label for="teamDescInput">球隊描述</label>
+                    <textarea id="teamDescInput" class="textarea" placeholder="輸入球隊描述（可選）" style="min-height: 100px;"></textarea>
+                </div>
+                <div class="field">
+                    <label for="teamColorInput">日曆顯示顏色</label>
+                    <input id="teamColorInput" class="input" type="color" value="#accent" style="height: 45px; padding: 5px;" />
+                </div>
+            </div>
+
+            <div class="btn-row">
+                <button class="btn secondary" id="teamEditorDeleteBtn" type="button" style="color: #ff6b6b; border-color: rgba(255, 107, 107, 0.3); display: none;">刪除球隊</button>
+                <button class="btn secondary" id="teamEditorCancelBtn" type="button">取消</button>
+                <button class="btn" id="teamEditorSaveBtn" type="button">儲存球隊</button>
+            </div>
+        </div>
+    </div>
+
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="supabase_init.js"></script>
     <script>
@@ -855,6 +1215,7 @@
         const editorDateEl = document.getElementById('diaryEditorDate');
         const editorTitleInput = document.getElementById('diaryTitleInput');
         const editorSubtitleInput = document.getElementById('diarySubtitleInput');
+        const editorTeamSelect = document.getElementById('diaryTeamSelect');
         const editorBodyInput = document.getElementById('diaryBodyInput');
         const editorCloseBtn = document.getElementById('diaryEditorCloseBtn');
         const editorCancelBtn = document.getElementById('diaryEditorCancelBtn');
@@ -870,6 +1231,17 @@
         const viewerBody = document.getElementById('diaryViewerBody');
         const viewerMedia = document.getElementById('diaryViewerMedia');
         const viewerCloseBtn = document.getElementById('diaryViewerCloseBtn');
+
+        const teamEditorOverlay = document.getElementById('teamEditorOverlay');
+        const teamNameInput = document.getElementById('teamNameInput');
+        const teamDescInput = document.getElementById('teamDescInput');
+        const teamEditorCloseBtn = document.getElementById('teamEditorCloseBtn');
+        const teamEditorCancelBtn = document.getElementById('teamEditorCancelBtn');
+        const teamEditorSaveBtn = document.getElementById('teamEditorSaveBtn');
+        const teamColorInput = document.getElementById('teamColorInput');
+        const teamEditorDeleteBtn = document.getElementById('teamEditorDeleteBtn');
+        const teamEditorTitle = document.getElementById('teamEditorTitle');
+        const diaryDateInput = document.getElementById('diaryDateInput');
 
         const diaryState = new Map(); // key -> diaries[]
         let currentModule = null;
@@ -911,7 +1283,12 @@
             const { listEl, emptyEl } = getModuleEls(module);
             if (!listEl || !emptyEl) return;
 
-            const diaries = diaryState.get(module.key) || [];
+            let diaries = diaryState.get(module.key) || [];
+            
+            // 如果當前有選擇球隊，則過濾出該球隊的日記
+            if (currentTeamId && module.key === 'baseballGame') {
+                diaries = diaries.filter(diary => diary.team_id === currentTeamId);
+            }
 
             listEl.innerHTML = '';
             if (!diaries.length) {
@@ -1016,7 +1393,9 @@
 
             if (editorTitleInput) editorTitleInput.value = entry ? (entry.title || '') : '';
             if (editorSubtitleInput) editorSubtitleInput.value = entry ? (entry.subtitle || '') : '';
+            if (editorTeamSelect) editorTeamSelect.value = entry ? (entry.team_id || '') : '';
             if (editorBodyInput) editorBodyInput.value = entry ? (entry.body || '') : '';
+            if (diaryDateInput) diaryDateInput.value = entry ? (entry.date || '') : formatDateYYYYMMDD(new Date());
             if (editorDateEl) editorDateEl.textContent = entry ? (entry.date || '') : formatDateYYYYMMDD(new Date());
             
             if (editorTitleEl) {
@@ -1161,11 +1540,14 @@
             // UI Loading state? For now just await
             editorSaveBtn.textContent = '儲存中...';
             editorSaveBtn.disabled = true;
-
+            
+            // 優先使用手動輸入的日期
             const now = new Date();
-            const date = editingEntryId ? editorDateEl.textContent : formatDateYYYYMMDD(now);
+            const date = diaryDateInput?.value || (editingEntryId ? editorDateEl.textContent : formatDateYYYYMMDD(now));
+            
             const title = editorTitleInput?.value?.trim?.() || '';
             const subtitle = editorSubtitleInput?.value?.trim?.() || '';
+            const teamId = editorTeamSelect?.value || '';
             const body = editorBodyInput?.value || '';
 
             const diaries = diaryState.get(currentModule.key) || [];
@@ -1179,6 +1561,7 @@
                 date,
                 title,
                 subtitle,
+                team_id: teamId,
                 body,
                 media: draftMedia.slice(),
                 createdAt: editingEntryId ? undefined : Date.now() // Only set if new, but DB has created_at
@@ -1527,8 +1910,8 @@
             closeSubjectEditor();
         });
 
-        subjectPageCloseBtn?.addEventListener('click', () => { location.hash = '#study'; });
-        subjectPageOverlay?.addEventListener('click', (e)=>{ if (e.target===subjectPageOverlay) location.hash = '#study'; });
+        subjectPageCloseBtn?.addEventListener('click', closeSubjectPage);
+        subjectPageOverlay?.addEventListener('click', (e)=>{ if (e.target===subjectPageOverlay) closeSubjectPage(); });
 
         subjectScopeEditBtn?.addEventListener('click', ()=> editLongText('scope','學習範圍（編輯）'));
         subjectGoalEditBtn?.addEventListener('click', ()=> editLongText('goal','學習目標（編輯）'));
@@ -1663,8 +2046,409 @@
                 closeSubjectPage();
             }
         }
+
+        // 月曆功能
+        let currentMonth = new Date().getMonth();
+        let currentYear = new Date().getFullYear();
+
+        // 初始化月曆
+        function initMonthlyCalendars() {
+            // 棒球比賽紀錄月曆
+            const calPrevMonthBtn = document.getElementById('calPrevMonthBtn');
+            const calNextMonthBtn = document.getElementById('calNextMonthBtn');
+            const currentMonthDisplay = document.getElementById('currentMonthDisplay');
+            
+            if (calPrevMonthBtn && calNextMonthBtn && currentMonthDisplay) {
+                calPrevMonthBtn.addEventListener('click', () => {
+                    currentMonth--;
+                    if (currentMonth < 0) {
+                        currentMonth = 11;
+                        currentYear--;
+                    }
+                    renderMonthlyCalendar('baseballGame');
+                });
+                
+                calNextMonthBtn.addEventListener('click', () => {
+                    currentMonth++;
+                    if (currentMonth > 11) {
+                        currentMonth = 0;
+                        currentYear++;
+                    }
+                    renderMonthlyCalendar('baseballGame');
+                });
+                
+                renderMonthlyCalendar('baseballGame');
+            }
+
+            // 棒球訓練紀錄月曆
+            const calPrevMonthBtnTraining = document.getElementById('calPrevMonthBtnTraining');
+            const calNextMonthBtnTraining = document.getElementById('calNextMonthBtnTraining');
+            const currentMonthDisplayTraining = document.getElementById('currentMonthDisplayTraining');
+            
+            if (calPrevMonthBtnTraining && calNextMonthBtnTraining && currentMonthDisplayTraining) {
+                calPrevMonthBtnTraining.addEventListener('click', () => {
+                    currentMonth--;
+                    if (currentMonth < 0) {
+                        currentMonth = 11;
+                        currentYear--;
+                    }
+                    renderMonthlyCalendar('baseballTraining');
+                });
+                
+                calNextMonthBtnTraining.addEventListener('click', () => {
+                    currentMonth++;
+                    if (currentMonth > 11) {
+                        currentMonth = 0;
+                        currentYear++;
+                    }
+                    renderMonthlyCalendar('baseballTraining');
+                });
+                
+                renderMonthlyCalendar('baseballTraining');
+            }
+        }
+
+        // 渲染月曆
+        async function renderMonthlyCalendar(pageType) {
+            const calendarEl = document.getElementById(pageType === 'baseballGame' ? 'monthlyCalendar' : 'monthlyCalendarTraining');
+            const monthDisplayEl = document.getElementById(pageType === 'baseballGame' ? 'currentMonthDisplay' : 'currentMonthDisplayTraining');
+            
+            if (!calendarEl || !monthDisplayEl) return;
+
+            // 獲取該類型的日記記錄
+            const type = `diary_${pageType}`;
+            let diaries = await dbFetch(type);
+            
+            // 獲取所有球隊資料，用於自訂顏色
+            const allTeams = await dbFetch('team');
+            const teamColorMap = new Map();
+            allTeams.forEach(t => {
+                if (t.color) teamColorMap.set(t.id, t.color);
+            });
+            
+            // 如果當前有選擇球隊，則在比賽紀錄月曆中過濾出該球隊的日期
+            if (currentTeamId && pageType === 'baseballGame') {
+                diaries = diaries.filter(diary => diary.team_id === currentTeamId);
+            }
+            
+            // 重要：重新載入球隊資料以確保獲取最新的顏色設定
+            const updatedTeams = await dbFetch('team');
+            teamColorMap.clear();
+            updatedTeams.forEach(t => {
+                if (t.color) teamColorMap.set(t.id, t.color);
+            });
+
+            // 更新月份顯示
+            const monthNames = ['一月', '二月', '三月', '四月', '五月', '六月', '七月', '八月', '九月', '十月', '十一月', '十二月'];
+            monthDisplayEl.textContent = `${currentYear}年 ${monthNames[currentMonth]}`;
+            
+            // 計算該月的第一天和最後一天
+            const firstDay = new Date(currentYear, currentMonth, 1);
+            const lastDay = new Date(currentYear, currentMonth + 1, 0);
+            const daysInMonth = lastDay.getDate();
+            const startingDay = firstDay.getDay(); // 0 = 星期日, 1 = 星期一, ..., 6 = 星期六
+            
+            // 清空月曆
+            calendarEl.innerHTML = '';
+            
+            // 添加星期標題
+            const weekdays = ['日', '一', '二', '三', '四', '五', '六'];
+            weekdays.forEach(day => {
+                const dayHeader = document.createElement('div');
+                dayHeader.className = 'calendar-day-header';
+                dayHeader.textContent = day;
+                calendarEl.appendChild(dayHeader);
+            });
+            
+            // 添加空白格（月初前的空白）
+            for (let i = 0; i < startingDay; i++) {
+                const emptyDay = document.createElement('div');
+                emptyDay.className = 'calendar-day empty';
+                calendarEl.appendChild(emptyDay);
+            }
+            
+            // 添加日期格
+            for (let day = 1; day <= daysInMonth; day++) {
+                const dayEl = document.createElement('div');
+                dayEl.className = 'calendar-day';
+                dayEl.textContent = day;
+                
+                // 檢查這一天是否有記錄
+                const dateStr = `${currentYear}-${String(currentMonth + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+                const dayRecords = diaries.filter(diary => {
+                    const diaryDate = diary.date ? new Date(diary.date).toISOString().split('T')[0] : '';
+                    return diaryDate === dateStr;
+                });
+                
+                if (dayRecords.length > 0) {
+                    dayEl.classList.add('has-record');
+                    
+                    // 為不同球隊添加不同顏色的標記
+                    const teamIds = [...new Set(dayRecords.map(d => d.team_id).filter(id => id))];
+                    if (teamIds.length > 0) {
+                        // 使用球隊自訂顏色或預設顏色
+                        const teamId = teamIds[0];
+                        const customColor = teamColorMap.get(teamId);
+                        if (customColor) {
+                            dayEl.style.backgroundColor = customColor;
+                            dayEl.style.color = getContrastYIQ(customColor);
+                        } else {
+                            const colorIndex = (parseInt(teamId) || 0) % 6;
+                            const colorClass = `team-color-${colorIndex}`;
+                            dayEl.classList.add(colorClass);
+                        }
+                    }
+                    
+                    dayEl.addEventListener('click', () => {
+                        // 點擊有記錄的日期，打開對應的日記
+                        const targetDiary = dayRecords[0]; // 預設打開第一個記錄
+                        if (targetDiary) {
+                            const module = DIARY_MODULES.find(m => m.key === pageType);
+                            openViewer(module, targetDiary.id);
+                        }
+                    });
+                }
+                
+                calendarEl.appendChild(dayEl);
+            }
+        }
+
+        // 計算顏色對比度（決定文字黑或白）
+        function getContrastYIQ(hexcolor){
+            hexcolor = hexcolor.replace("#", "");
+            var r = parseInt(hexcolor.substr(0,2),16);
+            var g = parseInt(hexcolor.substr(2,2),16);
+            var b = parseInt(hexcolor.substr(4,2),16);
+            var yiq = ((r*299)+(g*587)+(b*114))/1000;
+            return (yiq >= 128) ? 'black' : 'white';
+        }
+
+        // 球隊管理功能
+        let currentTeamId = null;
+        const teams = [];
+
+        // 初始化球隊管理
+        function initTeamManagement() {
+            const teamAddBtn = document.getElementById('teamAddBtn');
+            if (teamAddBtn) {
+                teamAddBtn.addEventListener('click', openTeamEditor);
+            }
+
+            teamEditorCloseBtn?.addEventListener('click', closeTeamEditor);
+            teamEditorCancelBtn?.addEventListener('click', closeTeamEditor);
+            teamEditorSaveBtn?.addEventListener('click', saveTeam);
+            
+            teamEditorOverlay?.addEventListener('click', (e) => {
+                if (e.target === teamEditorOverlay) closeTeamEditor();
+            });
+            
+            loadTeams();
+        }
+
+        // 載入球隊列表
+        async function loadTeams() {
+            const teamList = document.getElementById('teamList');
+            if (!teamList) return;
+            
+            // 從 Supabase 載入球隊數據
+            const fetchedTeams = await dbFetch('team');
+            
+            teamList.innerHTML = '';
+            
+            // 更新日記編輯器的下拉選單
+            if (editorTeamSelect) {
+                editorTeamSelect.innerHTML = '<option value="">-- 選擇球隊 --</option>';
+            }
+
+            if (fetchedTeams.length === 0) {
+                teamList.innerHTML = '<div style="padding: 10px; color: var(--secondary-text); font-size: 14px;">尚未建立球隊</div>';
+            } else {
+                fetchedTeams.forEach(team => {
+                    // 渲染列表
+                    const item = document.createElement('div');
+                    item.className = 'team-item';
+                    item.setAttribute('data-team-id', team.id);
+                    if (currentTeamId === team.id) item.classList.add('active');
+                    
+                    item.innerHTML = `
+                        <div class="team-item-info">
+                            <div style="font-weight: 500;">${team.name}</div>
+                            <div style="font-size: 12px; color: var(--secondary-text);">${team.desc || '點擊切換球隊'}</div>
+                        </div>
+                        <button class="team-more-btn" type="button" aria-label="更多選項">⋮</button>
+                        <div class="more-menu">
+                            <div class="menu-item edit">✎ 編輯資訊</div>
+                            <div class="menu-item delete">🗑 刪除球隊</div>
+                        </div>
+                    `;
+                    
+                    // 點擊資訊部分切換球隊
+                    item.querySelector('.team-item-info').addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        selectTeam(team.id);
+                    });
+
+                    // 更多按鈕邏輯
+                    const moreBtn = item.querySelector('.team-more-btn');
+                    const menu = item.querySelector('.more-menu');
+                    
+                    moreBtn.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        // 關閉其他已開啟的選單並恢復其 z-index
+                        document.querySelectorAll('.team-item').forEach(el => {
+                            el.style.zIndex = "";
+                        });
+                        document.querySelectorAll('.more-menu.active').forEach(m => {
+                            if (m !== menu) m.classList.remove('active');
+                        });
+                        
+                        const isActive = menu.classList.toggle('active');
+                        // 如果選單開啟，提升父容器的 z-index
+                        item.style.zIndex = isActive ? "10000" : "";
+                    });
+
+                    // 編輯功能
+                    menu.querySelector('.edit').addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        menu.classList.remove('active');
+                        item.style.zIndex = ""; // 關閉選單時重置 z-index
+                        openTeamEditor(team);
+                    });
+
+                    // 刪除功能
+                    menu.querySelector('.delete').addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        menu.classList.remove('active');
+                        item.style.zIndex = ""; // 關閉選單時重置 z-index
+                        confirmDeleteTeam(team);
+                    });
+
+                    teamList.appendChild(item);
+
+                    // 更新下拉選單
+                    if (editorTeamSelect) {
+                        const opt = document.createElement('option');
+                        opt.value = team.id;
+                        opt.textContent = team.name;
+                        editorTeamSelect.appendChild(opt);
+                    }
+                });
+            }
+        }
+
+        // 全域點擊關閉選單
+        document.addEventListener('click', () => {
+            document.querySelectorAll('.more-menu.active').forEach(m => m.classList.remove('active'));
+            document.querySelectorAll('.team-item').forEach(el => el.style.zIndex = "");
+        });
+
+        // 確認刪除球隊
+        async function confirmDeleteTeam(team) {
+            const confirmed = confirm(`確定要刪除球隊「${team.name}」嗎？相關日記將失去球隊關聯。`);
+            if (confirmed) {
+                const success = await dbDelete(team.id); 
+                if (success) {
+                    await loadTeams();
+                    if (currentTeamId === team.id) {
+                        currentTeamId = null;
+                        renderModuleList(DIARY_MODULES.find(m => m.key === 'baseballGame'));
+                        renderMonthlyCalendar('baseballGame');
+                    }
+                    closeTeamEditor();
+                }
+            }
+        }
+
+        let editingTeamId = null;
+
+        // 儲存球隊
+        async function saveTeam() {
+            const name = teamNameInput?.value?.trim() || '';
+            const desc = teamDescInput?.value?.trim() || '';
+            const color = teamColorInput?.value || '#ffffff';
+            
+            if (!name) {
+                alert('請輸入球隊名稱');
+                return;
+            }
+            
+            teamEditorSaveBtn.disabled = true;
+            teamEditorSaveBtn.textContent = '儲存中...';
+            
+            let result;
+            if (editingTeamId) {
+                // 更新現有球隊：此處 type 應為 'team'，且必須傳入正確的 ID
+                result = await dbUpdate(editingTeamId, { name, desc, color });
+            } else {
+                result = await dbAdd('team', { name, desc, color });
+            }
+            
+            if (result) {
+                await loadTeams();
+                closeTeamEditor();
+                renderMonthlyCalendar('baseballGame');
+            }
+            
+            teamEditorSaveBtn.disabled = false;
+            teamEditorSaveBtn.textContent = '儲存球隊';
+        }
+
+        // 選擇球隊
+        function selectTeam(teamId) {
+            // 如果點擊已經選擇的球隊，則取消選擇（回總覽）
+            if (currentTeamId === teamId) {
+                currentTeamId = null;
+            } else {
+                currentTeamId = teamId;
+            }
+            
+            // 更新UI顯示
+            document.querySelectorAll('.team-item').forEach(item => {
+                const id = item.getAttribute('data-team-id');
+                if (id === currentTeamId) {
+                    item.classList.add('active');
+                } else {
+                    item.classList.remove('active');
+                }
+            });
+            
+            // 重新載入該球隊的日記
+            renderModuleList(DIARY_MODULES.find(m => m.key === 'baseballGame'));
+            renderMonthlyCalendar('baseballGame');
+        }
+
+        // 開啟球隊編輯器
+        function openTeamEditor(team = null) {
+            if (!teamEditorOverlay) return;
+            
+            editingTeamId = team ? team.id : null;
+            teamEditorTitle.textContent = team ? '編輯球隊資訊' : '新增球隊';
+            
+            if (teamNameInput) teamNameInput.value = team ? (team.name || '') : '';
+            if (teamDescInput) teamDescInput.value = team ? (team.desc || '') : '';
+            if (teamColorInput) teamColorInput.value = team ? (team.color || '#ffffff') : '#ffffff';
+            
+            if (teamEditorDeleteBtn) {
+                teamEditorDeleteBtn.style.display = team ? 'block' : 'none';
+                teamEditorDeleteBtn.onclick = () => confirmDeleteTeam(team);
+            }
+
+            teamEditorOverlay.classList.add('active');
+            teamEditorOverlay.setAttribute('aria-hidden', 'false');
+            teamNameInput?.focus();
+        }
+
+        // 關閉球隊編輯器
+        function closeTeamEditor() {
+            if (!teamEditorOverlay) return;
+            teamEditorOverlay.classList.remove('active');
+            teamEditorOverlay.setAttribute('aria-hidden', 'true');
+        }
+
         handleHash();
         window.addEventListener('hashchange', handleHash);
+        initMonthlyCalendars();
+        initTeamManagement();
     </script>
 </body>
 </html>

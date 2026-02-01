@@ -117,3 +117,22 @@ async function dbDelete(id) {
     }
     return true;
 }
+
+/**
+ * 刪除資料
+ * @param {string} id - 資料 ID (UUID)
+ * @returns {Promise<boolean>} - 是否成功
+ */
+async function dbDelete(id) {
+    const { error } = await _supabase
+        .from('posts')
+        .delete()
+        .eq('id', id);
+
+    if (error) {
+        console.error(`Error deleting ${id}:`, error);
+        alert('刪除失敗');
+        return false;
+    }
+    return true;
+}
