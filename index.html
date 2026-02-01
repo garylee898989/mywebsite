@@ -730,22 +730,66 @@
         /* 響應式設計 */
         @media (max-width: 768px) {
             .nav-container {
-                flex-wrap: wrap;
-                justify-content: center;
+                flex-direction: column;
+                gap: 15px;
+                padding: 10px;
+            }
+
+            .nav-left {
+                display: grid;
+                grid-template-columns: repeat(3, 1fr);
+                width: 100%;
+                gap: 5px;
             }
 
             .nav-item {
-                padding: 15px 15px;
-                font-size: 13px;
-                margin: 3px;
+                padding: 10px 5px;
+                font-size: 12px;
+                margin: 0;
+                text-align: center;
+                justify-content: center;
+                width: 100%;
+                border-radius: 6px;
+            }
+
+            .nav-right {
+                width: 100%;
+                justify-content: center;
+                border-top: 1px solid var(--border);
+                padding-top: 10px;
+            }
+
+            .team-management-layout {
+                grid-template-columns: 1fr;
+                display: flex;
+                flex-direction: column;
+            }
+
+            .team-sidebar {
+                position: relative;
+                top: 0;
+                width: 100%;
+                margin-bottom: 20px;
+            }
+
+            .team-list {
+                display: grid;
+                grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+                gap: 10px;
             }
 
             .page-title {
-                font-size: 28px;
+                font-size: 24px;
+                margin: 15px 0;
             }
 
             .content-area {
-                padding: 20px 15px;
+                padding: 15px 10px;
+            }
+
+            .modal {
+                width: 95%;
+                padding: 15px;
             }
         }
     </style>
@@ -925,11 +969,10 @@
                     <input id="diaryDateInput" class="input" type="date" />
                 </div>
 
-                <div class="field">
+                <div class="field" id="diaryTeamSelectField">
                     <label for="diaryTeamSelect">選擇球隊</label>
                     <select id="diaryTeamSelect" class="input">
                         <option value="">-- 選擇球隊 --</option>
-                        <option value="1">範例球隊</option>
                         <!-- 球隊選項將動態生成 -->
                     </select>
                 </div>
@@ -1377,6 +1420,12 @@
             if (!editorOverlay) return;
             currentModule = module;
             editingEntryId = entryId;
+
+            // 根據頁面類型顯示或隱藏球隊選擇
+            const teamField = document.getElementById('diaryTeamSelectField');
+            if (teamField) {
+                teamField.style.display = (module.key === 'baseballGame') ? 'block' : 'none';
+            }
 
             draftMedia = [];
             let entry = null;
