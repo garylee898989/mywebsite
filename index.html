@@ -25,6 +25,8 @@
             --input-bg: rgba(255, 255, 255, 0.06);
             --secondary-text: #ccc;
             --modal-text: #fff;
+            --surface-subtle: rgba(255, 255, 255, 0.03);
+            --shadow: rgba(255, 255, 255, 0.05);
         }
 
         .theme-light {
@@ -41,6 +43,8 @@
             --input-bg: rgba(0, 0, 0, 0.03);
             --secondary-text: #444;
             --modal-text: #000;
+            --surface-subtle: rgba(0, 0, 0, 0.02);
+            --shadow: rgba(0, 0, 0, 0.1);
         }
 
         body {
@@ -50,6 +54,139 @@
             overflow-x: hidden;
             min-height: 100vh;
             position: relative;
+        }
+
+        /* 驗證畫面樣式 */
+        #authOverlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: var(--bg);
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(20px);
+        }
+
+        .auth-container {
+            width: 90%;
+            max-width: 400px;
+            padding: 40px;
+            background: var(--modal-bg);
+            border: 1px solid var(--border);
+            border-radius: 24px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+            text-align: center;
+            animation: authFadeIn 0.5s ease-out;
+        }
+
+        @keyframes authFadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .auth-title {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            color: var(--text);
+        }
+
+        .auth-sub {
+            font-size: 14px;
+            color: var(--secondary-text);
+            margin-bottom: 32px;
+        }
+
+        .auth-form {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .auth-input-group {
+            text-align: left;
+        }
+
+        .auth-label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            margin-bottom: 6px;
+            margin-left: 4px;
+            color: var(--secondary-text);
+        }
+
+        .auth-input {
+            width: 100%;
+            padding: 14px 18px;
+            background: var(--input-bg);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            color: var(--text);
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+
+        .auth-input:focus {
+            outline: none;
+            border-color: var(--accent);
+            background: var(--surface-hover);
+        }
+
+        .auth-btn {
+            width: 100%;
+            padding: 14px;
+            margin-top: 8px;
+            background: var(--accent);
+            color: #000;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .auth-btn:hover {
+            opacity: 0.9;
+            transform: translateY(-2px);
+        }
+
+        .auth-bio-btn {
+            margin-top: 16px;
+            background: transparent;
+            color: var(--accent);
+            border: 1px solid var(--accent);
+            display: none; /* 初始隱藏，支援生物辨識才顯示 */
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .auth-error {
+            color: #ff6b6b;
+            font-size: 13px;
+            margin-top: 12px;
+            min-height: 18px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        /* 隱藏主內容 */
+        #mainContent {
+            display: none;
+        }
+
+        body.authenticated #mainContent {
+            display: block;
+        }
+
+        body.authenticated #authOverlay {
+            display: none;
         }
 
         /* 呼吸動畫背景 */
@@ -74,7 +211,7 @@
             position: sticky;
             top: 0;
             z-index: 1000;
-            box-shadow: 0 2px 20px rgba(255, 255, 255, 0.05);
+            box-shadow: 0 2px 20px var(--shadow);
         }
 
         .nav-container {
@@ -234,6 +371,54 @@
             color: var(--secondary-text);
             font-size: 14px;
             line-height: 1.6;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            max-height: 4.8em;
+        }
+
+        /* 總日曆樣式 */
+        .calendar-event {
+            font-size: 11px;
+            padding: 2px 4px;
+            margin-bottom: 2px;
+            border-radius: 3px;
+            color: white;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            cursor: pointer;
+            transition: transform 0.1s;
+        }
+
+        .calendar-event:hover {
+            transform: scale(1.02);
+            filter: brightness(1.1);
+        }
+
+        .calendar-event.study { background-color: #4caf50; }
+        .calendar-event.game { background-color: #2196f3; }
+        .calendar-event.training { background-color: #ff9800; }
+
+        .calendar-day.full-view {
+            display: flex;
+            flex-direction: column;
+            align-items: stretch;
+            justify-content: flex-start;
+            padding: 4px;
+            height: auto;
+            min-height: 100px;
+            aspect-ratio: auto; /* 確保全覽模式不強制為正方形 */
+            overflow: hidden;
+        }
+
+        .calendar-day-number {
+            font-size: 12px;
+            font-weight: bold;
+            margin-bottom: 4px;
+            text-align: right;
         }
 
         .media-preview {
@@ -331,7 +516,7 @@
 
         .input:focus, .textarea:focus {
             border-color: var(--accent);
-            background: var(--surface);
+            background-color: var(--surface);
         }
 
         .textarea {
@@ -362,8 +547,8 @@
         /* 互動式呼吸感反白：只在 hover 時觸發 */
         .btn:hover {
             animation: breatheHighlight 1.9s ease-in-out infinite;
-            color: #000;
-            border-color: rgba(255, 255, 255, 0.55);
+            color: var(--bg);
+            border-color: var(--accent);
         }
 
         .btn:active {
@@ -371,7 +556,7 @@
         }
 
         .btn.secondary {
-            background: rgba(255, 255, 255, 0.04);
+            background: var(--surface);
         }
 
         .media-strip {
@@ -381,12 +566,12 @@
         }
 
         .media-chip {
-            border: 1px solid rgba(255, 255, 255, 0.14);
+            border: 1px solid var(--border);
             border-radius: 999px;
             padding: 6px 10px;
             font-size: 12px;
-            color: rgba(255, 255, 255, 0.82);
-            background: rgba(255, 255, 255, 0.06);
+            color: var(--secondary-text);
+            background: var(--surface);
             max-width: 100%;
             overflow: hidden;
             text-overflow: ellipsis;
@@ -505,11 +690,14 @@
         .monthly-calendar {
             display: grid;
             grid-template-columns: repeat(7, 1fr);
+            grid-auto-rows: minmax(min-content, auto);
             gap: 4px;
+            width: 100%;
+            overflow-x: auto; /* 防止手機版超出寬度 */
         }
 
         .calendar-day {
-            aspect-ratio: 1;
+            /* aspect-ratio: 1; 移除這行，改在下方區分 */
             display: flex;
             align-items: center;
             justify-content: center;
@@ -520,7 +708,12 @@
             cursor: pointer;
             transition: all 0.2s ease;
             border: 1px solid transparent;
-            min-height: 24px;
+            min-height: 36px; /* 增加最小高度 */
+        }
+
+        /* 正常月曆格為正方形 */
+        .calendar-day:not(.full-view):not(.empty) {
+            aspect-ratio: 1;
         }
 
         .calendar-day:hover {
@@ -548,15 +741,27 @@
             cursor: default;
         }
 
+        /* 星期標題 */
         .calendar-day-header {
-            aspect-ratio: 1;
+            /* aspect-ratio: 1; 移除這行 */
             display: flex;
             align-items: center;
             justify-content: center;
             font-weight: 600;
             color: var(--secondary-text);
             font-size: 11px;
-            min-height: 24px;
+            padding: 8px 0;
+        }
+
+        /* 棒球訓練紀錄頁面 */
+        #baseball-training .team-sidebar h3 {
+            color: var(--text);
+            margin: 0;
+            font-size: 18px;
+        }
+
+        #baseball-training .team-sidebar .team-header button[aria-label="新增球隊"]::after {
+            /* 這裡無法直接改文字，但在 JS 中會處理標籤 */
         }
 
         /* 球隊管理系統樣式 */
@@ -644,7 +849,7 @@
         }
 
         .team-more-btn:hover {
-            background: rgba(255, 255, 255, 0.1);
+            background: var(--surface-hover);
         }
 
         .team-item.active .team-more-btn:hover {
@@ -653,14 +858,31 @@
 
         /* 下拉選單動畫與配色優化 */
         select.input {
+            -webkit-appearance: none;
+            -moz-appearance: none;
             appearance: none;
             background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
             background-repeat: no-repeat;
             background-position: right 12px center;
             background-size: 16px;
             padding-right: 40px;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: border-color 0.3s, box-shadow 0.3s, transform 0.3s;
             cursor: pointer;
+            color: var(--modal-text);
+        }
+
+        select.input option {
+            background-color: #1a1a1a;
+            color: #fff;
+        }
+
+        .theme-light select.input option {
+            background-color: #fff;
+            color: #000;
+        }
+
+        select.input::-ms-expand {
+            display: none;
         }
 
         .theme-light select.input {
@@ -670,7 +892,93 @@
         select.input:focus {
             border-color: var(--accent);
             box-shadow: 0 0 0 3px rgba(255, 213, 79, 0.2);
-            transform: scale(1.01);
+        }
+
+        /* 待辦清單樣式 */
+        .task-list {
+            list-style: none;
+            padding: 0;
+            margin-top: 15px;
+        }
+
+        .task-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px;
+            background: var(--surface);
+            border-radius: 8px;
+            margin-bottom: 8px;
+            border: 1px solid var(--border);
+            transition: all 0.2s;
+        }
+
+        .task-item:hover {
+            border-color: var(--accent);
+        }
+
+        .task-checkbox {
+            width: 20px;
+            height: 20px;
+            border: 2px solid var(--accent);
+            border-radius: 4px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            transition: background 0.2s;
+        }
+
+        .task-checkbox.checked {
+            background: #4caf50;
+            border-color: #4caf50;
+        }
+
+        .task-checkbox.checked::after {
+            content: '✓';
+            color: white;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        .task-text {
+            flex: 1;
+            color: var(--text);
+            font-size: 15px;
+            transition: all 0.2s;
+        }
+
+        .task-item.completed .task-text {
+            text-decoration: line-through;
+            opacity: 0.6;
+        }
+
+        .task-edit-btn, .task-delete-btn {
+            background: none;
+            border: none;
+            color: var(--secondary-text);
+            cursor: pointer;
+            font-size: 16px;
+            padding: 4px;
+            border-radius: 4px;
+            transition: all 0.2s;
+        }
+
+        .task-edit-btn:hover {
+            color: var(--accent);
+            background: rgba(255, 213, 79, 0.1);
+        }
+
+        .task-delete-btn:hover {
+            color: #ff6b6b;
+            background: rgba(255, 107, 107, 0.1);
+        }
+
+        .task-input-row {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
         }
 
         /* 更多選項菜單 */
@@ -731,7 +1039,7 @@
         @media (max-width: 768px) {
             .nav-container {
                 flex-direction: column;
-                gap: 15px;
+                gap: 8px;
                 padding: 10px;
             }
 
@@ -743,58 +1051,130 @@
             }
 
             .nav-item {
-                padding: 10px 5px;
+                padding: 8px 2px;
                 font-size: 12px;
                 margin: 0;
                 text-align: center;
                 justify-content: center;
                 width: 100%;
                 border-radius: 6px;
+                background: var(--surface);
+                border: 1px solid var(--border);
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+
+            .nav-item.active {
+                background: var(--accent);
+                color: #000;
+                border-color: var(--accent);
+                opacity: 1;
             }
 
             .nav-right {
                 width: 100%;
                 justify-content: center;
                 border-top: 1px solid var(--border);
-                padding-top: 10px;
+                padding-top: 8px;
+                display: flex;
             }
 
             .team-management-layout {
-                grid-template-columns: 1fr;
                 display: flex;
                 flex-direction: column;
+                gap: 12px;
             }
 
             .team-sidebar {
                 position: relative;
                 top: 0;
                 width: 100%;
-                margin-bottom: 20px;
+                margin-bottom: 0;
+                padding: 12px;
+                border-right: none;
+                border-bottom: 1px solid var(--border);
+                border-radius: 10px;
+                background: var(--surface-subtle);
             }
 
             .team-list {
                 display: grid;
-                grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-                gap: 10px;
+                grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+                gap: 8px;
+                max-height: 150px;
+                overflow-y: auto;
+                padding-right: 5px;
+            }
+
+            .team-item {
+                padding: 8px 10px;
             }
 
             .page-title {
-                font-size: 24px;
-                margin: 15px 0;
+                font-size: 22px;
+                margin: 10px 0 20px 0;
+            }
+
+            .team-content {
+                width: 100%;
+                padding: 0;
             }
 
             .content-area {
                 padding: 15px 10px;
             }
 
+            .content-section {
+                padding: 15px;
+                border-radius: 12px;
+            }
+
             .modal {
                 width: 95%;
                 padding: 15px;
+                max-height: 90vh;
+                overflow-y: auto;
+            }
+
+            .monthly-calendar {
+                gap: 4px;
+            }
+
+            .calendar-day {
+                height: 40px;
+                font-size: 13px;
             }
         }
     </style>
 </head>
 <body>
+    <!-- 驗證畫面 -->
+    <div id="authOverlay">
+        <div class="auth-container">
+            <div class="auth-title">身分驗證</div>
+            <div class="auth-sub">請輸入帳號密碼以存取內容</div>
+            
+            <div class="auth-form">
+                <div class="auth-input-group">
+                    <label class="auth-label" for="authUsername">帳號</label>
+                    <input type="text" id="authUsername" class="auth-input" placeholder="請輸入帳號" autocomplete="username">
+                </div>
+                <div class="auth-input-group">
+                    <label class="auth-label" for="authPassword">密碼</label>
+                    <input type="password" id="authPassword" class="auth-input" placeholder="請輸入密碼" autocomplete="current-password">
+                </div>
+                <div id="authError" class="auth-error">帳號或密碼錯誤</div>
+                <button type="button" id="authSubmitBtn" class="auth-btn">登入</button>
+                <button type="button" id="authBioBtn" class="auth-btn auth-bio-btn">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+                    使用生物辨識解鎖
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div id="mainContent">
     <!-- 頂部導航欄 -->
     <nav class="navbar">
         <div class="nav-container">
@@ -807,6 +1187,7 @@
                 <div class="nav-item" data-page="study">學習記錄</div>
             </div>
             <div class="nav-right">
+                <button class="btn secondary" id="enableBioBtn" type="button" style="display: none; margin-right: 10px; font-size: 12px; padding: 6px 12px;">啟用生物辨識</button>
                 <button class="btn-circle" id="themeToggleBtn" type="button" aria-label="切換日夜模式">☾</button>
             </div>
         </div>
@@ -821,7 +1202,19 @@
             <div class="content-section">
                 <h2>歡迎來到我的個人網頁</h2>
                 <p>這是一個展示個人資訊和個人紀錄的平台。我會在這裡記錄下一切，例如球場、讀書等各種方面的事情，可能是日記，可能是認真記錄課題。</p>
-                
+            </div>
+
+            <!-- 總日曆區域 -->
+            <div class="content-section">
+                <div class="calendar-header">
+                    <h2>全覽總日曆</h2>
+                    <div class="calendar-controls">
+                        <button class="btn-circle calendar-nav-btn" id="calPrevMonthBtnHome" type="button" aria-label="上個月">&lt;</button>
+                        <span id="currentMonthDisplayHome" class="calendar-month-display"></span>
+                        <button class="btn-circle calendar-nav-btn" id="calNextMonthBtnHome" type="button" aria-label="下個月">&gt;</button>
+                    </div>
+                </div>
+                <div id="monthlyCalendarHome" class="monthly-calendar"></div>
             </div>
         </div>
 
@@ -883,30 +1276,46 @@
 
         <!-- 棒球訓練紀錄頁面 -->
         <div id="baseball-training" class="page-content">
-            <div class="content-section">
-                <h2>棒球訓練紀錄</h2>
-                <p>這裡記錄我的棒球訓練內容和進度。</p>
-
-                <!-- 月曆組件 -->
-                <div class="monthly-calendar-section">
-                    <div class="calendar-header">
-                        <h3>月曆檢視</h3>
-                        <div class="calendar-controls">
-                            <button class="btn-circle calendar-nav-btn" id="calPrevMonthBtnTraining" type="button" aria-label="上個月">&lt;</button>
-                            <span id="currentMonthDisplayTraining" class="calendar-month-display"></span>
-                            <button class="btn-circle calendar-nav-btn" id="calNextMonthBtnTraining" type="button" aria-label="下個月">&gt;</button>
-                        </div>
+            <div class="team-management-layout">
+                <!-- 紀錄類型管理側邊欄 -->
+                <div class="team-sidebar">
+                    <div class="team-header">
+                        <h3 id="trainingTypeHeader">紀錄類型管理</h3>
+                        <button class="btn-circle" id="teamAddBtnTraining" type="button" aria-label="新增紀錄類型">＋</button>
                     </div>
-                    <div id="monthlyCalendarTraining" class="monthly-calendar"></div>
+                    <div class="team-list" id="teamListTraining">
+                        <!-- 紀錄類型列表將在這裡動態生成 -->
+                    </div>
                 </div>
 
-                <div class="diary-header">
-                    <div class="diary-header-title">日記區</div>
-                    <button class="btn-circle" id="diaryAddBtnTraining" type="button" aria-label="新增日記">＋</button>
-                </div>
+                <!-- 主要內容區域 -->
+                <div class="team-content">
+                    <div class="content-section">
+                        <h2>棒球訓練紀錄</h2>
+                        <p>這裡記錄我的棒球訓練內容和進度。</p>
 
-                <div id="diaryEmptyTraining" class="empty-state">目前還沒有日記。點右上角「＋」新增第一篇。</div>
-                <div id="diaryListTraining" class="diary-list" aria-label="日記列表"></div>
+                        <!-- 月曆組件 -->
+                        <div class="monthly-calendar-section">
+                            <div class="calendar-header">
+                                <h3>月曆檢視</h3>
+                                <div class="calendar-controls">
+                                    <button class="btn-circle calendar-nav-btn" id="calPrevMonthBtnTraining" type="button" aria-label="上個月">&lt;</button>
+                                    <span id="currentMonthDisplayTraining" class="calendar-month-display"></span>
+                                    <button class="btn-circle calendar-nav-btn" id="calNextMonthBtnTraining" type="button" aria-label="下個月">&gt;</button>
+                                </div>
+                            </div>
+                            <div id="monthlyCalendarTraining" class="monthly-calendar"></div>
+                        </div>
+
+                        <div class="diary-header">
+                            <div class="diary-header-title">日記區</div>
+                            <button class="btn-circle" id="diaryAddBtnTraining" type="button" aria-label="新增日記">＋</button>
+                        </div>
+
+                        <div id="diaryEmptyTraining" class="empty-state">目前還沒有日記。點右上角「＋」新增第一篇。</div>
+                        <div id="diaryListTraining" class="diary-list" aria-label="日記列表"></div>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -970,9 +1379,9 @@
                 </div>
 
                 <div class="field" id="diaryTeamSelectField">
-                    <label for="diaryTeamSelect">選擇球隊</label>
+                    <label for="diaryTeamSelect" id="diaryTeamSelectLabel">選擇球隊</label>
                     <select id="diaryTeamSelect" class="input">
-                        <option value="">-- 選擇球隊 --</option>
+                        <option value="" id="diaryTeamSelectPlaceholder">-- 選擇球隊 --</option>
                         <!-- 球隊選項將動態生成 -->
                     </select>
                 </div>
@@ -1009,7 +1418,7 @@
                 </div>
                 <div class="btn-row" style="margin-top:0;">
                     <button class="btn secondary" id="diaryViewerEditBtn" type="button">編輯</button>
-                    <button class="btn secondary" id="diaryViewerDeleteBtn" type="button" style="color: #ff6b6b; border-color: rgba(255, 107, 107, 0.3);">刪除日記</button>
+                    <button class="btn secondary" id="diaryViewerDeleteBtn" type="button" style="color: #ff6b6b; border-color: var(--border-strong);">刪除日記</button>
                     <button class="btn secondary" id="diaryViewerCloseBtn" type="button">關閉</button>
                 </div>
             </div>
@@ -1091,13 +1500,16 @@
 
             <div class="content-section" style="background: var(--input-bg);">
                 <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:10px;">
-                    <h2>行事曆（一週）</h2>
-                    <div style="display:flex; gap:8px;">
-                        <button class="btn-circle" id="calPrevWeekBtn" style="width:32px; height:32px; font-size:14px;">&lt;</button>
-                        <button class="btn-circle" id="calNextWeekBtn" style="width:32px; height:32px; font-size:14px;">&gt;</button>
+                    <h2>學習月曆 <span style="font-size: 14px; color: var(--secondary-text); font-weight: normal;">(只顯示此科目安排)</span></h2>
+                    <div style="display:flex; align-items:center; gap:12px;">
+                        <span id="currentMonthDisplayStudy" style="font-weight: bold; color: var(--accent);"></span>
+                        <div style="display:flex; gap:8px;">
+                            <button class="btn-circle" id="calPrevMonthBtnStudy" style="width:32px; height:32px; font-size:14px;">&lt;</button>
+                            <button class="btn-circle" id="calNextMonthBtnStudy" style="width:32px; height:32px; font-size:14px;">&gt;</button>
+                        </div>
                     </div>
                 </div>
-                <div id="weekCalendar" class="diary-list week-calendar"></div>
+                <div id="monthlyCalendarStudy" class="monthly-calendar"></div>
             </div>
         </div>
     </div>
@@ -1123,6 +1535,38 @@
             <div class="btn-row">
                 <button class="btn secondary" id="calendarEditorCancelBtn" type="button">取消</button>
                 <button class="btn" id="calendarEditorSaveBtn" type="button">儲存</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 每日任務編輯視窗（學習記錄） -->
+    <div id="taskEditorOverlay" class="overlay" aria-hidden="true">
+        <div class="modal" role="dialog" aria-modal="true" aria-label="每日任務管理">
+            <div class="modal-header">
+                <div>
+                    <div class="modal-title" id="taskEditorTitle">每日任務</div>
+                    <div class="modal-sub" id="taskEditorSub">日期：<span id="taskEditorDateDisplay"></span></div>
+                </div>
+                <button class="btn secondary" id="taskEditorCloseBtn" type="button">關閉</button>
+            </div>
+
+            <div class="content-section" style="background: var(--input-bg); margin-bottom: 0;">
+                <div class="task-input-row">
+                    <input id="taskNewInput" class="input" type="text" placeholder="新增任務內容..." maxlength="100" />
+                    <button class="btn" id="taskAddBtn" type="button">新增</button>
+                </div>
+                
+                <div id="taskListContainer" class="task-list">
+                    <!-- 任務項目將動態生成 -->
+                </div>
+                
+                <div id="taskEmptyMsg" class="empty-state" style="text-align: center; display: none;">
+                    今天還沒有任務，快來新增一個吧！
+                </div>
+            </div>
+
+            <div class="btn-row">
+                <button class="btn secondary" id="taskEditorDoneBtn" type="button">完成</button>
             </div>
         </div>
     </div>
@@ -1196,6 +1640,40 @@
             const navEl = Array.from(navItems).find(n => n.getAttribute('data-page') === targetPage);
             navEl?.classList.add('active');
             pageEl.classList.add('active');
+
+            // 重置當前選擇的球隊/紀錄類型
+            currentTeamId = null;
+
+            // 根據頁面調整日記編輯器的文字與功能
+            const teamSelectLabel = document.getElementById('diaryTeamSelectLabel');
+            const teamSelectPlaceholder = document.getElementById('diaryTeamSelectPlaceholder');
+            const teamEditorTitle = document.getElementById('teamEditorTitle');
+            const teamEditorNameLabel = document.querySelector('label[for="teamNameInput"]');
+            const teamEditorDescLabel = document.querySelector('label[for="teamDescInput"]');
+
+            if (targetPage === 'home') {
+                renderMonthlyCalendarHome();
+            } else if (targetPage === 'baseball-training') {
+                if (teamSelectLabel) teamSelectLabel.textContent = '選擇紀錄類型';
+                if (teamSelectPlaceholder) teamSelectPlaceholder.textContent = '-- 選擇紀錄類型 --';
+                if (teamEditorTitle) teamEditorTitle.textContent = editingTeamId ? '編輯紀錄類型' : '新增紀錄類型';
+                if (teamEditorNameLabel) teamEditorNameLabel.textContent = '紀錄類型名稱';
+                if (teamEditorDescLabel) teamEditorDescLabel.textContent = '紀錄類型描述';
+                
+                // 載入訓練紀錄的類型
+                loadTeams('training');
+                renderMonthlyCalendar('baseballTraining');
+            } else if (targetPage === 'baseball-game') {
+                if (teamSelectLabel) teamSelectLabel.textContent = '選擇球隊';
+                if (teamSelectPlaceholder) teamSelectPlaceholder.textContent = '-- 選擇球隊 --';
+                if (teamEditorTitle) teamEditorTitle.textContent = editingTeamId ? '編輯球隊' : '新增球隊';
+                if (teamEditorNameLabel) teamEditorNameLabel.textContent = '球隊名稱';
+                if (teamEditorDescLabel) teamEditorDescLabel.textContent = '球隊描述';
+                
+                // 載入比賽紀錄的球隊
+                loadTeams('game');
+                renderMonthlyCalendar('baseballGame');
+            }
 
             // 切換分頁後回到頂部（更像多頁）
             window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -1328,8 +1806,8 @@
 
             let diaries = diaryState.get(module.key) || [];
             
-            // 如果當前有選擇球隊，則過濾出該球隊的日記
-            if (currentTeamId && module.key === 'baseballGame') {
+            // 如果當前有選擇球隊/紀錄類型，則過濾出對應的日記
+            if (currentTeamId && (module.key === 'baseballGame' || module.key === 'baseballTraining')) {
                 diaries = diaries.filter(diary => diary.team_id === currentTeamId);
             }
 
@@ -1424,7 +1902,18 @@
             // 根據頁面類型顯示或隱藏球隊選擇
             const teamField = document.getElementById('diaryTeamSelectField');
             if (teamField) {
-                teamField.style.display = (module.key === 'baseballGame') ? 'block' : 'none';
+                teamField.style.display = (module.key === 'baseballGame' || module.key === 'baseballTraining') ? 'block' : 'none';
+                
+                // 動態更新標籤文字
+                const teamSelectLabel = document.getElementById('diaryTeamSelectLabel');
+                const teamSelectPlaceholder = document.getElementById('diaryTeamSelectPlaceholder');
+                if (module.key === 'baseballTraining') {
+                    if (teamSelectLabel) teamSelectLabel.textContent = '選擇紀錄類型';
+                    if (teamSelectPlaceholder) teamSelectPlaceholder.textContent = '-- 選擇紀錄類型 --';
+                } else {
+                    if (teamSelectLabel) teamSelectLabel.textContent = '選擇球隊';
+                    if (teamSelectPlaceholder) teamSelectPlaceholder.textContent = '-- 選擇球隊 --';
+                }
             }
 
             draftMedia = [];
@@ -1711,11 +2200,146 @@
         const calPrevWeekBtn = document.getElementById('calPrevWeekBtn');
         const calNextWeekBtn = document.getElementById('calNextWeekBtn');
 
+        // 學習記錄相關變數
+        const taskEditorOverlay = document.getElementById('taskEditorOverlay');
+        const taskEditorCloseBtn = document.getElementById('taskEditorCloseBtn');
+        const taskEditorDoneBtn = document.getElementById('taskEditorDoneBtn');
+        const taskAddBtn = document.getElementById('taskAddBtn');
+        const taskNewInput = document.getElementById('taskNewInput');
+        const taskListContainer = document.getElementById('taskListContainer');
+        const taskEmptyMsg = document.getElementById('taskEmptyMsg');
+        const taskEditorDateDisplay = document.getElementById('taskEditorDateDisplay');
+
         let subjects = [];
         let currentSubjectId = null;
         let calendarEditingKey = null;
         let currentWeekOffset = 0; // 0 = this week, -1 = last week
         let editingEntryId = null; // For diary editing
+        let currentTaskDate = ''; // YYYY-MM-DD
+        let taskData = []; // Local cache for daily tasks
+
+        // 每日任務編輯器邏輯
+        async function openTaskEditor(dateStr) {
+            currentTaskDate = dateStr;
+            taskEditorDateDisplay.textContent = dateStr;
+            taskEditorOverlay.classList.add('active');
+            taskEditorOverlay.setAttribute('aria-hidden', 'false');
+            
+            // 載入該日期的任務
+            await loadDailyTasks();
+        }
+
+        function closeTaskEditor() {
+            taskEditorOverlay.classList.remove('active');
+            taskEditorOverlay.setAttribute('aria-hidden', 'true');
+        }
+
+        async function loadDailyTasks() {
+            taskListContainer.innerHTML = '';
+            taskEmptyMsg.style.display = 'none';
+            
+            // 從 Supabase 抓取該科目、該日期的任務
+            const allTasks = await dbFetch('study_task');
+            taskData = allTasks.filter(t => t.subject_id === currentSubjectId && t.date === currentTaskDate);
+            
+            if (taskData.length === 0) {
+                taskEmptyMsg.style.display = 'block';
+            } else {
+                taskData.forEach(task => renderTaskItem(task));
+            }
+        }
+
+        function renderTaskItem(task) {
+            const item = document.createElement('div');
+            item.className = `task-item ${task.completed ? 'completed' : ''}`;
+            item.innerHTML = `
+                <div class="task-checkbox ${task.completed ? 'checked' : ''}"></div>
+                <div class="task-text">${task.text}</div>
+                <button class="task-edit-btn" title="編輯">✎</button>
+                <button class="task-delete-btn" title="刪除">🗑</button>
+            `;
+
+            // 勾選功能
+            item.querySelector('.task-checkbox').onclick = async () => {
+                const newStatus = !task.completed;
+                const { id, _db_created_at, ...content } = task;
+                content.completed = newStatus;
+                
+                const success = await dbUpdate(task.id, content);
+                if (success) {
+                    task.completed = newStatus;
+                    item.classList.toggle('completed', newStatus);
+                    item.querySelector('.task-checkbox').classList.toggle('checked', newStatus);
+                    // 更新月曆顏色
+                    renderMonthlyCalendarStudy();
+                }
+            };
+
+            // 編輯功能
+            item.querySelector('.task-edit-btn').onclick = async () => {
+                const newText = prompt('編輯任務內容:', task.text);
+                if (newText !== null && newText.trim() !== '') {
+                    const { id, _db_created_at, ...content } = task;
+                    content.text = newText.trim();
+                    const success = await dbUpdate(task.id, content);
+                    if (success) {
+                        task.text = content.text;
+                        item.querySelector('.task-text').textContent = content.text;
+                    }
+                }
+            };
+
+            // 刪除功能
+            item.querySelector('.task-delete-btn').onclick = async () => {
+                openConfirm({
+                    title: '刪除確認',
+                    message: '確定要刪除此任務嗎？',
+                    confirmText: '確定刪除',
+                    cancelText: '取消',
+                    onConfirm: async () => {
+                        const success = await dbDelete(task.id);
+                        if (success) {
+                            item.remove();
+                            taskData = taskData.filter(t => t.id !== task.id);
+                            if (taskData.length === 0) taskEmptyMsg.style.display = 'block';
+                            // 更新月曆顏色
+                            renderMonthlyCalendarStudy();
+                        }
+                    }
+                });
+            };
+
+            taskListContainer.appendChild(item);
+        }
+
+        taskAddBtn?.addEventListener('click', async () => {
+            const text = taskNewInput.value.trim();
+            if (!text) return;
+
+            const newTask = {
+                subject_id: currentSubjectId,
+                date: currentTaskDate,
+                text: text,
+                completed: false,
+                createdAt: Date.now()
+            };
+
+            const savedTask = await dbAdd('study_task', newTask);
+            if (savedTask) {
+                taskData.push(savedTask);
+                taskEmptyMsg.style.display = 'none';
+                renderTaskItem(savedTask);
+                taskNewInput.value = '';
+                // 更新月曆顏色
+                renderMonthlyCalendarStudy();
+            }
+        });
+
+        taskEditorCloseBtn?.addEventListener('click', closeTaskEditor);
+        taskEditorDoneBtn?.addEventListener('click', closeTaskEditor);
+        taskEditorOverlay?.addEventListener('click', (e) => {
+            if (e.target === taskEditorOverlay) closeTaskEditor();
+        });
 
         function openConfirm(options) {
             if (!confirmOverlay) return;
@@ -1819,11 +2443,86 @@
             subjectEditorOverlay.setAttribute('aria-hidden','true');
         }
 
-        function openSubjectPage(subjectId) {
+        async function renderMonthlyCalendarStudy() {
+            const calendarEl = document.getElementById('monthlyCalendarStudy');
+            const monthDisplayEl = document.getElementById('currentMonthDisplayStudy');
+            
+            if (!calendarEl || !monthDisplayEl) return;
+
+            // 獲取所有學習任務來標記日曆
+            const allTasks = await dbFetch('study_task');
+            const subjectTasks = allTasks.filter(t => t.subject_id === currentSubjectId);
+            
+            const monthNames = ['一月', '二月', '三月', '四月', '五月', '六月', '七月', '八月', '九月', '十月', '十一月', '十二月'];
+            monthDisplayEl.textContent = `${currentYear}年 ${monthNames[currentMonth]}`;
+            
+            const firstDay = new Date(currentYear, currentMonth, 1);
+            const lastDay = new Date(currentYear, currentMonth + 1, 0);
+            const daysInMonth = lastDay.getDate();
+            const startingDay = firstDay.getDay();
+            
+            calendarEl.innerHTML = '';
+            
+            // 星期標題
+            const weekdays = ['日', '一', '二', '三', '四', '五', '六'];
+            weekdays.forEach(day => {
+                const dayHeader = document.createElement('div');
+                dayHeader.className = 'calendar-day-header';
+                dayHeader.textContent = day;
+                calendarEl.appendChild(dayHeader);
+            });
+            
+            // 空白格
+            for (let i = 0; i < startingDay; i++) {
+                const emptyDay = document.createElement('div');
+                emptyDay.className = 'calendar-day empty';
+                calendarEl.appendChild(emptyDay);
+            }
+            
+            // 日期格
+            const today = new Date();
+            const todayStr = formatDateYYYYMMDD(today);
+
+            for (let day = 1; day <= daysInMonth; day++) {
+                const dayEl = document.createElement('div');
+                dayEl.className = 'calendar-day';
+                dayEl.textContent = day;
+                
+                const dateStr = `${currentYear}-${String(currentMonth + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+                
+                if (dateStr === todayStr) {
+                    dayEl.classList.add('is-today');
+                }
+
+                // 檢查是否有任務
+                const dayTasks = subjectTasks.filter(t => t.date === dateStr);
+                if (dayTasks.length > 0) {
+                    dayEl.classList.add('has-record');
+                    
+                    // 檢查是否全部完成
+                    const allCompleted = dayTasks.every(t => t.completed);
+                    if (allCompleted) {
+                        dayEl.style.backgroundColor = '#4caf50'; // 綠色代表全部完成
+                        dayEl.style.color = 'white';
+                    } else {
+                        dayEl.style.backgroundColor = 'var(--accent)'; // 橘色代表有任務但未全部完成
+                        dayEl.style.color = '#000';
+                    }
+                }
+                
+                dayEl.addEventListener('click', () => openTaskEditor(dateStr));
+                calendarEl.appendChild(dayEl);
+            }
+        }
+
+        async function openSubjectPage(subjectId) {
             const s = subjects.find(x=>x.id===subjectId);
             if (!s || !subjectPageOverlay) return;
             currentSubjectId = subjectId;
-            currentWeekOffset = 0; // Reset to current week
+            
+            // 重置為當前月份
+            currentMonth = new Date().getMonth();
+            currentYear = new Date().getFullYear();
 
             subjectPageTitle.textContent = s.name || '科目';
             subjectPageDesc.textContent = s.description || '';
@@ -1831,7 +2530,7 @@
             subjectGoalView.textContent = s.goal || '';
             subjectPlanView.textContent = s.plan || '';
 
-            renderWeekCalendar(s);
+            await renderMonthlyCalendarStudy();
 
             subjectPageOverlay.classList.add('active');
             subjectPageOverlay.setAttribute('aria-hidden','false');
@@ -2098,6 +2797,181 @@
 
         // 月曆功能
         let currentMonth = new Date().getMonth();
+        // --- 身份驗證系統 ---
+        const AUTH_CONFIG = {
+            username: '123', // 您可以在此修改帳號
+            password: '321', // 您可以在此修改密碼
+            sessionKey: 'myweb_auth_session',
+            bioKey: 'myweb_bio_enabled'
+        };
+
+        const authOverlay = document.getElementById('authOverlay');
+        const authUsernameInput = document.getElementById('authUsername');
+        const authPasswordInput = document.getElementById('authPassword');
+        const authSubmitBtn = document.getElementById('authSubmitBtn');
+        const authBioBtn = document.getElementById('authBioBtn');
+        const authError = document.getElementById('authError');
+
+        // 檢查登入狀態
+        function checkAuth() {
+            const session = localStorage.getItem(AUTH_CONFIG.sessionKey);
+            if (session === 'true') {
+                document.body.classList.add('authenticated');
+                return true;
+            }
+            return false;
+        }
+
+        // 處理登入
+        function handleLogin() {
+            const user = authUsernameInput.value;
+            const pass = authPasswordInput.value;
+
+            if (user === AUTH_CONFIG.username && pass === AUTH_CONFIG.password) {
+                loginSuccess();
+            } else {
+                showAuthError();
+            }
+        }
+
+        function loginSuccess() {
+            localStorage.setItem(AUTH_CONFIG.sessionKey, 'true');
+            document.body.classList.add('authenticated');
+            authError.style.opacity = '0';
+            
+            // 登入成功後，檢查是否支援生物辨識且尚未啟用
+            updateBioBtnVisibility();
+        }
+
+        function updateBioBtnVisibility() {
+            const enableBioBtn = document.getElementById('enableBioBtn');
+            if (window.PublicKeyCredential && !localStorage.getItem('myweb_cred_id')) {
+                if (enableBioBtn) enableBioBtn.style.display = 'block';
+            } else {
+                if (enableBioBtn) enableBioBtn.style.display = 'none';
+            }
+        }
+
+        function showAuthError() {
+            authError.textContent = "帳號或密碼錯誤";
+            authError.style.opacity = '1';
+            authPasswordInput.value = '';
+            authPasswordInput.focus();
+        }
+
+        // 註冊生物辨識 (在第一次密碼登入後可以呼叫)
+        async function registerBio() {
+            if (!window.PublicKeyCredential) return;
+            
+            try {
+                const challenge = new Uint8Array(32);
+                window.crypto.getRandomValues(challenge);
+                
+                const createOptions = {
+                    publicKey: {
+                        challenge,
+                        rp: { name: "我的個人網頁", id: window.location.hostname || "localhost" },
+                        user: {
+                            id: new Uint8Array(16),
+                            name: AUTH_CONFIG.username,
+                            displayName: AUTH_CONFIG.username
+                        },
+                        pubKeyCredParams: [{ alg: -7, type: "public-key" }, { alg: -257, type: "public-key" }],
+                        authenticatorSelection: { userVerification: "required" },
+                        timeout: 60000
+                    }
+                };
+                
+                const credential = await navigator.credentials.create(createOptions);
+                if (credential) {
+                    // 儲存 credentialId 到 localStorage (轉為 base64)
+                    const id = btoa(String.fromCharCode(...new Uint8Array(credential.rawId)));
+                    localStorage.setItem('myweb_cred_id', id);
+                    localStorage.setItem(AUTH_CONFIG.bioKey, 'true');
+                    alert('生物辨識已啟用！下次登入可直接使用。');
+                }
+            } catch (err) {
+                console.error('註冊生物辨識失敗:', err);
+            }
+        }
+
+        // 生物辨識驗證
+        async function handleBioAuth() {
+            const credIdBase64 = localStorage.getItem('myweb_cred_id');
+            if (!window.PublicKeyCredential || !credIdBase64) {
+                // 如果還沒註冊過，但在支援的裝置上，引導用戶先用密碼登入再註冊
+                if (window.PublicKeyCredential && !credIdBase64) {
+                    showAuthError();
+                    authError.textContent = "請先使用密碼登入以啟用生物辨識";
+                    authError.style.opacity = '1';
+                }
+                return;
+            }
+
+            try {
+                const challenge = new Uint8Array(32);
+                window.crypto.getRandomValues(challenge);
+                
+                const credId = Uint8Array.from(atob(credIdBase64), c => c.charCodeAt(0));
+                
+                const getOptions = {
+                    publicKey: {
+                        challenge,
+                        allowCredentials: [{
+                            id: credId,
+                            type: 'public-key'
+                        }],
+                        userVerification: "required",
+                        timeout: 60000
+                    }
+                };
+                
+                const assertion = await navigator.credentials.get(getOptions);
+                if (assertion) {
+                    loginSuccess();
+                }
+            } catch (err) {
+                console.error('生物辨識驗證失敗:', err);
+                // 失敗時顯示錯誤訊息
+                showAuthError();
+                authError.textContent = "生物辨識失敗，請使用密碼登入";
+            }
+        }
+
+        // 初始化驗證系統
+        function initAuth() {
+            if (checkAuth()) {
+                updateBioBtnVisibility();
+            }
+
+            // 檢查是否支援並已啟用生物辨識
+            if (window.PublicKeyCredential && localStorage.getItem('myweb_cred_id')) {
+                authBioBtn.style.display = 'flex';
+                // 自動嘗試生物辨識
+                setTimeout(handleBioAuth, 500);
+            }
+
+            authSubmitBtn.addEventListener('click', handleLogin);
+            authBioBtn.addEventListener('click', handleBioAuth);
+            
+            const enableBioBtn = document.getElementById('enableBioBtn');
+            if (enableBioBtn) {
+                enableBioBtn.addEventListener('click', async () => {
+                    await registerBio();
+                    updateBioBtnVisibility();
+                });
+            }
+            
+            // 支援 Enter 鍵登入
+            authPasswordInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') handleLogin();
+            });
+        }
+
+        // 在 DOMContentLoaded 時啟動
+        initAuth();
+
+        // --- 原有的初始化代碼 ---
         let currentYear = new Date().getFullYear();
 
         // 初始化月曆
@@ -2155,6 +3029,167 @@
                 
                 renderMonthlyCalendar('baseballTraining');
             }
+
+            // 學習記錄月曆
+            const calPrevMonthBtnStudy = document.getElementById('calPrevMonthBtnStudy');
+            const calNextMonthBtnStudy = document.getElementById('calNextMonthBtnStudy');
+            
+            if (calPrevMonthBtnStudy && calNextMonthBtnStudy) {
+                calPrevMonthBtnStudy.addEventListener('click', () => {
+                    currentMonth--;
+                    if (currentMonth < 0) {
+                        currentMonth = 11;
+                        currentYear--;
+                    }
+                    renderMonthlyCalendarStudy();
+                });
+                
+                calNextMonthBtnStudy.addEventListener('click', () => {
+                    currentMonth++;
+                    if (currentMonth > 11) {
+                        currentMonth = 0;
+                        currentYear++;
+                    }
+                    renderMonthlyCalendarStudy();
+                });
+            }
+
+            // 首頁總日曆
+            const calPrevMonthBtnHome = document.getElementById('calPrevMonthBtnHome');
+            const calNextMonthBtnHome = document.getElementById('calNextMonthBtnHome');
+            
+            if (calPrevMonthBtnHome && calNextMonthBtnHome) {
+                calPrevMonthBtnHome.addEventListener('click', () => {
+                    currentMonth--;
+                    if (currentMonth < 0) {
+                        currentMonth = 11;
+                        currentYear--;
+                    }
+                    renderMonthlyCalendarHome();
+                });
+                
+                calNextMonthBtnHome.addEventListener('click', () => {
+                    currentMonth++;
+                    if (currentMonth > 11) {
+                        currentMonth = 0;
+                        currentYear++;
+                    }
+                    renderMonthlyCalendarHome();
+                });
+            }
+        }
+
+        async function renderMonthlyCalendarHome() {
+            const calendarEl = document.getElementById('monthlyCalendarHome');
+            const monthDisplayEl = document.getElementById('currentMonthDisplayHome');
+            if (!calendarEl || !monthDisplayEl) return;
+
+            // 1. 抓取所有需要的資料
+            const [studyTasks, gameDiaries, trainingDiaries, subjects, teams, trainingTypes] = await Promise.all([
+                dbFetch('study_task'),
+                dbFetch('diary_baseballGame'),
+                dbFetch('diary_baseballTraining'),
+                dbFetch('subject'),
+                dbFetch('team'),
+                dbFetch('training_type')
+            ]);
+
+            // 2. 準備對照表
+            const subjectMap = new Map(subjects.map(s => [s.id, s]));
+            const teamMap = new Map(teams.map(t => [t.id, t]));
+            const trainingTypeMap = new Map(trainingTypes.map(t => [t.id, t]));
+
+            // 3. 更新月份顯示
+            const monthNames = ['一月', '二月', '三月', '四月', '五月', '六月', '七月', '八月', '九月', '十月', '十一月', '十二月'];
+            monthDisplayEl.textContent = `${currentYear}年 ${monthNames[currentMonth]}`;
+            
+            const firstDay = new Date(currentYear, currentMonth, 1);
+            const lastDay = new Date(currentYear, currentMonth + 1, 0);
+            const daysInMonth = lastDay.getDate();
+            const startingDay = firstDay.getDay();
+            
+            calendarEl.innerHTML = '';
+            
+            const weekdays = ['日', '一', '二', '三', '四', '五', '六'];
+            weekdays.forEach(day => {
+                const dayHeader = document.createElement('div');
+                dayHeader.className = 'calendar-day-header';
+                dayHeader.textContent = day;
+                calendarEl.appendChild(dayHeader);
+            });
+            
+            for (let i = 0; i < startingDay; i++) {
+                const emptyDay = document.createElement('div');
+                emptyDay.className = 'calendar-day empty';
+                calendarEl.appendChild(emptyDay);
+            }
+            
+            const todayStr = formatDateYYYYMMDD(new Date());
+
+            for (let day = 1; day <= daysInMonth; day++) {
+                const dayEl = document.createElement('div');
+                dayEl.className = 'calendar-day full-view';
+                
+                const dateStr = `${currentYear}-${String(currentMonth + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+                
+                if (dateStr === todayStr) {
+                    dayEl.classList.add('is-today');
+                }
+
+                // 日期數字
+                const numEl = document.createElement('div');
+                numEl.className = 'calendar-day-number';
+                numEl.textContent = day;
+                dayEl.appendChild(numEl);
+
+                // 4. 收集當日所有事件
+                const dayStudy = studyTasks.filter(t => t.date === dateStr);
+                const dayGames = gameDiaries.filter(d => d.date === dateStr);
+                const dayTraining = trainingDiaries.filter(d => d.date === dateStr);
+
+                // 學習任務
+                dayStudy.forEach(task => {
+                    const subject = subjectMap.get(task.subject_id);
+                    const eventEl = document.createElement('div');
+                    eventEl.className = 'calendar-event study';
+                    eventEl.textContent = `[${subject?.name || '學習'}] ${task.text}`;
+                    eventEl.onclick = (e) => {
+                        e.stopPropagation();
+                        location.hash = `#study/subject/${task.subject_id}`;
+                    };
+                    dayEl.appendChild(eventEl);
+                });
+
+                // 比賽紀錄
+                dayGames.forEach(diary => {
+                    const team = teamMap.get(diary.team_id);
+                    const eventEl = document.createElement('div');
+                    eventEl.className = 'calendar-event game';
+                    eventEl.style.backgroundColor = team?.color || '#2196f3';
+                    eventEl.textContent = `[${team?.name || '比賽'}] ${diary.title}`;
+                    eventEl.onclick = (e) => {
+                        e.stopPropagation();
+                        openViewer({key: 'baseballGame'}, diary.id);
+                    };
+                    dayEl.appendChild(eventEl);
+                });
+
+                // 訓練紀錄
+                dayTraining.forEach(diary => {
+                    const type = trainingTypeMap.get(diary.team_id);
+                    const eventEl = document.createElement('div');
+                    eventEl.className = 'calendar-event training';
+                    eventEl.style.backgroundColor = type?.color || '#ff9800';
+                    eventEl.textContent = `[${type?.name || '訓練'}] ${diary.title}`;
+                    eventEl.onclick = (e) => {
+                        e.stopPropagation();
+                        openViewer({key: 'baseballTraining'}, diary.id);
+                    };
+                    dayEl.appendChild(eventEl);
+                });
+
+                calendarEl.appendChild(dayEl);
+            }
         }
 
         // 渲染月曆
@@ -2168,25 +3203,20 @@
             const type = `diary_${pageType}`;
             let diaries = await dbFetch(type);
             
-            // 獲取所有球隊資料，用於自訂顏色
-            const allTeams = await dbFetch('team');
+            // 獲取所有球隊/紀錄類型資料，用於自訂顏色
+            // 重要：根據頁面類型獲取對應的顏色設定
+            const dataType = pageType === 'baseballTraining' ? 'training_type' : 'team';
+            const allTeams = await dbFetch(dataType);
             const teamColorMap = new Map();
             allTeams.forEach(t => {
                 if (t.color) teamColorMap.set(t.id, t.color);
             });
             
-            // 如果當前有選擇球隊，則在比賽紀錄月曆中過濾出該球隊的日期
-            if (currentTeamId && pageType === 'baseballGame') {
+            // 如果當前有選擇球隊/紀錄類型，則在月曆中過濾出該類別的日期
+            if (currentTeamId && (pageType === 'baseballGame' || pageType === 'baseballTraining')) {
                 diaries = diaries.filter(diary => diary.team_id === currentTeamId);
             }
             
-            // 重要：重新載入球隊資料以確保獲取最新的顏色設定
-            const updatedTeams = await dbFetch('team');
-            teamColorMap.clear();
-            updatedTeams.forEach(t => {
-                if (t.color) teamColorMap.set(t.id, t.color);
-            });
-
             // 更新月份顯示
             const monthNames = ['一月', '二月', '三月', '四月', '五月', '六月', '七月', '八月', '九月', '十月', '十一月', '十二月'];
             monthDisplayEl.textContent = `${currentYear}年 ${monthNames[currentMonth]}`;
@@ -2280,7 +3310,12 @@
         function initTeamManagement() {
             const teamAddBtn = document.getElementById('teamAddBtn');
             if (teamAddBtn) {
-                teamAddBtn.addEventListener('click', openTeamEditor);
+                teamAddBtn.addEventListener('click', () => openTeamEditor());
+            }
+
+            const teamAddBtnTraining = document.getElementById('teamAddBtnTraining');
+            if (teamAddBtnTraining) {
+                teamAddBtnTraining.addEventListener('click', () => openTeamEditor());
             }
 
             teamEditorCloseBtn?.addEventListener('click', closeTeamEditor);
@@ -2291,26 +3326,31 @@
                 if (e.target === teamEditorOverlay) closeTeamEditor();
             });
             
-            loadTeams();
+            const currentPage = location.hash.replace('#', '') || 'home';
+            loadTeams(currentPage === 'baseball-training' ? 'training' : 'game');
         }
 
         // 載入球隊列表
-        async function loadTeams() {
-            const teamList = document.getElementById('teamList');
+        async function loadTeams(mode = 'game') {
+            const listId = mode === 'training' ? 'teamListTraining' : 'teamList';
+            const teamList = document.getElementById(listId);
             if (!teamList) return;
             
-            // 從 Supabase 載入球隊數據
-            const fetchedTeams = await dbFetch('team');
+            // 從 Supabase 載入數據，區分球隊與紀錄類型
+            const type = mode === 'training' ? 'training_type' : 'team';
+            const fetchedTeams = await dbFetch(type);
             
             teamList.innerHTML = '';
             
             // 更新日記編輯器的下拉選單
             if (editorTeamSelect) {
-                editorTeamSelect.innerHTML = '<option value="">-- 選擇球隊 --</option>';
+                const placeholder = mode === 'training' ? '-- 選擇紀錄類型 --' : '-- 選擇球隊 --';
+                editorTeamSelect.innerHTML = `<option value="">${placeholder}</option>`;
             }
 
             if (fetchedTeams.length === 0) {
-                teamList.innerHTML = '<div style="padding: 10px; color: var(--secondary-text); font-size: 14px;">尚未建立球隊</div>';
+                const emptyMsg = mode === 'training' ? '尚未建立紀錄類型' : '尚未建立球隊';
+                teamList.innerHTML = `<div style="padding: 10px; color: var(--secondary-text); font-size: 14px;">${emptyMsg}</div>`;
             } else {
                 fetchedTeams.forEach(team => {
                     // 渲染列表
@@ -2319,22 +3359,26 @@
                     item.setAttribute('data-team-id', team.id);
                     if (currentTeamId === team.id) item.classList.add('active');
                     
+                    const subText = mode === 'training' ? '點擊切換類型' : '點擊切換球隊';
+                    const editLabel = mode === 'training' ? '✎ 編輯紀錄類型' : '✎ 編輯資訊';
+                    const deleteLabel = mode === 'training' ? '🗑 刪除紀錄類型' : '🗑 刪除球隊';
+
                     item.innerHTML = `
                         <div class="team-item-info">
                             <div style="font-weight: 500;">${team.name}</div>
-                            <div style="font-size: 12px; color: var(--secondary-text);">${team.desc || '點擊切換球隊'}</div>
+                            <div style="font-size: 12px; color: var(--secondary-text);">${team.desc || subText}</div>
                         </div>
                         <button class="team-more-btn" type="button" aria-label="更多選項">⋮</button>
                         <div class="more-menu">
-                            <div class="menu-item edit">✎ 編輯資訊</div>
-                            <div class="menu-item delete">🗑 刪除球隊</div>
+                            <div class="menu-item edit">${editLabel}</div>
+                            <div class="menu-item delete">${deleteLabel}</div>
                         </div>
                     `;
                     
-                    // 點擊資訊部分切換球隊
+                    // 點擊資訊部分切換
                     item.querySelector('.team-item-info').addEventListener('click', (e) => {
                         e.stopPropagation();
-                        selectTeam(team.id);
+                        selectTeam(team.id, mode);
                     });
 
                     // 更多按鈕邏輯
@@ -2343,16 +3387,12 @@
                     
                     moreBtn.addEventListener('click', (e) => {
                         e.stopPropagation();
-                        // 關閉其他已開啟的選單並恢復其 z-index
-                        document.querySelectorAll('.team-item').forEach(el => {
-                            el.style.zIndex = "";
-                        });
+                        document.querySelectorAll('.team-item').forEach(el => el.style.zIndex = "");
                         document.querySelectorAll('.more-menu.active').forEach(m => {
                             if (m !== menu) m.classList.remove('active');
                         });
                         
                         const isActive = menu.classList.toggle('active');
-                        // 如果選單開啟，提升父容器的 z-index
                         item.style.zIndex = isActive ? "10000" : "";
                     });
 
@@ -2360,7 +3400,7 @@
                     menu.querySelector('.edit').addEventListener('click', (e) => {
                         e.stopPropagation();
                         menu.classList.remove('active');
-                        item.style.zIndex = ""; // 關閉選單時重置 z-index
+                        item.style.zIndex = "";
                         openTeamEditor(team);
                     });
 
@@ -2368,8 +3408,8 @@
                     menu.querySelector('.delete').addEventListener('click', (e) => {
                         e.stopPropagation();
                         menu.classList.remove('active');
-                        item.style.zIndex = ""; // 關閉選單時重置 z-index
-                        confirmDeleteTeam(team);
+                        item.style.zIndex = "";
+                        confirmDeleteTeam(team, mode);
                     });
 
                     teamList.appendChild(item);
@@ -2391,17 +3431,19 @@
             document.querySelectorAll('.team-item').forEach(el => el.style.zIndex = "");
         });
 
-        // 確認刪除球隊
-        async function confirmDeleteTeam(team) {
-            const confirmed = confirm(`確定要刪除球隊「${team.name}」嗎？相關日記將失去球隊關聯。`);
+        // 確認刪除
+        async function confirmDeleteTeam(team, mode = 'game') {
+            const label = mode === 'training' ? '紀錄類型' : '球隊';
+            const confirmed = confirm(`確定要刪除${label}「${team.name}」嗎？相關日記將失去關聯。`);
             if (confirmed) {
                 const success = await dbDelete(team.id); 
                 if (success) {
-                    await loadTeams();
+                    await loadTeams(mode);
                     if (currentTeamId === team.id) {
                         currentTeamId = null;
-                        renderModuleList(DIARY_MODULES.find(m => m.key === 'baseballGame'));
-                        renderMonthlyCalendar('baseballGame');
+                        const moduleKey = mode === 'training' ? 'baseballTraining' : 'baseballGame';
+                        renderModuleList(DIARY_MODULES.find(m => m.key === moduleKey));
+                        renderMonthlyCalendar(moduleKey);
                     }
                     closeTeamEditor();
                 }
@@ -2410,14 +3452,19 @@
 
         let editingTeamId = null;
 
-        // 儲存球隊
+        // 儲存球隊/紀錄類型
         async function saveTeam() {
             const name = teamNameInput?.value?.trim() || '';
             const desc = teamDescInput?.value?.trim() || '';
             const color = teamColorInput?.value || '#ffffff';
             
+            const currentPage = location.hash.replace('#', '') || 'home';
+            const mode = currentPage === 'baseball-training' ? 'training' : 'game';
+            const label = mode === 'training' ? '紀錄類型' : '球隊';
+            const type = mode === 'training' ? 'training_type' : 'team';
+            
             if (!name) {
-                alert('請輸入球隊名稱');
+                alert(`請輸入${label}名稱`);
                 return;
             }
             
@@ -2426,52 +3473,68 @@
             
             let result;
             if (editingTeamId) {
-                // 更新現有球隊：此處 type 應為 'team'，且必須傳入正確的 ID
                 result = await dbUpdate(editingTeamId, { name, desc, color });
             } else {
-                result = await dbAdd('team', { name, desc, color });
+                result = await dbAdd(type, { name, desc, color });
             }
             
             if (result) {
-                await loadTeams();
+                await loadTeams(mode);
                 closeTeamEditor();
-                renderMonthlyCalendar('baseballGame');
+                const moduleKey = mode === 'training' ? 'baseballTraining' : 'baseballGame';
+                renderMonthlyCalendar(moduleKey);
             }
             
             teamEditorSaveBtn.disabled = false;
-            teamEditorSaveBtn.textContent = '儲存球隊';
+            teamEditorSaveBtn.textContent = editingTeamId ? `儲存${label}` : `儲存新${label}`;
         }
 
-        // 選擇球隊
-        function selectTeam(teamId) {
-            // 如果點擊已經選擇的球隊，則取消選擇（回總覽）
+        // 選擇球隊/紀錄類型
+        function selectTeam(teamId, mode = 'game') {
+            const moduleKey = mode === 'training' ? 'baseballTraining' : 'baseballGame';
+            // 如果點擊已經選擇的，則取消選擇（回總覽）
             if (currentTeamId === teamId) {
                 currentTeamId = null;
             } else {
                 currentTeamId = teamId;
             }
             
-            // 更新UI顯示
-            document.querySelectorAll('.team-item').forEach(item => {
-                const id = item.getAttribute('data-team-id');
-                if (id === currentTeamId) {
+            // 更新列表 UI
+            const listId = mode === 'training' ? 'teamListTraining' : 'teamList';
+            document.querySelectorAll(`#${listId} .team-item`).forEach(item => {
+                if (item.getAttribute('data-team-id') === currentTeamId) {
                     item.classList.add('active');
                 } else {
                     item.classList.remove('active');
                 }
             });
             
-            // 重新載入該球隊的日記
-            renderModuleList(DIARY_MODULES.find(m => m.key === 'baseballGame'));
-            renderMonthlyCalendar('baseballGame');
+            // 重新渲染該模組的日記與月曆
+            renderModuleList(DIARY_MODULES.find(m => m.key === moduleKey));
+            renderMonthlyCalendar(moduleKey);
         }
 
         // 開啟球隊編輯器
         function openTeamEditor(team = null) {
             if (!teamEditorOverlay) return;
             
+            const currentPage = location.hash.replace('#', '') || 'home';
+            const mode = currentPage === 'baseball-training' ? 'training' : 'game';
+            const label = mode === 'training' ? '紀錄類型' : '球隊';
+            
             editingTeamId = team ? team.id : null;
-            teamEditorTitle.textContent = team ? '編輯球隊資訊' : '新增球隊';
+            teamEditorTitle.textContent = team ? `編輯${label}` : `新增${label}`;
+            
+            // 更新副標題與欄位標籤
+            const teamEditorSub = document.querySelector('#teamEditorOverlay .modal-sub');
+            const teamNameLabel = document.querySelector('label[for="teamNameInput"]');
+            const teamDescLabel = document.querySelector('label[for="teamDescInput"]');
+            
+            if (teamEditorSub) teamEditorSub.textContent = `建立你的專屬${label}`;
+            if (teamNameLabel) teamNameLabel.textContent = `${label}名稱`;
+            if (teamDescLabel) teamDescLabel.textContent = `${label}描述`;
+            if (teamNameInput) teamNameInput.placeholder = `輸入${label}名稱`;
+            if (teamDescInput) teamDescInput.placeholder = `輸入${label}描述`;
             
             if (teamNameInput) teamNameInput.value = team ? (team.name || '') : '';
             if (teamDescInput) teamDescInput.value = team ? (team.desc || '') : '';
@@ -2479,7 +3542,12 @@
             
             if (teamEditorDeleteBtn) {
                 teamEditorDeleteBtn.style.display = team ? 'block' : 'none';
-                teamEditorDeleteBtn.onclick = () => confirmDeleteTeam(team);
+                teamEditorDeleteBtn.textContent = `刪除${label}`;
+                teamEditorDeleteBtn.onclick = () => confirmDeleteTeam(team, mode);
+            }
+
+            if (teamEditorSaveBtn) {
+                teamEditorSaveBtn.textContent = editingTeamId ? `儲存${label}` : `儲存新${label}`;
             }
 
             teamEditorOverlay.classList.add('active');
@@ -2499,5 +3567,6 @@
         initMonthlyCalendars();
         initTeamManagement();
     </script>
+    </div>
 </body>
 </html>
