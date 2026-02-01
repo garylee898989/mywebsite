@@ -2801,7 +2801,7 @@
         const AUTH_CONFIG = {
             username: '123', // 您可以在此修改帳號
             password: '321', // 您可以在此修改密碼
-            sessionKey: 'myweb_auth_session',
+            // 移除 sessionKey 相關持久化邏輯
             bioKey: 'myweb_bio_enabled'
         };
 
@@ -2812,14 +2812,9 @@
         const authBioBtn = document.getElementById('authBioBtn');
         const authError = document.getElementById('authError');
 
-        // 檢查登入狀態
+        // 檢查登入狀態 (現在每次刷新都是 false)
         function checkAuth() {
-            const session = localStorage.getItem(AUTH_CONFIG.sessionKey);
-            if (session === 'true') {
-                document.body.classList.add('authenticated');
-                return true;
-            }
-            return false;
+            return false; 
         }
 
         // 處理登入
@@ -2835,7 +2830,7 @@
         }
 
         function loginSuccess() {
-            localStorage.setItem(AUTH_CONFIG.sessionKey, 'true');
+            // 不再儲存登入狀態到 localStorage
             document.body.classList.add('authenticated');
             authError.style.opacity = '0';
             
@@ -2940,15 +2935,15 @@
 
         // 初始化驗證系統
         function initAuth() {
-            if (checkAuth()) {
-                updateBioBtnVisibility();
-            }
-
+            // 每次刷新都必須驗證，所以不再檢查 checkAuth()
+            
             // 檢查是否支援並已啟用生物辨識
             if (window.PublicKeyCredential && localStorage.getItem('myweb_cred_id')) {
                 authBioBtn.style.display = 'flex';
-                // 自動嘗試生物辨識
-                setTimeout(handleBioAuth, 500);
+                // 自動嘗試生物辨識 (給予一點延遲確保 UI 已渲染)
+                setTimeout(() => {
+                    handleBioAuth();
+                }, 300);
             }
 
             authSubmitBtn.addEventListener('click', handleLogin);
