@@ -39,6 +39,28 @@ async function dbFetch(type) {
     }));
 }
 
+async function dbFetchByDateRange(type, startDate, endDate) {
+    const { data, error } = await _supabase
+        .from('posts')
+        .select('*')
+        .eq('user_id', USER_ID)
+        .eq('type', type)
+        .gte('data->>date', startDate)
+        .lte('data->>date', endDate)
+        .order('data->>date', { ascending: false });
+
+    if (error) {
+        console.error(`Error fetching ${type} by date range:`, error);
+        return [];
+    }
+
+    return data.map(row => ({
+        ...row.data,
+        id: row.id,
+        _db_created_at: row.created_at
+    }));
+}
+
 /**
  * 新增資料
  * @param {string} type - 資料類型
@@ -99,24 +121,6 @@ async function dbUpdate(id, content) {
     return true;
 }
 
-/**
- * 刪除資料
- * @param {string} id - 資料 ID (UUID)
- * @returns {Promise<boolean>} - 是否成功
- */
-async function dbDelete(id) {
-    const { error } = await _supabase
-        .from('posts')
-        .delete()
-        .eq('id', id);
-
-    if (error) {
-        console.error(`Error deleting ${id}:`, error);
-        alert('刪除失敗');
-        return false;
-    }
-    return true;
-}
 
 /**
  * 刪除資料

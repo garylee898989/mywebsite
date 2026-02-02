@@ -4,6 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>我的個人網頁</title>
+        <link rel="preconnect" href="https://cdn.jsdelivr.net">
+        <link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
+        <link rel="preconnect" href="https://rkdmecqlxtovdngcxaaj.supabase.co">
+        <link rel="dns-prefetch" href="https://rkdmecqlxtovdngcxaaj.supabase.co">
     <style>
         * {
             margin: 0;
@@ -666,6 +670,12 @@
             line-height: 1.8;
             font-size: 16px;
         }
+        
+        @media (max-width: 768px) {
+            .content-section {
+                backdrop-filter: none;
+            }
+        }
 
         /* 月曆組件樣式 */
         .monthly-calendar-section {
@@ -1223,12 +1233,7 @@
             <div class="content-section">
                 <h2>歡迎來到我的個人網頁</h2>
                 <p>這是一個展示個人資訊和個人紀錄的平台。我會在這裡記錄下一切，例如球場、讀書等各種方面的事情，可能是日記，可能是認真記錄課題。</p>
-                
-                <div style="margin-top: 20px; display: flex; gap: 10px; flex-wrap: wrap;">
-                    <button class="btn" onclick="location.hash='#consumption'; activatePage('consumption'); setTimeout(() => openConsumptionEditor(), 100);" style="background: var(--consumption-color); border-color: var(--consumption-color); color: white;">＋ 新增消費</button>
-                    <button class="btn" onclick="location.hash='#baseball-game'; activatePage('baseball-game');" style="background: var(--game-color); border-color: var(--game-color); color: white;">前往比賽紀錄</button>
-                    <button class="btn" onclick="location.hash='#baseball-training'; activatePage('baseball-training');" style="background: var(--training-color); border-color: var(--training-color); color: white;">前往訓練紀錄</button>
-                </div>
+
             </div>
 
             <!-- 總日曆區域 -->
@@ -1242,6 +1247,47 @@
                     </div>
                 </div>
                 <div id="monthlyCalendarHome" class="monthly-calendar"></div>
+            </div>
+        </div>
+
+        <!-- 消費紀錄頁面 -->
+        <div id="consumption" class="page-content">
+            <div class="content-section" id="consumptionBox">
+                <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:15px; flex-wrap: wrap; gap: 10px;">
+                    <div>
+                        <h2>消費紀錄</h2>
+                        <p>新增、分析並查看你的消費。</p>
+                    </div>
+                    <div>
+                        <button class="btn" id="homeConsumptionAddBtn" type="button" style="padding: 8px 16px;">新增消費</button>
+                    </div>
+                </div>
+                <div style="display:flex; gap:20px; flex-wrap: wrap; margin-bottom: 20px;">
+                    <div style="flex:1; min-width:260px;">
+                        <div style="font-weight:600; margin-bottom:8px;">消費類型圓餅圖</div>
+                        <div id="pieCategory" style="width:240px; height:240px; border-radius:50%; background: var(--surface); display:flex; align-items:center; justify-content:center;"></div>
+                    </div>
+                    <div style="flex:1; min-width:260px;">
+                        <div style="font-weight:600; margin-bottom:8px;">支付方式圓餅圖</div>
+                        <div id="piePayment" style="width:240px; height:240px; border-radius:50%; background: var(--surface); display:flex; align-items:center; justify-content:center;"></div>
+                    </div>
+                    <div style="flex:1; min-width:260px;">
+                        <div style="font-weight:600; margin-bottom:8px;">累積總覽</div>
+                        <table id="consumptionTotals" class="table" style="width:100%; border-collapse: collapse;">
+                            <tbody>
+                                <tr><td style="padding:8px; color: var(--secondary-text);">本週累積</td><td id="totalWeek" style="padding:8px; font-weight:600;">$0</td></tr>
+                                <tr><td style="padding:8px; color: var(--secondary-text);">本月累積</td><td id="totalMonth" style="padding:8px; font-weight:600;">$0</td></tr>
+                                <tr><td style="padding:8px; color: var(--secondary-text);">本年累積</td><td id="totalYear" style="padding:8px; font-weight:600;">$0</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div>
+                    <div class="diary-header" style="margin-bottom: 10px;">
+                        <div class="diary-header-title">消費表格</div>
+                    </div>
+                    <div id="consumptionTable"></div>
+                </div>
             </div>
         </div>
 
@@ -1540,48 +1586,12 @@
             </div>
         </div>
 
-        <!-- 消費紀錄頁面 -->
-        <div id="consumption" class="page-content">
-            <div class="content-section">
-                <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:15px; flex-wrap: wrap; gap: 10px;">
-                    <div>
-                        <h2>消費紀錄</h2>
-                        <p>管理你的日常支出與預算。</p>
-                    </div>
-                    <button class="btn" id="consumptionAddBtn" type="button" style="white-space: nowrap;">＋ 新增消費</button>
-                </div>
+        <!-- 消費紀錄舊分頁已移除，改放首頁下方 -->
+                <!-- 舊查詢區塊已移除 -->
 
-                <div class="stats-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 20px;">
-                    <div class="content-section" style="background: var(--surface); margin-bottom: 0;">
-                        <div style="font-size: 14px; color: var(--secondary-text);">本月總支出</div>
-                        <div id="monthTotalAmount" style="font-size: 24px; font-weight: bold; color: var(--accent); margin-top: 5px;">$0</div>
-                    </div>
-                    <div class="content-section" style="background: var(--surface); margin-bottom: 0;">
-                        <div style="font-size: 14px; color: var(--secondary-text);">今日支出</div>
-                        <div id="todayTotalAmount" style="font-size: 24px; font-weight: bold; color: var(--accent); margin-top: 5px;">$0</div>
-                    </div>
-                </div>
+                <!-- 舊統計卡片已移除 -->
 
-                <div class="consumption-layout" style="display: flex; gap: 20px; flex-wrap: wrap;">
-                    <div style="flex: 2; min-width: 300px;">
-                        <div class="diary-header" style="margin-bottom: 15px;">
-                            <div class="diary-header-title">近期消費</div>
-                        </div>
-                        <div id="consumptionList" class="consumption-list">
-                            <!-- 消費項目將在此動態生成 -->
-                            <div class="empty-state" style="text-align: center; padding: 40px;">尚無紀錄</div>
-                        </div>
-                    </div>
-                    <div style="flex: 1; min-width: 300px;">
-                        <div class="diary-header" style="margin-bottom: 15px;">
-                            <div class="diary-header-title">分類統計</div>
-                        </div>
-                        <div id="consumptionStats" class="content-section" style="background: var(--surface); min-height: 200px; display: flex; flex-direction: column; gap: 10px;">
-                            <!-- 分類統計圓餅圖或列表 -->
-                            <div class="empty-state" style="text-align: center; padding: 20px;">尚無資料</div>
-                        </div>
-                    </div>
-                </div>
+                <!-- 舊列表與分析已移除 -->
             </div>
         </div>
     </div>
@@ -1706,36 +1716,42 @@
 
             <div class="form-grid">
                 <div class="field">
-                    <label for="consumptionAmountInput">金額</label>
+                    <label for="consumptionMerchantInput">消費店家</label>
+                    <input id="consumptionMerchantInput" class="input" type="text" placeholder="請輸入店家名稱" required />
+                </div>
+                <div class="field">
+                    <label for="consumptionAmountInput">消費金額</label>
                     <input id="consumptionAmountInput" class="input" type="number" placeholder="請輸入金額" required />
                 </div>
                 <div class="field">
-                    <label for="consumptionItemInput">項目</label>
-                    <input id="consumptionItemInput" class="input" type="text" placeholder="例如：午餐、交通、電影..." required />
-                </div>
-                <div class="field">
-                    <label for="consumptionCategorySelect">類別</label>
-                    <select id="consumptionCategorySelect" class="input">
-                        <option value="飲食">飲食</option>
-                        <option value="交通">交通</option>
-                        <option value="娛樂">娛樂</option>
-                        <option value="生活">生活</option>
-                        <option value="購物">購物</option>
-                        <option value="其他">其他</option>
-                    </select>
-                </div>
-                <div class="field">
-                    <label for="consumptionPaymentSelect">付款方式</label>
-                    <select id="consumptionPaymentSelect" class="input">
+                    <label for="consumptionPaymentSelect">支付方式</label>
+                    <select id="consumptionPaymentSelect" class="input" required>
                         <option value="現金">現金</option>
-                        <option value="信用卡">信用卡</option>
-                        <option value="行動支付">行動支付</option>
-                        <option value="轉帳">轉帳</option>
+                        <option value="中信卡">中信卡</option>
+                        <option value="富邦卡">富邦卡</option>
+                        <option value="郵局轉帳">郵局轉帳</option>
                     </select>
                 </div>
                 <div class="field">
-                    <label for="consumptionDateInput">日期</label>
-                    <input id="consumptionDateInput" class="input" type="date" />
+                    <label for="consumptionDatetimeInput">消費時間</label>
+                    <input id="consumptionDatetimeInput" class="input" type="datetime-local" />
+                </div>
+                <div class="field">
+                    <label for="consumptionNoteInput">備註</label>
+                    <input id="consumptionNoteInput" class="input" type="text" placeholder="請輸入備註（可選）" />
+                </div>
+                <div class="field">
+                    <label for="consumptionCategorySelect">消費類型</label>
+                    <select id="consumptionCategorySelect" class="input">
+                        <option value="吃的">吃的</option>
+                        <option value="喝的">喝的</option>
+                        <option value="書">書</option>
+                        <option value="周邊">周邊</option>
+                        <option value="棒球">棒球</option>
+                        <option value="衣飾">衣飾</option>
+                        <option value="娛樂">娛樂</option>
+                        <option value="交通">交通</option>
+                    </select>
                 </div>
             </div>
 
@@ -1744,6 +1760,19 @@
                 <button class="btn secondary" id="consumptionEditorCancelBtn" type="button">取消</button>
                 <button class="btn" id="consumptionEditorSaveBtn" type="button">儲存</button>
             </div>
+        </div>
+    </div>
+
+    <div id="dayConsumptionOverlay" class="overlay" aria-hidden="true">
+        <div class="modal" role="dialog" aria-modal="true" aria-label="當日消費" style="width: min(520px, 95%);">
+            <div class="modal-header">
+                <div>
+                    <div class="modal-title" id="dayConsumptionTitle">當日消費</div>
+                    <div class="modal-sub">列出當日所有消費</div>
+                </div>
+                <button class="btn secondary" id="dayConsumptionCloseBtn" type="button">關閉</button>
+            </div>
+            <div id="dayConsumptionList"></div>
         </div>
     </div>
 
@@ -1757,52 +1786,49 @@
 
         function activatePage(targetPage) {
             if (!targetPage) targetPage = 'home';
+            
+            // 隱藏所有頁面內容
+            pageContents.forEach(page => {
+                page.classList.remove('active');
+                page.style.display = 'none';
+            });
+
             const pageEl = document.getElementById(targetPage);
             if (!pageEl) return;
 
-            navItems.forEach(nav => nav.classList.remove('active'));
-            pageContents.forEach(page => page.classList.remove('active'));
-
-            const navEl = Array.from(navItems).find(n => n.getAttribute('data-page') === targetPage);
-            navEl?.classList.add('active');
+            // 顯示目標頁面
             pageEl.classList.add('active');
+            pageEl.style.display = 'block';
 
-            // 重置當前選擇的球隊/紀錄類型
-            currentTeamId = null;
+            // 更新導航欄的 active 狀態
+            navItems.forEach(item => {
+                if (item.dataset.page === targetPage) {
+                    item.classList.add('active');
+                } else {
+                    item.classList.remove('active');
+                }
+            });
 
-            // 根據頁面調整日記編輯器的文字與功能
-            const teamSelectLabel = document.getElementById('diaryTeamSelectLabel');
-            const teamSelectPlaceholder = document.getElementById('diaryTeamSelectPlaceholder');
-            const teamEditorTitle = document.getElementById('teamEditorTitle');
-            const teamEditorNameLabel = document.querySelector('label[for="teamNameInput"]');
-            const teamEditorDescLabel = document.querySelector('label[for="teamDescInput"]');
-
+            // 根據頁面類型執行初始化或渲染
             if (targetPage === 'home') {
                 renderMonthlyCalendarHome();
-            } else if (targetPage === 'baseball-training') {
-                if (teamSelectLabel) teamSelectLabel.textContent = '選擇紀錄類型';
-                if (teamSelectPlaceholder) teamSelectPlaceholder.textContent = '-- 選擇紀錄類型 --';
-                if (teamEditorTitle) teamEditorTitle.textContent = editingTeamId ? '編輯紀錄類型' : '新增紀錄類型';
-                if (teamEditorNameLabel) teamEditorNameLabel.textContent = '紀錄類型名稱';
-                if (teamEditorDescLabel) teamEditorDescLabel.textContent = '紀錄類型描述';
-                
-                // 載入訓練紀錄的類型
-                loadTeams('training');
-                renderMonthlyCalendar('baseballTraining');
             } else if (targetPage === 'baseball-game') {
-                if (teamSelectLabel) teamSelectLabel.textContent = '選擇球隊';
-                if (teamSelectPlaceholder) teamSelectPlaceholder.textContent = '-- 選擇球隊 --';
-                if (teamEditorTitle) teamEditorTitle.textContent = editingTeamId ? '編輯球隊' : '新增球隊';
-                if (teamEditorNameLabel) teamEditorNameLabel.textContent = '球隊名稱';
-                if (teamEditorDescLabel) teamEditorDescLabel.textContent = '球隊描述';
-                
-                // 載入比賽紀錄的球隊
+                currentTeamId = null; // 重置選擇，避免跨頁面干擾
                 loadTeams('game');
                 renderMonthlyCalendar('baseballGame');
+            } else if (targetPage === 'baseball-training') {
+                currentTeamId = null; // 重置選擇，避免跨頁面干擾
+                loadTeams('training');
+                renderMonthlyCalendar('baseballTraining');
+            } else if (targetPage === 'reading') {
+                renderModuleList(DIARY_MODULES.find(m => m.key === 'reading'));
+            } else if (targetPage === 'study') {
+                loadSubjects().then(() => renderSubjects());
             } else if (targetPage === 'consumption') {
-                loadConsumptions();
+                renderHomeConsumption();
+            } else if (targetPage === 'about') {
+                // 關於我頁面可能不需要特殊初始化
             }
-
             // 切換分頁後回到頂部（更像多頁）
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
@@ -1816,33 +1842,33 @@
             });
         });
         
-        function applyTheme(theme) {
+        function applyTheme(theme, skipRender = false) {
             const t = theme === 'light' ? 'light' : 'dark';
             document.body.classList.toggle('theme-light', t === 'light');
             if (themeToggleBtn) themeToggleBtn.textContent = t === 'light' ? '☀' : '☾';
             localStorage.setItem('myweb.theme', t);
             
             // 重新渲染當前頁面的月曆，以更新動態生成的顏色
-            const activePage = document.querySelector('.page-content.active');
-            if (activePage) {
-                const pageId = activePage.id;
-                if (pageId === 'home') {
-                    renderMonthlyCalendarHome();
-                } else if (pageId === 'baseball-game') {
-                    renderMonthlyCalendar('baseballGame');
-                } else if (pageId === 'baseball-training') {
-                    renderMonthlyCalendar('baseballTraining');
-                } else if (pageId === 'consumption') {
-                    loadConsumptions();
-                } else if (currentSubjectId) {
-                    renderMonthlyCalendarStudy();
+            if (!skipRender) {
+                const activePage = document.querySelector('.page-content.active');
+                if (activePage) {
+                    const pageId = activePage.id;
+                    if (pageId === 'home') {
+                        renderMonthlyCalendarHome();
+                    } else if (pageId === 'baseball-game') {
+                        renderMonthlyCalendar('baseballGame');
+                    } else if (pageId === 'baseball-training') {
+                        renderMonthlyCalendar('baseballTraining');
+                    } else if (currentSubjectId) {
+                        renderMonthlyCalendarStudy();
+                    }
                 }
             }
         }
         
         (function initTheme() {
             const saved = localStorage.getItem('myweb.theme');
-            applyTheme(saved || 'dark');
+            applyTheme(saved || 'dark', true);
         })();
         
         themeToggleBtn?.addEventListener('click', () => {
@@ -2563,7 +2589,10 @@
                 card.appendChild(top);
                 card.appendChild(desc);
 
-                const open = () => { location.hash = `#study/subject/${s.id}`; };
+                const open = () => { 
+                    location.hash = `#study/subject/${s.id}`; 
+                    openSubjectPage(s.id); // 直接呼叫開啟，確保即時反應
+                };
                 card.addEventListener('click', open);
                 card.addEventListener('keydown', (e)=>{
                     if (e.key==='Enter' || e.key===' ') { e.preventDefault(); open(); }
@@ -2983,6 +3012,17 @@
             
             // 登入成功後，檢查是否支援生物辨識且尚未啟用
             updateBioBtnVisibility();
+            
+            // 依據網址 hash 切到正確分頁（例如 #consumption）
+            // 若沒有 hash，保持預設首頁
+            try {
+                const h = (location.hash || '').replace('#', '');
+                if (h) {
+                    handleHash();
+                } else {
+                    activatePage('home');
+                }
+            } catch {}
         }
 
         function updateBioBtnVisibility() {
@@ -3105,14 +3145,14 @@
             }
             
             // 支援 Enter 鍵跳轉與登入
-            authUsernameInput.addEventListener('keypress', (e) => {
+            authUsernameInput.addEventListener('keydown', (e) => {
                 if (e.key === 'Enter') {
                     e.preventDefault();
                     authPasswordInput.focus();
                 }
             });
 
-            authPasswordInput.addEventListener('keypress', (e) => {
+            authPasswordInput.addEventListener('keydown', (e) => {
                 if (e.key === 'Enter') handleLogin();
             });
         }
@@ -3233,15 +3273,21 @@
             const monthDisplayEl = document.getElementById('currentMonthDisplayHome');
             if (!calendarEl || !monthDisplayEl) return;
 
-            // 1. 抓取所有需要的資料
+            const firstDay = new Date(currentYear, currentMonth, 1);
+            const lastDay = new Date(currentYear, currentMonth + 1, 0);
+            const daysInMonth = lastDay.getDate();
+            const startingDay = firstDay.getDay();
+            const startStr = `${currentYear}-${String(currentMonth + 1).padStart(2, '0')}-01`;
+            const endStr = `${currentYear}-${String(currentMonth + 1).padStart(2, '0')}-${String(daysInMonth).padStart(2, '0')}`;
+
             const [studyTasks, gameDiaries, trainingDiaries, subjects, teams, trainingTypes, consumptionsData] = await Promise.all([
-                dbFetch('study_task'),
-                dbFetch('diary_baseballGame'),
-                dbFetch('diary_baseballTraining'),
+                dbFetchByDateRange('study_task', startStr, endStr),
+                dbFetchByDateRange('diary_baseballGame', startStr, endStr),
+                dbFetchByDateRange('diary_baseballTraining', startStr, endStr),
                 dbFetch('subject'),
                 dbFetch('team'),
                 dbFetch('training_type'),
-                dbFetch('consumption')
+                dbFetchByDateRange('consumption', startStr, endStr)
             ]);
 
             // 2. 準備對照表
@@ -3252,11 +3298,6 @@
             // 3. 更新月份顯示
             const monthNames = ['一月', '二月', '三月', '四月', '五月', '六月', '七月', '八月', '九月', '十月', '十一月', '十二月'];
             monthDisplayEl.textContent = `${currentYear}年 ${monthNames[currentMonth]}`;
-            
-            const firstDay = new Date(currentYear, currentMonth, 1);
-            const lastDay = new Date(currentYear, currentMonth + 1, 0);
-            const daysInMonth = lastDay.getDate();
-            const startingDay = firstDay.getDay();
             
             calendarEl.innerHTML = '';
             
@@ -3366,7 +3407,12 @@
 
             // 獲取該類型的日記記錄
             const type = `diary_${pageType}`;
-            let diaries = await dbFetch(type);
+            const firstDay = new Date(currentYear, currentMonth, 1);
+            const lastDay = new Date(currentYear, currentMonth + 1, 0);
+            const daysInMonth = lastDay.getDate();
+            const startStr = `${currentYear}-${String(currentMonth + 1).padStart(2, '0')}-01`;
+            const endStr = `${currentYear}-${String(currentMonth + 1).padStart(2, '0')}-${String(daysInMonth).padStart(2, '0')}`;
+            let diaries = await dbFetchByDateRange(type, startStr, endStr);
             
             // 獲取所有球隊/紀錄類型資料，用於自訂顏色
             // 重要：根據頁面類型獲取對應的顏色設定
@@ -3387,9 +3433,6 @@
             monthDisplayEl.textContent = `${currentYear}年 ${monthNames[currentMonth]}`;
             
             // 計算該月的第一天和最後一天
-            const firstDay = new Date(currentYear, currentMonth, 1);
-            const lastDay = new Date(currentYear, currentMonth + 1, 0);
-            const daysInMonth = lastDay.getDate();
             const startingDay = firstDay.getDay(); // 0 = 星期日, 1 = 星期一, ..., 6 = 星期六
             
             // 清空月曆
@@ -3491,8 +3534,10 @@
                 if (e.target === teamEditorOverlay) closeTeamEditor();
             });
             
+            // 初始載入根據當前 hash
             const currentPage = location.hash.replace('#', '') || 'home';
-            loadTeams(currentPage === 'baseball-training' ? 'training' : 'game');
+            if (currentPage === 'baseball-game') loadTeams('game');
+            if (currentPage === 'baseball-training') loadTeams('training');
         }
 
         // 載入球隊列表
@@ -3727,184 +3772,308 @@
             teamEditorOverlay.setAttribute('aria-hidden', 'true');
         }
 
-        // --- 消費紀錄相關功能 ---
-        let consumptions = [];
+        // 首頁消費紀錄（新）
+        let consumptionData = [];
         let editingConsumptionId = null;
-
-        const consumptionList = document.getElementById('consumptionList');
-        const consumptionAddBtn = document.getElementById('consumptionAddBtn');
+        const homeConsumptionAddBtn = document.getElementById('homeConsumptionAddBtn');
         const consumptionEditorOverlay = document.getElementById('consumptionEditorOverlay');
         const consumptionEditorTitle = document.getElementById('consumptionEditorTitle');
         const consumptionEditorCloseBtn = document.getElementById('consumptionEditorCloseBtn');
         const consumptionEditorCancelBtn = document.getElementById('consumptionEditorCancelBtn');
         const consumptionEditorSaveBtn = document.getElementById('consumptionEditorSaveBtn');
         const consumptionEditorDeleteBtn = document.getElementById('consumptionEditorDeleteBtn');
+        const consumptionTableEl = document.getElementById('consumptionTable');
+        const pieCategoryEl = document.getElementById('pieCategory');
+        const piePaymentEl = document.getElementById('piePayment');
+        const totalWeekEl = document.getElementById('totalWeek');
+        const totalMonthEl = document.getElementById('totalMonth');
+        const totalYearEl = document.getElementById('totalYear');
 
+        const consumptionMerchantInput = document.getElementById('consumptionMerchantInput');
         const consumptionAmountInput = document.getElementById('consumptionAmountInput');
-        const consumptionItemInput = document.getElementById('consumptionItemInput');
-        const consumptionCategorySelect = document.getElementById('consumptionCategorySelect');
         const consumptionPaymentSelect = document.getElementById('consumptionPaymentSelect');
-        const consumptionDateInput = document.getElementById('consumptionDateInput');
+        const consumptionDatetimeInput = document.getElementById('consumptionDatetimeInput');
+        const consumptionNoteInput = document.getElementById('consumptionNoteInput');
+        const consumptionCategorySelect = document.getElementById('consumptionCategorySelect');
 
-        async function loadConsumptions() {
+        function getDateStrFromISO(iso) {
+            try { return (iso || '').slice(0,10); } catch { return ''; }
+        }
+        function toISOFromLocalDatetimeLocal(v) {
+            if (!v) return new Date().toISOString();
+            const d = new Date(v);
+            return isNaN(d.getTime()) ? new Date().toISOString() : d.toISOString();
+        }
+
+        async function loadConsumptionData() {
             const data = await dbFetch('consumption');
-            consumptions = data || [];
-            renderConsumptions();
-            updateConsumptionStats();
+            consumptionData = (data || []).map(r => {
+                const iso = r.datetime || r.date || r._db_created_at;
+                const date = r.date || getDateStrFromISO(iso);
+                return { 
+                    id: r.id, 
+                    merchant: r.merchant || r.item || '', 
+                    amount: parseFloat(r.amount) || 0, 
+                    payment: r.payment || r.payment_method || '', 
+                    datetime: iso, 
+                    date, 
+                    note: r.note || '', 
+                    category: r.category || ''
+                };
+            }).sort((a,b)=> (new Date(b.datetime).getTime()) - (new Date(a.datetime).getTime()));
         }
 
-        function renderConsumptions() {
-            if (!consumptionList) return;
-            
-            if (consumptions.length === 0) {
-                consumptionList.innerHTML = '<div class="empty-state" style="text-align: center; padding: 40px;">尚無紀錄</div>';
-                return;
-            }
+        function renderPie(el, pairs) {
+            if (!el) return;
+            const total = pairs.reduce((s,[,v])=>s+v,0);
+            if (total <= 0) { el.style.background = 'var(--surface)'; return; }
+            const colors = [
+                '#4e79a7','#f28e2b','#e15759','#76b7b2','#59a14f','#edc948','#b07aa1','#ff9da7','#9c755f','#bab0ab'
+            ];
+            let acc = 0;
+            const stops = pairs.map(([label,value],i)=>{
+                const pct = value/total*100;
+                const start = acc; acc += pct;
+                const color = colors[i % colors.length];
+                return `${color} ${start}% ${acc}%`;
+            }).join(', ');
+            el.style.background = `conic-gradient(${stops})`;
+        }
 
-            // 按日期排序（最新在前）
-            const sorted = [...consumptions].sort((a, b) => new Date(b.date) - new Date(a.date));
-            
-            consumptionList.innerHTML = sorted.map(c => `
-                 <div class="content-section" style="background: var(--surface); margin-bottom: 10px; cursor: pointer; transition: transform 0.2s ease;" onclick="handleConsumptionClick('${c.id}')">
-                     <div style="display: flex; justify-content: space-between; align-items: center;">
-                         <div>
-                             <div style="font-weight: bold; font-size: 16px;">${c.item}</div>
-                             <div style="font-size: 12px; color: var(--secondary-text); margin-top: 4px;">
-                                 ${c.date} · ${c.category} · ${c.payment_method}
-                             </div>
-                         </div>
-                         <div style="font-size: 18px; font-weight: bold; color: var(--accent);">$${c.amount}</div>
-                     </div>
-                 </div>
-             `).join('');
-         }
-
-         function handleConsumptionClick(id) {
-             const consumption = consumptions.find(c => c.id === id);
-             if (consumption) openConsumptionEditor(consumption);
-         }
-
-        function updateConsumptionStats() {
+        function renderTotals() {
             const now = new Date();
-            const thisMonthStr = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
-            const todayStr = now.toISOString().split('T')[0];
+            const startOfWeek = new Date(now);
+            startOfWeek.setDate(now.getDate() - now.getDay());
+            startOfWeek.setHours(0,0,0,0);
+            const endOfWeek = new Date(startOfWeek); endOfWeek.setDate(startOfWeek.getDate()+6); endOfWeek.setHours(23,59,59,999);
+            const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
+            const endOfMonth = new Date(now.getFullYear(), now.getMonth()+1, 0); endOfMonth.setHours(23,59,59,999);
+            const startOfYear = new Date(now.getFullYear(), 0, 1);
+            const endOfYear = new Date(now.getFullYear(), 11, 31); endOfYear.setHours(23,59,59,999);
+            const sumBetween = (s,e)=> consumptionData.reduce((sum,r)=>{
+                const t = new Date(r.datetime).getTime();
+                return (t>=s.getTime() && t<=e.getTime()) ? sum + (r.amount||0) : sum;
+            },0);
+            totalWeekEl.textContent = `$${sumBetween(startOfWeek,endOfWeek).toLocaleString()}`;
+            totalMonthEl.textContent = `$${sumBetween(startOfMonth,endOfMonth).toLocaleString()}`;
+            totalYearEl.textContent = `$${sumBetween(startOfYear,endOfYear).toLocaleString()}`;
+        }
 
-            let monthTotal = 0;
-            let todayTotal = 0;
-            const categoryStats = {};
-
-            consumptions.forEach(c => {
-                const amount = parseFloat(c.amount) || 0;
-                if (c.date.startsWith(thisMonthStr)) {
-                    monthTotal += amount;
-                }
-                if (c.date === todayStr) {
-                    todayTotal += amount;
-                }
-                categoryStats[c.category] = (categoryStats[c.category] || 0) + amount;
+        function renderCharts() {
+            const byCat = new Map(); const byPay = new Map();
+            consumptionData.forEach(r=>{
+                byCat.set(r.category, (byCat.get(r.category)||0) + (r.amount||0));
+                byPay.set(r.payment, (byPay.get(r.payment)||0) + (r.amount||0));
             });
-
-            const monthTotalEl = document.getElementById('monthTotalAmount');
-            const todayTotalEl = document.getElementById('todayTotalAmount');
-            if (monthTotalEl) monthTotalEl.textContent = `$${monthTotal.toLocaleString()}`;
-            if (todayTotalEl) todayTotalEl.textContent = `$${todayTotal.toLocaleString()}`;
-
-            const statsContainer = document.getElementById('consumptionStats');
-            if (statsContainer) {
-                if (Object.keys(categoryStats).length === 0) {
-                    statsContainer.innerHTML = '<div class="empty-state" style="text-align: center; padding: 20px;">尚無資料</div>';
-                } else {
-                    const sortedCategories = Object.entries(categoryStats).sort((a, b) => b[1] - a[1]);
-                    statsContainer.innerHTML = sortedCategories.map(([cat, amt]) => `
-                        <div style="display: flex; justify-content: space-between; align-items: center; font-size: 14px; padding: 4px 0;">
-                            <span style="color: var(--secondary-text);">${cat}</span>
-                            <span style="font-weight: 600;">$${amt.toLocaleString()}</span>
-                        </div>
-                        <div style="width: 100%; height: 6px; background: var(--border); border-radius: 3px; overflow: hidden; margin-bottom: 8px;">
-                            <div style="width: ${(amt / monthTotal * 100) || 0}%; height: 100%; background: var(--accent);"></div>
-                        </div>
-                    `).join('');
-                }
-            }
+            const catPairs = [...byCat.entries()].filter(([k,v])=>k).sort((a,b)=>b[1]-a[1]);
+            const payPairs = [...byPay.entries()].filter(([k,v])=>k).sort((a,b)=>b[1]-a[1]);
+            renderPie(pieCategoryEl, catPairs);
+            renderPie(piePaymentEl, payPairs);
         }
 
-        function openConsumptionEditor(consumption = null) {
-            editingConsumptionId = consumption ? consumption.id : null;
-            consumptionEditorTitle.textContent = consumption ? '編輯消費' : '新增消費';
-            consumptionEditorDeleteBtn.style.display = consumption ? 'block' : 'none';
+        function renderTable() {
+            if (!consumptionTableEl) return;
+            const rows = consumptionData.map(r=>`
+                <tr>
+                    <td style="padding:8px; color:var(--secondary-text); white-space:nowrap;">${(r.datetime||'').replace('T',' ').slice(0,16)}</td>
+                    <td style="padding:8px;">${r.merchant || '—'}</td>
+                    <td style="padding:8px; font-weight:600; color: var(--accent);">$${(r.amount||0).toLocaleString()}</td>
+                    <td style="padding:8px;">${r.payment || '—'}</td>
+                    <td style="padding:8px;">${r.category || '—'}</td>
+                    <td style="padding:8px; color:var(--secondary-text);">${r.note || ''}</td>
+                    <td style="padding:8px; text-align:right;">
+                        <button class="btn secondary consumption-more-btn" data-id="${r.id}" type="button" style="padding:4px 8px;">⋯</button>
+                        <div class="more-menu" data-id="${r.id}">
+                            <div class="menu-item edit">編輯消費</div>
+                            <div class="menu-item delete">刪除消費</div>
+                        </div>
+                    </td>
+                </tr>
+            `).join('');
+            consumptionTableEl.innerHTML = `
+                <table class="table" style="width:100%; border-collapse: collapse;">
+                    <thead>
+                        <tr>
+                            <th style="padding:8px; text-align:left;">時間</th>
+                            <th style="padding:8px; text-align:left;">店家</th>
+                            <th style="padding:8px; text-align:left;">金額</th>
+                            <th style="padding:8px; text-align:left;">支付方式</th>
+                            <th style="padding:8px; text-align:left;">類型</th>
+                            <th style="padding:8px; text-align:left;">備註</th>
+                            <th style="padding:8px; text-align:right;">操作</th>
+                        </tr>
+                    </thead>
+                    <tbody>${rows || ''}</tbody>
+                </table>
+            `;
+            // 綁定三點菜單
+            consumptionTableEl.querySelectorAll('.consumption-more-btn').forEach(btn=>{
+                btn.addEventListener('click', (e)=>{
+                    const id = btn.getAttribute('data-id');
+                    const menu = consumptionTableEl.querySelector(`.more-menu[data-id="${id}"]`);
+                    document.querySelectorAll('.more-menu.active').forEach(m=>{ if (m!==menu) m.classList.remove('active'); });
+                    const rect = btn.getBoundingClientRect();
+                    menu.style.position = 'absolute';
+                    menu.style.left = `${rect.left}px`;
+                    menu.style.top = `${rect.bottom + window.scrollY}px`;
+                    menu.classList.toggle('active');
+                });
+            });
+            consumptionTableEl.querySelectorAll('.more-menu .edit').forEach(el=>{
+                el.addEventListener('click', ()=>{
+                    const id = el.parentElement.getAttribute('data-id');
+                    const r = consumptionData.find(x=>x.id===id);
+                    openConsumptionEditor(r||null);
+                    el.parentElement.classList.remove('active');
+                });
+            });
+            consumptionTableEl.querySelectorAll('.more-menu .delete').forEach(el=>{
+                el.addEventListener('click', async ()=>{
+                    const id = el.parentElement.getAttribute('data-id');
+                    if (confirm('確定刪除此筆消費嗎？')) {
+                        const ok = await dbDelete(id);
+                        if (ok) { await loadConsumptionData(); renderHomeConsumption(); }
+                    }
+                    el.parentElement.classList.remove('active');
+                });
+            });
+            document.addEventListener('click', ()=> {
+                document.querySelectorAll('.more-menu.active').forEach(m=>m.classList.remove('active'));
+            });
+        }
 
-            if (consumption) {
-                consumptionAmountInput.value = consumption.amount;
-                consumptionItemInput.value = consumption.item;
-                consumptionCategorySelect.value = consumption.category;
-                consumptionPaymentSelect.value = consumption.payment_method;
-                consumptionDateInput.value = consumption.date;
-            } else {
-                consumptionAmountInput.value = '';
-                consumptionItemInput.value = '';
-                consumptionCategorySelect.value = '飲食';
-                consumptionPaymentSelect.value = '現金';
-                consumptionDateInput.value = new Date().toISOString().split('T')[0];
-            }
+        function renderHomeConsumption() {
+            renderCharts();
+            renderTotals();
+            renderTable();
+        }
 
+        function openConsumptionEditor(record=null) {
+            editingConsumptionId = record ? record.id : null;
+            consumptionEditorTitle.textContent = record ? '編輯消費' : '新增消費';
+            consumptionEditorDeleteBtn.style.display = record ? 'block' : 'none';
+            consumptionMerchantInput.value = record ? (record.merchant||'') : '';
+            consumptionAmountInput.value = record ? (record.amount||'') : '';
+            consumptionPaymentSelect.value = record ? (record.payment||'現金') : '現金';
+            consumptionDatetimeInput.value = record && record.datetime ? record.datetime.replace('Z','').slice(0,16) : '';
+            consumptionNoteInput.value = record ? (record.note||'') : '';
+            consumptionCategorySelect.value = record ? (record.category||'吃的') : '吃的';
             consumptionEditorOverlay.classList.add('active');
-            consumptionEditorOverlay.setAttribute('aria-hidden', 'false');
+            consumptionEditorOverlay.setAttribute('aria-hidden','false');
         }
-
         function closeConsumptionEditor() {
             consumptionEditorOverlay.classList.remove('active');
-            consumptionEditorOverlay.setAttribute('aria-hidden', 'true');
+            consumptionEditorOverlay.setAttribute('aria-hidden','true');
             editingConsumptionId = null;
         }
-
         async function saveConsumption() {
+            const merchant = (consumptionMerchantInput.value||'').trim();
             const amount = parseFloat(consumptionAmountInput.value);
-            const item = consumptionItemInput.value.trim();
+            const payment = consumptionPaymentSelect.value;
+            const datetimeISO = toISOFromLocalDatetimeLocal(consumptionDatetimeInput.value);
+            const note = (consumptionNoteInput.value||'').trim();
             const category = consumptionCategorySelect.value;
-            const payment_method = consumptionPaymentSelect.value;
-            const date = consumptionDateInput.value;
-
-            if (!amount || !item || !date) {
-                alert('請填寫完整資訊');
+            if (!merchant || !amount || !payment) {
+                alert('請填完整：消費店家、金額、支付方式');
                 return;
             }
-
             consumptionEditorSaveBtn.disabled = true;
             consumptionEditorSaveBtn.textContent = '儲存中...';
-
-            const data = { amount, item, category, payment_method, date };
-            let result;
+            const payload = { merchant, amount, payment, datetime: datetimeISO, date: getDateStrFromISO(datetimeISO), note, category };
+            let ok = false;
             if (editingConsumptionId) {
-                result = await dbUpdate(editingConsumptionId, data);
+                ok = await dbUpdate(editingConsumptionId, payload);
             } else {
-                result = await dbAdd('consumption', data);
+                const created = await dbAdd('consumption', payload);
+                ok = !!created;
             }
-
-            if (result) {
-                await loadConsumptions();
+            if (ok) {
+                await loadConsumptionData();
+                renderHomeConsumption();
                 closeConsumptionEditor();
             }
-
             consumptionEditorSaveBtn.disabled = false;
             consumptionEditorSaveBtn.textContent = '儲存';
         }
-
         async function deleteConsumption() {
             if (!editingConsumptionId) return;
-            if (confirm('確定要刪除此筆紀錄嗎？')) {
-                const result = await dbDelete(editingConsumptionId);
-                if (result) {
-                    await loadConsumptions();
+            if (confirm('確定刪除此筆消費嗎？')) {
+                const ok = await dbDelete(editingConsumptionId);
+                if (ok) {
+                    await loadConsumptionData();
+                    renderHomeConsumption();
                     closeConsumptionEditor();
                 }
             }
         }
-
-        consumptionAddBtn?.addEventListener('click', () => openConsumptionEditor());
+        homeConsumptionAddBtn?.addEventListener('click', ()=> openConsumptionEditor());
         consumptionEditorCloseBtn?.addEventListener('click', closeConsumptionEditor);
         consumptionEditorCancelBtn?.addEventListener('click', closeConsumptionEditor);
         consumptionEditorSaveBtn?.addEventListener('click', saveConsumption);
         consumptionEditorDeleteBtn?.addEventListener('click', deleteConsumption);
+
+        // 首頁消費整合到總日曆：標記每日金額與點擊顯示清單
+        const dayConsumptionOverlay = document.getElementById('dayConsumptionOverlay');
+        const dayConsumptionTitle = document.getElementById('dayConsumptionTitle');
+        const dayConsumptionList = document.getElementById('dayConsumptionList');
+        function openDayConsumption(dateStr) {
+            const list = consumptionData.filter(r=> r.date === dateStr);
+            dayConsumptionTitle.textContent = `當日消費（${dateStr}）`;
+            dayConsumptionList.innerHTML = list.length ? list.map(r=>`
+                <div class="content-section" style="background: var(--surface); margin-bottom: 8px;">
+                    <div style="display:flex; justify-content:space-between;">
+                        <div>
+                            <div style="font-weight:600;">${r.merchant}</div>
+                            <div style="color: var(--secondary-text); font-size:12px;">${(r.datetime||'').replace('T',' ').slice(0,16)} · ${r.payment} · ${r.category}</div>
+                        </div>
+                        <div style="font-weight:600; color: var(--accent);">$${r.amount.toLocaleString()}</div>
+                    </div>
+                    ${r.note ? `<div style="margin-top:6px; color: var(--secondary-text); font-size:12px;">${r.note}</div>` : ''}
+                </div>
+            `).join('') : '<div class="empty-state" style="text-align:center; padding:20px;">當日尚無消費</div>';
+            dayConsumptionOverlay.classList.add('active');
+            dayConsumptionOverlay.setAttribute('aria-hidden','false');
+        }
+        document.getElementById('dayConsumptionCloseBtn')?.addEventListener('click', ()=>{
+            dayConsumptionOverlay.classList.remove('active');
+            dayConsumptionOverlay.setAttribute('aria-hidden','true');
+        });
+
+        // 覆寫首頁月曆的消費標記
+        const _renderMonthlyCalendarHome = renderMonthlyCalendarHome;
+        renderMonthlyCalendarHome = async function() {
+            await loadConsumptionData();
+            _renderMonthlyCalendarHome();
+            const calendarEl = document.getElementById('monthlyCalendarHome');
+            if (!calendarEl) return;
+            // 找出該月各日總額
+            const byDate = new Map();
+            consumptionData.forEach(r=>{
+                byDate.set(r.date, (byDate.get(r.date)||0) + (r.amount||0));
+            });
+            const max = Math.max(1, ...byDate.values());
+            // 在每個日期格加上底部長條
+            calendarEl.querySelectorAll('.calendar-day').forEach(dayEl=>{
+                const dateStr = dayEl.getAttribute('data-date');
+                if (!dateStr) return;
+                const amt = byDate.get(dateStr)||0;
+                if (amt > 0) {
+                    const bar = document.createElement('div');
+                    bar.style.position = 'absolute';
+                    bar.style.left = '4px';
+                    bar.style.right = '4px';
+                    bar.style.bottom = '4px';
+                    bar.style.height = `${Math.max(4, Math.round(amt/max*16))}px`;
+                    bar.style.background = 'var(--accent)';
+                    bar.style.borderRadius = '3px';
+                    bar.title = `$${amt.toLocaleString()}`;
+                    bar.addEventListener('click', (e)=>{ e.stopPropagation(); openDayConsumption(dateStr); });
+                    dayEl.style.position = 'relative';
+                    dayEl.appendChild(bar);
+                }
+            });
+            renderHomeConsumption();
+        };
 
         handleHash();
         window.addEventListener('hashchange', handleHash);
