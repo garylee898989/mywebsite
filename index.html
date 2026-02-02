@@ -1265,11 +1265,17 @@
                 <div style="display:flex; gap:20px; flex-wrap: wrap; margin-bottom: 20px;">
                     <div style="flex:1; min-width:260px;">
                         <div style="font-weight:600; margin-bottom:8px;">消費類型圓餅圖</div>
-                        <div id="pieCategory" style="width:240px; height:240px; border-radius:50%; background: var(--surface); display:flex; align-items:center; justify-content:center;"></div>
+                        <div style="display:flex; align-items:center; gap:15px;">
+                            <div id="pieCategory" style="width:160px; height:160px; border-radius:50%; background: var(--surface); flex-shrink:0;"></div>
+                            <div id="pieCategoryLegend" style="font-size:12px; display:flex; flex-direction:column; gap:4px;"></div>
+                        </div>
                     </div>
                     <div style="flex:1; min-width:260px;">
                         <div style="font-weight:600; margin-bottom:8px;">支付方式圓餅圖</div>
-                        <div id="piePayment" style="width:240px; height:240px; border-radius:50%; background: var(--surface); display:flex; align-items:center; justify-content:center;"></div>
+                        <div style="display:flex; align-items:center; gap:15px;">
+                            <div id="piePayment" style="width:160px; height:160px; border-radius:50%; background: var(--surface); flex-shrink:0;"></div>
+                            <div id="piePaymentLegend" style="font-size:12px; display:flex; flex-direction:column; gap:4px;"></div>
+                        </div>
                     </div>
                     <div style="flex:1; min-width:260px;">
                         <div style="font-weight:600; margin-bottom:8px;">累積總覽</div>
@@ -3823,10 +3829,14 @@
             }).sort((a,b)=> (new Date(b.datetime).getTime()) - (new Date(a.datetime).getTime()));
         }
 
-        function renderPie(el, pairs) {
+        function renderPie(el, pairs, legendEl) {
             if (!el) return;
             const total = pairs.reduce((s,[,v])=>s+v,0);
-            if (total <= 0) { el.style.background = 'var(--surface)'; return; }
+            if (total <= 0) { 
+                el.style.background = 'var(--surface)'; 
+                if (legendEl) legendEl.innerHTML = '';
+                return; 
+            }
             const colors = [
                 '#4e79a7','#f28e2b','#e15759','#76b7b2','#59a14f','#edc948','#b07aa1','#ff9da7','#9c755f','#bab0ab'
             ];
@@ -3838,6 +3848,21 @@
                 return `${color} ${start}% ${acc}%`;
             }).join(', ');
             el.style.background = `conic-gradient(${stops})`;
+
+            // 渲染對照表
+            if (legendEl) {
+                legendEl.innerHTML = pairs.map(([label, value], i) => {
+                    const color = colors[i % colors.length];
+                    const pct = Math.round(value/total*100);
+                    return `
+                        <div style="display:flex; align-items:center; gap:6px;">
+                            <div style="width:10px; height:10px; border-radius:2px; background:${color};"></div>
+                            <span style="color:var(--secondary-text);">${label}</span>
+                            <span style="font-weight:600;">${pct}%</span>
+                        </div>
+                    `;
+                }).join('');
+            }
         }
 
         function renderTotals() {
@@ -3867,15 +3892,19 @@
             });
             const catPairs = [...byCat.entries()].filter(([k,v])=>k).sort((a,b)=>b[1]-a[1]);
             const payPairs = [...byPay.entries()].filter(([k,v])=>k).sort((a,b)=>b[1]-a[1]);
-            renderPie(pieCategoryEl, catPairs);
-            renderPie(piePaymentEl, payPairs);
+            
+            const pieCategoryLegendEl = document.getElementById('pieCategoryLegend');
+            const piePaymentLegendEl = document.getElementById('piePaymentLegend');
+            
+            renderPie(pieCategoryEl, catPairs, pieCategoryLegendEl);
+            renderPie(piePaymentEl, payPairs, piePaymentLegendEl);
         }
 
         function renderTable() {
             if (!consumptionTableEl) return;
             const rows = consumptionData.map(r=>`
                 <tr>
-                    <td style="padding:8px; color:var(--secondary-text); white-space:nowrap;">${(r.datetime||'').replace('T',' ').slice(0,16)}</td>
+                    <td style="padding:8px; color:var(--secondary-text); white-space:nowrap;">${(r.datetime||'').slice(0,10)}</td>
                     <td style="padding:8px;">${r.merchant || '—'}</td>
                     <td style="padding:8px; font-weight:600; color: var(--accent);">$${(r.amount||0).toLocaleString()}</td>
                     <td style="padding:8px;">${r.payment || '—'}</td>
