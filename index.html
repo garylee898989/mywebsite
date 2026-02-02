@@ -4,6 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>我的個人網頁</title>
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#4a90e2">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-title" content="MyWeb">
+    <link rel="apple-touch-icon" href="https://cdn-icons-png.flaticon.com/512/3135/3135715.png">
         <link rel="preconnect" href="https://cdn.jsdelivr.net">
         <link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
         <link rel="preconnect" href="https://rkdmecqlxtovdngcxaaj.supabase.co">
@@ -4104,10 +4110,81 @@
             renderHomeConsumption();
         };
 
+        // 通知推播功能：每 6 小時提醒一次 (00:00, 06:00, 12:00, 18:00)
+        let notificationTimer = null;
+        async function setupNotifications() {
+            if (!("Notification" in window)) {
+                console.log("此瀏覽器不支援桌面通知");
+                return;
+            }
+
+            // 註冊 Service Worker
+            if ('serviceWorker' in navigator) {
+                try {
+                    const registration = await navigator.serviceWorker.register('sw.js');
+                    console.log('Service Worker 註冊成功，範圍：', registration.scope);
+                } catch (error) {
+                    console.log('Service Worker 註冊失敗：', error);
+                }
+            }
+
+            if (Notification.permission === "default") {
+                await Notification.requestPermission();
+            }
+            scheduleNextNotification();
+        }
+
+        function scheduleNextNotification() {
+            if (notificationTimer) clearTimeout(notificationTimer);
+            
+            const now = new Date();
+            const hours = now.getHours();
+            // 找出下一個推播的時間點 (0, 6, 12, 18, 24)
+            const nextNotificationHour = [0, 6, 12, 18, 24].find(h => h > hours);
+            
+            const nextDate = new Date(now);
+            if (nextNotificationHour === 24 || nextNotificationHour === undefined) {
+                nextDate.setDate(now.getDate() + 1);
+                nextDate.setHours(0, 0, 0, 0);
+            } else {
+                nextDate.setHours(nextNotificationHour, 0, 0, 0);
+            }
+            
+            const delay = nextDate.getTime() - now.getTime();
+            console.log(`下次提醒時間：${nextDate.toLocaleString()}，剩餘 ${Math.round(delay/1000/60)} 分鐘`);
+            
+            notificationTimer = setTimeout(() => {
+                sendNotification();
+                scheduleNextNotification(); // 排程下一次
+            }, delay);
+        }
+
+        async function sendNotification() {
+            if (Notification.permission === "granted") {
+                const options = {
+                    body: "記得紀錄消費跟訓練紀錄",
+                    icon: "https://cdn-icons-png.flaticon.com/512/3135/3135715.png",
+                    badge: "https://cdn-icons-png.flaticon.com/512/3135/3135715.png",
+                    vibrate: [200, 100, 200],
+                    tag: 'daily-reminder', // 避免重複通知
+                    renotify: true
+                };
+
+                // 優先使用 Service Worker 發送通知，這在手機上更穩定
+                if ('serviceWorker' in navigator) {
+                    const registration = await navigator.serviceWorker.ready;
+                    registration.showNotification("每日提醒", options);
+                } else {
+                    new Notification("每日提醒", options);
+                }
+            }
+        }
+
         handleHash();
         window.addEventListener('hashchange', handleHash);
         initMonthlyCalendars();
         initTeamManagement();
+        setupNotifications(); // 啟動通知系統
     </script>
     </div>
 </body>
