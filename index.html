@@ -1453,8 +1453,18 @@
                     
                     <div class="field" style="margin-top: 30px; border-top: 1px solid var(--border); padding-top: 20px;">
                         <label>系統測試</label>
-                        <p style="font-size: 14px; color: var(--secondary-text); margin-bottom: 10px;">發送測試推播通知，確保您的設備能正確接收提醒。</p>
-                        <button class="btn secondary" id="testNotificationBtn" type="button">發送測試訊息</button>
+                        <p style="font-size: 14px; color: var(--secondary-text); margin-bottom: 10px;">
+                            目前的通知權限狀態：<span id="notificationStatusText" style="font-weight: 600;">檢查中...</span>
+                        </p>
+                        <div style="display: flex; flex-direction: column; gap: 10px;">
+                            <button class="btn primary" id="testNotificationBtn" type="button">發送測試訊息</button>
+                            <button class="btn secondary" id="requestPermissionBtn" type="button">重新請求通知權限</button>
+                        </div>
+                        <div id="iosPwaHint" style="display: none; margin-top: 15px; padding: 12px; background: rgba(255,193,7,0.1); border-left: 4px solid #ffc107; font-size: 13px;">
+                            <strong>iOS 使用者注意：</strong><br>
+                            1. 必須將此網頁「加入主畫面」成 App 才能接收通知。<br>
+                            2. 若已加入主畫面仍無反應，請至「系統設定」>「通知」>「MyWeb」確認是否已開啟通知。
+                        </div>
                     </div>
                 </div>
             </div>
@@ -4150,25 +4160,43 @@
         // 通知推播功能：每 6 小時提醒一次 (00:00, 06:00, 12:00, 18:00)
         let notificationTimer = null;
         async function setupNotifications() {
+            updateNotificationStatus();
+            
             if (!("Notification" in window)) {
                 console.log("此瀏覽器不支援桌面通知");
                 return;
             }
 
-            // 註冊 Service Worker
+            const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+            const isStandalone = window.matchMedia('(display-mode: standalone)').matches;
+            if (isIOS && !isStandalone) {
+                document.getElementById('iosPwaHint').style.display = 'block';
+            }
+
             if ('serviceWorker' in navigator) {
                 try {
                     const registration = await navigator.serviceWorker.register('sw.js');
-                    console.log('Service Worker 註冊成功，範圍：', registration.scope);
+                    console.log('Service Worker 註冊成功');
                 } catch (error) {
                     console.log('Service Worker 註冊失敗：', error);
                 }
             }
 
-            // iOS 注意：Notification.permission 可能在非 standalone 模式下為 'denied' 或不可用
-            // 不要在頁面載入時請求權限，因為 iOS 會直接拒絕非使用者觸發的請求
             if (Notification.permission === "granted") {
                 scheduleNextNotification();
+            }
+        }
+
+        function updateNotificationStatus() {
+            const el = document.getElementById('notificationStatusText');
+            if (!el) return;
+            if (!("Notification" in window)) {
+                el.textContent = "不支援";
+                el.style.color = "var(--danger)";
+            } else {
+                const p = Notification.permission;
+                el.textContent = p === "granted" ? "已允許" : (p === "denied" ? "已拒絕" : "尚未請求");
+                el.style.color = p === "granted" ? "#28a745" : (p === "denied" ? "var(--danger)" : "#ffc107");
             }
         }
 
@@ -4251,6 +4279,7 @@
             let permission = Notification.permission;
             if (permission !== "granted") {
                 permission = await Notification.requestPermission();
+                updateNotificationStatus();
             }
             
             if (permission === "granted") {
@@ -4264,21 +4293,35 @@
                 };
 
                 try {
+                    // iOS 關鍵：確保在點擊事件內直接觸發 showNotification，不要等待過多 async 操作
                     if ('serviceWorker' in navigator) {
-                        const registration = await navigator.serviceWorker.ready;
-                        await registration.showNotification("測試用訊息", options);
-                        scheduleNextNotification(); // 成功後啟動排程
+                        const reg = await navigator.serviceWorker.getRegistration();
+                        if (reg) {
+                            reg.showNotification("測試用訊息", options);
+                            scheduleNextNotification();
+                        } else {
+                            // 重新註冊並發送
+                            const newReg = await navigator.serviceWorker.register('sw.js');
+                            newReg.showNotification("測試用訊息", options);
+                        }
                     } else {
                         new Notification("測試用訊息", options);
-                        scheduleNextNotification();
                     }
                 } catch (err) {
                     console.error("發送通知失敗:", err);
-                    alert("發送通知失敗，請確認是否已允許通知權限。");
+                    alert("發送通知失敗：" + err.message);
                 }
             } else {
-                alert("請先允許通知權限才能測試推播功能。如果已經拒絕，請至系統設定中開啟。");
+                alert("通知權限為：" + permission + "。請至系統設定中開啟通知權限。");
             }
+        });
+
+        // 重新請求權限按鈕
+        document.getElementById('requestPermissionBtn')?.addEventListener('click', async () => {
+            if (!("Notification" in window)) return;
+            const p = await Notification.requestPermission();
+            updateNotificationStatus();
+            alert("目前權限狀態：" + p);
         });
     </script>
     </div>
