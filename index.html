@@ -1225,7 +1225,7 @@
             </div>
             <div class="nav-right">
                 <button class="btn secondary" id="enableBioBtn" type="button" style="display: none; margin-right: 10px; font-size: 12px; padding: 6px 12px;">啟用生物辨識</button>
-                <button class="btn-circle" id="themeToggleBtn" type="button" aria-label="切換日夜模式">☾</button>
+                <button class="btn-circle" id="settingsBtn" type="button" aria-label="設定">⚙</button>
             </div>
         </div>
     </nav>
@@ -1433,6 +1433,30 @@
 
                 <div id="subjectEmpty" class="empty-state">目前還沒有科目。點右上角「＋」新增第一個科目。</div>
                 <div id="subjectList" class="diary-list" aria-label="科目列表"></div>
+            </div>
+        </div>
+
+        <!-- 設定頁面 -->
+        <div id="settings" class="page-content">
+            <div class="content-section">
+                <h2>設定</h2>
+                <p>調整您的個人化選項與功能測試。</p>
+                
+                <div class="form-grid" style="margin-top: 20px;">
+                    <div class="field">
+                        <label>介面風格</label>
+                        <div style="display: flex; align-items: center; gap: 15px;">
+                            <span>切換日夜模式</span>
+                            <button class="btn-circle" id="themeToggleBtn" type="button" aria-label="切換日夜模式">☾</button>
+                        </div>
+                    </div>
+                    
+                    <div class="field" style="margin-top: 30px; border-top: 1px solid var(--border); padding-top: 20px;">
+                        <label>系統測試</label>
+                        <p style="font-size: 14px; color: var(--secondary-text); margin-bottom: 10px;">發送測試推播通知，確保您的設備能正確接收提醒。</p>
+                        <button class="btn secondary" id="testNotificationBtn" type="button">發送測試訊息</button>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -1838,6 +1862,8 @@
                 loadSubjects().then(() => renderSubjects());
             } else if (targetPage === 'consumption') {
                 renderHomeConsumption();
+            } else if (targetPage === 'settings') {
+                // 設定頁面初始化
             } else if (targetPage === 'about') {
                 // 關於我頁面可能不需要特殊初始化
             }
@@ -3071,7 +3097,12 @@
                             displayName: AUTH_CONFIG.username
                         },
                         pubKeyCredParams: [{ alg: -7, type: "public-key" }, { alg: -257, type: "public-key" }],
-                        authenticatorSelection: { userVerification: "required" },
+                        authenticatorSelection: { 
+                            authenticatorAttachment: "platform",
+                            userVerification: "required",
+                            residentKey: "preferred",
+                            requireResidentKey: false
+                        },
                         timeout: 60000
                     }
                 };
@@ -3916,7 +3947,7 @@
                     <td style="padding:8px;">${r.payment || '—'}</td>
                     <td style="padding:8px;">${r.category || '—'}</td>
                     <td style="padding:8px; color:var(--secondary-text);">${r.note || ''}</td>
-                    <td style="padding:8px; text-align:right;">
+                    <td style="padding:8px; text-align:right; position:relative;">
                         <button class="btn secondary consumption-more-btn" data-id="${r.id}" type="button" style="padding:4px 8px;">⋯</button>
                         <div class="more-menu" data-id="${r.id}">
                             <div class="menu-item edit">編輯消費</div>
@@ -3944,18 +3975,26 @@
             // 綁定三點菜單
             consumptionTableEl.querySelectorAll('.consumption-more-btn').forEach(btn=>{
                 btn.addEventListener('click', (e)=>{
+                    e.stopPropagation();
                     const id = btn.getAttribute('data-id');
                     const menu = consumptionTableEl.querySelector(`.more-menu[data-id="${id}"]`);
-                    document.querySelectorAll('.more-menu.active').forEach(m=>{ if (m!==menu) m.classList.remove('active'); });
-                    const rect = btn.getBoundingClientRect();
-                    menu.style.position = 'absolute';
-                    menu.style.left = `${rect.left}px`;
-                    menu.style.top = `${rect.bottom + window.scrollY}px`;
+                    
+                    // 關閉其他選單
+                    document.querySelectorAll('.more-menu.active').forEach(m=>{ 
+                        if (m !== menu) m.classList.remove('active'); 
+                    });
+                    
                     menu.classList.toggle('active');
                 });
             });
+            // 點擊其他地方關閉選單
+            document.addEventListener('click', () => {
+                document.querySelectorAll('.more-menu.active').forEach(m => m.classList.remove('active'));
+            });
+
             consumptionTableEl.querySelectorAll('.more-menu .edit').forEach(el=>{
-                el.addEventListener('click', ()=>{
+                el.addEventListener('click', (e)=>{
+                    e.stopPropagation();
                     const id = el.parentElement.getAttribute('data-id');
                     const r = consumptionData.find(x=>x.id===id);
                     openConsumptionEditor(r||null);
@@ -3963,7 +4002,8 @@
                 });
             });
             consumptionTableEl.querySelectorAll('.more-menu .delete').forEach(el=>{
-                el.addEventListener('click', async ()=>{
+                el.addEventListener('click', async (e)=>{
+                    e.stopPropagation();
                     const id = el.parentElement.getAttribute('data-id');
                     if (confirm('確定刪除此筆消費嗎？')) {
                         const ok = await dbDelete(id);
@@ -3971,9 +4011,6 @@
                     }
                     el.parentElement.classList.remove('active');
                 });
-            });
-            document.addEventListener('click', ()=> {
-                document.querySelectorAll('.more-menu.active').forEach(m=>m.classList.remove('active'));
             });
         }
 
@@ -4185,6 +4222,39 @@
         initMonthlyCalendars();
         initTeamManagement();
         setupNotifications(); // 啟動通知系統
+
+        // 設定按鈕事件
+        document.getElementById('settingsBtn')?.addEventListener('click', () => {
+            location.hash = '#settings';
+            activatePage('settings');
+        });
+
+        // 測試通知按鈕
+        document.getElementById('testNotificationBtn')?.addEventListener('click', async () => {
+            if (Notification.permission !== "granted") {
+                await Notification.requestPermission();
+            }
+            
+            if (Notification.permission === "granted") {
+                const options = {
+                    body: "訊息功能測試成功",
+                    icon: "https://cdn-icons-png.flaticon.com/512/3135/3135715.png",
+                    badge: "https://cdn-icons-png.flaticon.com/512/3135/3135715.png",
+                    vibrate: [200, 100, 200],
+                    tag: 'test-notification',
+                    renotify: true
+                };
+
+                if ('serviceWorker' in navigator) {
+                    const registration = await navigator.serviceWorker.ready;
+                    registration.showNotification("測試用訊息", options);
+                } else {
+                    new Notification("測試用訊息", options);
+                }
+            } else {
+                alert("請先允許通知權限才能測試推播功能。");
+            }
+        });
     </script>
     </div>
 </body>
