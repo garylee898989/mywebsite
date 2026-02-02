@@ -4165,10 +4165,11 @@
                 }
             }
 
-            if (Notification.permission === "default") {
-                await Notification.requestPermission();
+            // iOS 注意：Notification.permission 可能在非 standalone 模式下為 'denied' 或不可用
+            // 不要在頁面載入時請求權限，因為 iOS 會直接拒絕非使用者觸發的請求
+            if (Notification.permission === "granted") {
+                scheduleNextNotification();
             }
-            scheduleNextNotification();
         }
 
         function scheduleNextNotification() {
@@ -4197,23 +4198,26 @@
         }
 
         async function sendNotification() {
-            if (Notification.permission === "granted") {
-                const options = {
-                    body: "記得紀錄消費跟訓練紀錄",
-                    icon: "https://cdn-icons-png.flaticon.com/512/3135/3135715.png",
-                    badge: "https://cdn-icons-png.flaticon.com/512/3135/3135715.png",
-                    vibrate: [200, 100, 200],
-                    tag: 'daily-reminder', // 避免重複通知
-                    renotify: true
-                };
+            if (!("Notification" in window) || Notification.permission !== "granted") return;
 
-                // 優先使用 Service Worker 發送通知，這在手機上更穩定
+            const options = {
+                body: "記得紀錄消費跟訓練紀錄",
+                icon: "https://cdn-icons-png.flaticon.com/512/3135/3135715.png",
+                badge: "https://cdn-icons-png.flaticon.com/512/3135/3135715.png",
+                vibrate: [200, 100, 200],
+                tag: 'daily-reminder',
+                renotify: true
+            };
+
+            try {
                 if ('serviceWorker' in navigator) {
                     const registration = await navigator.serviceWorker.ready;
-                    registration.showNotification("每日提醒", options);
+                    await registration.showNotification("每日提醒", options);
                 } else {
                     new Notification("每日提醒", options);
                 }
+            } catch (err) {
+                console.error("發送每日提醒失敗:", err);
             }
         }
 
@@ -4231,11 +4235,25 @@
 
         // 測試通知按鈕
         document.getElementById('testNotificationBtn')?.addEventListener('click', async () => {
-            if (Notification.permission !== "granted") {
-                await Notification.requestPermission();
+            if (!("Notification" in window)) {
+                alert("抱歉，您的瀏覽器不支援通知功能。");
+                return;
+            }
+
+            const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+            const isStandalone = window.matchMedia('(display-mode: standalone)').matches;
+
+            if (isIOS && !isStandalone) {
+                alert("在 iOS 上，您必須先將此網頁「加入主畫面」才能接收通知。請點擊分享按鈕並選擇「加入主畫面」。");
+                return;
+            }
+
+            let permission = Notification.permission;
+            if (permission !== "granted") {
+                permission = await Notification.requestPermission();
             }
             
-            if (Notification.permission === "granted") {
+            if (permission === "granted") {
                 const options = {
                     body: "訊息功能測試成功",
                     icon: "https://cdn-icons-png.flaticon.com/512/3135/3135715.png",
@@ -4245,14 +4263,21 @@
                     renotify: true
                 };
 
-                if ('serviceWorker' in navigator) {
-                    const registration = await navigator.serviceWorker.ready;
-                    registration.showNotification("測試用訊息", options);
-                } else {
-                    new Notification("測試用訊息", options);
+                try {
+                    if ('serviceWorker' in navigator) {
+                        const registration = await navigator.serviceWorker.ready;
+                        await registration.showNotification("測試用訊息", options);
+                        scheduleNextNotification(); // 成功後啟動排程
+                    } else {
+                        new Notification("測試用訊息", options);
+                        scheduleNextNotification();
+                    }
+                } catch (err) {
+                    console.error("發送通知失敗:", err);
+                    alert("發送通知失敗，請確認是否已允許通知權限。");
                 }
             } else {
-                alert("請先允許通知權限才能測試推播功能。");
+                alert("請先允許通知權限才能測試推播功能。如果已經拒絕，請至系統設定中開啟。");
             }
         });
     </script>
